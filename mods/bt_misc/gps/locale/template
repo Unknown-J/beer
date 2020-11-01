@@ -1,0 +1,22 @@
+# textdomain: gps
+
+GPS=
+Localizar=
+Destinos=
+Destino=
+Desligar=
+Deletar=
+Novo Destino=
+Nome Desse Lugar=
+Gravar Novo Destino=
+Precisa estar com o GPS para ir ao destino.=
+GPS Ativado. Destino @1 localizado.=
+Nenhum destino encontrado. Defina novos destinos.=
+GPS desligado.=
+Nenhum nome definido para o lugar. Digite um nome.=
+Limite de @1 destinos no seu GPS. Delete algum dos ja existentes.=
+Lugar @1 foi gravado no seu GPS.=
+Caracteres invalidos. Tente utilizar apenas letras e numeros no novo nome.=
+Nenhum nome especificado para o novo lugar. Defina o nome desse lugar.=
+Destino @1 deletado.=
+Nenhum destino para deletar.=
