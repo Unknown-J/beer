@@ -5,44 +5,26 @@
 
 -- recipe list: [in] ={fuel cost, out, quantity of material required for processing}
 basic_machines.grinder_recipes = {
-	["default:stone"] = {2,"default:sand",1},
+	["darkage:silt_lump"] = {1,"darkage:chalk_powder",1},
 	["default:cobble"] = {1,"default:gravel",1},
-	["default:gravel"] = {0.5,"default:dirt",1},
+	["default:desert_stone"] = {2,"default:desert_sand 4",1},
 	["default:dirt"] = {0.5,"default:clay_lump 4",1},
+	["default:gravel"] = {0.5,"default:dirt",1},
+	["default:ice"] = {1, "default:snow 4",1},
+	["default:obsidian_shard"] = {199,"default:lava_source",1},
+	["default:stone"] = {2,"default:sand",1},
 	["es:aikerum_crystal"] ={16,"es:aikerum_dust 2",1}, -- added for es mod
-	["es:ruby_crystal"] = {16,"es:ruby_dust 2",1},
 	["es:emerald_crystal"] = {16,"es:emerald_dust 2",1},
 	["es:purpellium_lump"] = {16,"es:purpellium_dust 2",1},
-	["default:obsidian_shard"] = {199,"default:lava_source",1},
-	["gloopblocks:basalt"] = {1, "default:cobble",1}, -- enable coble farms with gloopblocks mod
-	["default:ice"] = {1, "default:snow 4",1},
-	["darkage:silt_lump"]={1,"darkage:chalk_powder",1},
-};
+	["es:ruby_crystal"] = {16,"es:ruby_dust 2",1},
+	["gloopblocks:basalt"] = {1, "default:cobble",1} -- enable coble farms with gloopblocks mod
+}
 
--- es gems dust cooking
-local es_gems = function()
-	local es_gems = {
-	{name = "emerald", cooktime = 1200},{name = "ruby", cooktime = 1500},{name = "purpellium", cooktime = 1800},
-	{name = "aikerum", cooktime = 2000}}
-
-	for _,v in pairs(es_gems) do
-		minetest.register_craft({
-			type = "cooking",
-			recipe = "es:"..v.name.."_dust",
-			output = "es:"..v.name .."_crystal",
-			cooktime = v.cooktime
-		})
-	end
-end
-minetest.after(0,es_gems);
-
-
+local handle, after = nil, false
 
 local grinder_process = function(pos)
-
-	local node = minetest.get_node({x=pos.x,y=pos.y-1,z=pos.z}).name;
-	local meta = minetest.get_meta(pos);local inv = meta:get_inventory();
-
+	local node = minetest.get_node({x=pos.x,y=pos.y-1,z=pos.z}).name
+	local meta = minetest.get_meta(pos);local inv = meta:get_inventory()
 
 	-- PROCESS: check out inserted items
 	local stack = inv:get_stack("src",1);
@@ -56,18 +38,17 @@ local grinder_process = function(pos)
 		meta:set_string("infotext", "please insert valid materials"); return
 	end-- unknown node
 
-	if stack:get_count()< def[3] then
-		meta:set_string("infotext", "Recipe requires at least " .. def[3] .. " " .. src_item);
+	local steps = math.floor(stack:get_count() / def[3]) -- how many steps to process inserted stack
+	if steps < 1 then
+		meta:set_string("infotext", "Recipe requires at least " .. def[3] .. " " .. src_item)
 		return
 	end
 
-
-
 	-- FUEL CHECK
-	local fuel = meta:get_float("fuel");
+	local fuel = meta:get_float("fuel")
+	local fuel_req = def[1] -- * steps
 
-
-	if fuel-def[1]<0 then -- we need new fuel, check chest below
+	if fuel - fuel_req < 0 then -- we need new fuel, check chest below
 		local fuellist = inv:get_list("fuel")
 		if not fuellist then return end
 
@@ -76,7 +57,7 @@ local grinder_process = function(pos)
 		local supply=0;
 		if fueladd.time == 0 then -- no fuel inserted, try look for outlet
 				-- No valid fuel in fuel list
-				supply = basic_machines.check_power({x=pos.x,y=pos.y-1,z=pos.z} , def[1]) or 0; -- tweaked so 1 coal = 1 energy
+				supply = basic_machines.check_power({x=pos.x,y=pos.y-1,z=pos.z}, fuel_req) or 0; -- tweaked so 1 coal = 1 energy
 				if supply>0 then
 					fueladd.time = supply -- same as 10 coal
 				else
@@ -87,7 +68,6 @@ local grinder_process = function(pos)
 			if supply==0 then -- Take fuel from fuel list if no supply available
 				inv:set_stack("fuel",1,afterfuel.items[1])
 				fueladd.time=fueladd.time*0.1/4 -- thats 1 for coal
-				--minetest.chat_send_all("FUEL ADD TIME " .. fueladd.time)
 			end
 		end
 		if fueladd.time>0 then
@@ -95,32 +75,32 @@ local grinder_process = function(pos)
 			meta:set_float("fuel",fuel);
 			meta:set_string("infotext", "added fuel furnace burn time " .. fueladd.time .. ", fuel status " .. fuel);
 		end
-		if fuel-def[1]<0 then
-			meta:set_string("infotext", "need at least " .. def[1]-fuel .. " fuel to complete operation ");  return
+		if fuel - fuel_req < 0 then
+			meta:set_string("infotext", "need at least " .. fuel_req - fuel .. " fuel to complete operation ");  return
 		end
-
 	end
 
-
-
 	-- process items
+	local addstack = ItemStack(def[2])
+	if inv:room_for_item("dst", addstack) then
+		inv:add_item("dst", addstack)
+	else
+		return
+	end
 
-		-- TO DO: check if there is room for item yyy
-		local addstack = ItemStack(def[2]);
-		if inv:room_for_item("dst", addstack) then
-			inv:add_item("dst",addstack);
-		else return
-		end
+	-- take 1 item from src inventory for each activation
+	stack = stack:take_item(1); inv:remove_item("src", stack)
 
-		--take 1 item from src inventory for each activation
-		stack=stack:take_item(1); inv:remove_item("src", stack)
+	if not handle then
+		handle = minetest.sound_play("grinder",
+			{pos = pos, gain = 0.4, max_hear_distance = 16})
+	elseif not after then
+		after = true; minetest.after(4.992, function() handle, after = nil, false end)
+	end
 
-		minetest.sound_play("grinder", {pos=pos,gain=0.5,max_hear_distance = 16,})
-
-		fuel = fuel-def[1]; -- burn fuel
-		meta:set_float("fuel",fuel);
-		meta:set_string("infotext", "fuel " .. fuel);
-
+	fuel = fuel - fuel_req -- burn fuel
+	meta:set_float("fuel", fuel)
+	meta:set_string("infotext", "fuel " .. fuel)
 end
 
 
@@ -191,12 +171,12 @@ minetest.register_node("basic_machines:grinder", {
 	end,
 
 	mesecons = {effector = {
-		action_on = function (pos, node,ttl)
-		if type(ttl)~="number" then ttl = 1 end
-		if ttl<0 then return end -- machines_TTL prevents infinite recursion
-		grinder_process(pos);
-	end}
-	},
+		action_on = function (pos, node, ttl)
+			if type(ttl)~="number" then ttl = 1 end
+			if ttl<0 then return end -- machines_TTL prevents infinite recursion
+			grinder_process(pos)
+		end
+	}},
 
 	on_receive_fields = function(pos, formname, fields, sender)
 		if fields.quit then return end
@@ -205,7 +185,7 @@ minetest.register_node("basic_machines:grinder", {
 		if fields.help then
 			--recipe list: [in] ={fuel cost, out, quantity of material required for processing}
 			--basic_machines.grinder_recipes
-			text = "RECIPES\n\n";
+			local text = "RECIPES\n\n";
 			for key,v in pairs(basic_machines.grinder_recipes) do
 				text = text .. "INPUT ".. key .. " " .. v[3] .. " OUTPUT " ..  v[2] .. "\n"
 			end
@@ -251,20 +231,17 @@ minetest.register_node("basic_machines:grinder", {
 
 
 -- REGISTER DUSTS
-
-
 local function register_dust(name,input_node_name,ingot,grindcost,cooktime,R,G,B)
-
 	if not R then R = "FF" end
 	if not G then G = "FF" end
 	if not B then B = "FF" end
 
 	local purity_table = {"33","66"};
 
-	for i = 1,#purity_table do
+	for i = 1, #purity_table do
 		local purity = purity_table[i];
 		minetest.register_craftitem("basic_machines:"..name.."_dust_".. purity, {
-			description = name.. " dust purity " .. purity .. "%" ,
+			description = name:gsub("^%l", string.upper) .. " dust purity " .. purity .. "%" ,
 			inventory_image = "basic_machines_dust.png^[colorize:#"..R..G..B..":180",
 		})
 	end
@@ -296,17 +273,19 @@ end
 
 register_dust("iron","default:iron_lump","default:steel_ingot",4,8,"99","99","99")
 register_dust("copper","default:copper_lump","default:copper_ingot",4,8,"C8","80","0D") --c8800d
+register_dust("tin","default:tin_lump","default:tin_ingot",4,8,"9F","9F","9F")
 register_dust("gold","default:gold_lump","default:gold_ingot",6,25,"FF","FF","00")
 
 --  grinding ingots gives dust too
 basic_machines.grinder_recipes["default:steel_ingot"] = {4,"basic_machines:iron_dust_33 2",1};
 basic_machines.grinder_recipes["default:copper_ingot"] = {4,"basic_machines:copper_dust_33 2",1};
 basic_machines.grinder_recipes["default:gold_ingot"] = {6,"basic_machines:gold_dust_33 2",1};
+basic_machines.grinder_recipes["default:tin_ingot"] = {4,"basic_machines:tin_dust_33 2",1};
 
 -- are moreores (tin, silver, mithril) present?
 
 local table = minetest.registered_items["moreores:tin_lump"]; if table then
-	register_dust("tin","moreores:tin_lump","moreores:tin_ingot",4,8,"FF","FF","FF")
+	-- register_dust("tin","moreores:tin_lump","moreores:tin_ingot",4,8,"FF","FF","FF")
 	register_dust("silver","moreores:silver_lump","moreores:silver_ingot",5,15,"BB","BB","BB")
 	register_dust("mithril","moreores:mithril_lump","moreores:mithril_ingot",16,750,"00","00","FF")
 
@@ -349,8 +328,6 @@ minetest.register_craft({
 	output = "darkage:marble",
 	cooktime = 20
 })
-
-
 
 minetest.register_craft({
 	output = "darkage:serpentine",

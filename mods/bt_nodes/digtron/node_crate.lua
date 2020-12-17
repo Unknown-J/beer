@@ -49,9 +49,6 @@ local loaded_formspec
 if minetest.get_modpath("doc") then
 	loaded_formspec =
 	"size[4.1,1.5]" ..
-	default.gui_bg ..
-	default.gui_bg_img ..
-	default.gui_slots ..
 	"field[0.3,0.5;4,0.5;title;" .. S("Digtron Name") .. ";${title}]" ..
 	"button_exit[0.0,1.2;1,0.1;save;" .. S("Save\nTitle") .. "]" ..
 	"tooltip[save;" .. S("Saves the title of this Digtron") .. "]" ..
@@ -64,9 +61,6 @@ if minetest.get_modpath("doc") then
 else
 	loaded_formspec =
 	"size[4,1.5]" ..
-	default.gui_bg ..
-	default.gui_bg_img ..
-	default.gui_slots ..
 	"field[0.3,0.5;4,0.5;title;" .. S("Digtron Name") .. ";${title}]" ..
 	"button_exit[0.5,1.2;1,0.1;save;" .. S("Save\nTitle") .. "]" ..
 	"tooltip[show;" .. S("Saves the title of this Digtron") .. "]" ..

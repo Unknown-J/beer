@@ -331,7 +331,7 @@ minetest.register_craft({
 		{"group:wood", "group:wood", "group:wood"},
 	}
 })
---[[
+
 minetest.register_craft({
 	output = "default:chest_locked",
 	recipe = {
@@ -346,7 +346,7 @@ minetest.register_craft( {
 	output = "default:chest_locked",
 	recipe = {"default:chest", "default:steel_ingot"},
 })
-]]--
+
 minetest.register_craft({
 	type = "fuel",
 	recipe = "default:chest",

@@ -1,0 +1,6 @@
+# textdomain: signs_lib
+
+Write=schreiben
+Locked sign, owned by @1@n=gesperrter Schild, gehört @1@n
+@1 wrote \"@2\" to sign at @3=@1 schrieb \"@2\" auf das Schild bei @3
+#@1 flipped the wide-font switch to \"@2\" at @3=

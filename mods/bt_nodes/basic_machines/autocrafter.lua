@@ -326,17 +326,24 @@ minetest.register_node("basic_machines:autocrafter", {
 		return stack:get_count()
 	end,
 	allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-		return 0; -- no internal inventory moves!
+		return 0 -- no internal inventory moves!
 	end,
 
-	mesecons = {effector = {  -- rnd: run machine when activated by signal
-		action_on = function (pos, node,ttl)
-		if type(ttl)~="number" then ttl = 1 end
-		if ttl<0 then return end -- machines_TTL prevents infinite recursion
-		run_autocrafter(pos, craft_time);
-	end
-	}
-	}
+	mesecons = {effector = { -- rnd: run machine when activated by signal
+		action_on = function (pos, node, ttl)
+			if type(ttl) ~= "number" then ttl = 1 end
+			if ttl < 0 then return end -- machines_TTL prevents infinite recursion
+			run_autocrafter(pos, craft_time)
+		end,
+		can_dig = function(pos)
+			local meta = minetest.get_meta(pos)
+			local inv = meta:get_inventory()
+
+			if not (inv:is_empty("src")) or not (inv:is_empty("dst")) then return false end -- all inv must be empty to be dug
+
+			return true
+		end
+	}}
 	--on_timer = run_autocrafter -- rnd
 })
 

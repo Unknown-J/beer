@@ -1,22 +1,24 @@
 -- Spider by AspireMint (fishyWET (CC-BY-SA 3.0 license for texture)
 
 integral.search_replace = function(pos, search_rate, replace_what, replace_with)
-	if math.random(1, search_rate) == 1 then
-		local p1 = vector.subtract(pos, 1)
-		local p2 = vector.add(pos, 1)
+	if math.random(search_rate) > 1 then
+		return
+	end
 
-		--look for nodes
-		local nodelist = minetest.find_nodes_in_area(p1, p2, replace_what)
+	local p1 = vector.subtract(pos, 1)
+	local p2 = vector.add(pos, 1)
 
-		if #nodelist > 0 then
-			for key,value in pairs(nodelist) do
-				minetest.set_node(value, {name = replace_with})
-				return  -- only one at a time
-			end
+	--look for nodes
+	local nodelist = minetest.find_nodes_in_area(p1, p2, replace_what)
+
+	if #nodelist > 0 then
+		for key,value in pairs(nodelist) do
+			minetest.set_node(value, {name = replace_with})
+			break  -- only one at a time
 		end
 	end
-end
 
+end
 
 mobs:register_mob("integral:integrite", {
 	description = "Integrite Worker",
@@ -34,13 +36,13 @@ mobs:register_mob("integral:integrite", {
 	mesh = "integral_spider.x",
 	drawtype = "front",
 	textures = {
-		{"mobs_spider.png"},
+		{"mobs_spider.png"}
 	},
 	visual_size = {x = 1.5, y = 1.5},
 	makes_footstep_sound = false,
 	sounds = {
 		random = "mobs_spider",
-		attack = "mobs_spider",
+		attack = "mobs_spider"
 	},
 	walk_velocity = 1,
 	run_velocity = 3,
@@ -49,7 +51,7 @@ mobs:register_mob("integral:integrite", {
 	floats = 0,
 	drops = {
 		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
-		{name = "default:mese_crystal_fragment", chance = 5, min = 1, max = 1},
+		{name = "default:mese_crystal_fragment", chance = 5, min = 1, max = 1}
 	},
 	water_damage = 1,
 	lava_damage = 5,
@@ -67,20 +69,19 @@ mobs:register_mob("integral:integrite", {
 		run_start = 20,
 		run_end = 40,
 		punch_start = 50,
-		punch_end = 90,
+		punch_end = 90
 	},
 	replace_rate = 50,
-	replace_what = {"mobs:cobweb", "integral:glowing_fungal_wood", "integral:sap",},
+	replace_what = {"mobs:cobweb", "integral:glowing_fungal_wood", "integral:sap"},
 	replace_with = "air",
 	replace_offset = -1,
 	do_custom = function(self)
 		integral.integrite_tunneling(self, "worker")
 		integral.climb(self)
 		integral.search_replace(self.object:get_pos(), 50, {"integral:integral_wood"}, "integral:glowing_fungal_wood")
-		integral.search_replace(self.object:get_pos(), 200, {"air"}, "mobs:cobweb")
-	end,
+		integral.search_replace(self.object:get_pos(), 2000, {"air"}, "mobs:cobweb")
+	end
 })
-
 
 mobs:register_mob("integral:integrite_soldier", {
 	description = "Integrite Soldier",
@@ -98,13 +99,13 @@ mobs:register_mob("integral:integrite_soldier", {
 	mesh = "integral_spider.x",
 	drawtype = "front",
 	textures = {
-		{"integrite_soldier.png"},
+		{"integrite_soldier.png"}
 	},
 	visual_size = {x = 2.5, y = 2.5},
 	makes_footstep_sound = false,
 	sounds = {
 		random = "mobs_spider",
-		attack = "mobs_spider",
+		attack = "mobs_spider"
 	},
 	walk_velocity = 1,
 	run_velocity = 3,
@@ -113,7 +114,7 @@ mobs:register_mob("integral:integrite_soldier", {
 	floats = 0,
 	drops = {
 		{name = "mobs:meat_raw", chance = 2, min = 1, max = 2},
-		{name = "default:mese_crystal_fragment", chance = 3, min = 1, max = 1},
+		{name = "default:mese_crystal_fragment", chance = 3, min = 1, max = 1}
 	},
 	water_damage = 1,
 	lava_damage = 5,
@@ -131,7 +132,7 @@ mobs:register_mob("integral:integrite_soldier", {
 		run_start = 20,
 		run_end = 40,
 		punch_start = 50,
-		punch_end = 90,
+		punch_end = 90
 	},
 	replace_rate = 50,
 	replace_what = {"integral:glowing_fungal_wood", "integral:sap"},
@@ -139,10 +140,9 @@ mobs:register_mob("integral:integrite_soldier", {
 	replace_offset = -1,
 	do_custom = function(self)
 		integral.climb(self)
-		integral.search_replace(self.object:get_pos(), 500, {"air"}, "mobs:cobweb")
-	end,
+		integral.search_replace(self.object:get_pos(), 3000, {"air"}, "mobs:cobweb")
+	end
 })
-
 
 function integral.climb(self)
 	if self.state == "stand" and math.random() < 0.2 then
@@ -214,10 +214,9 @@ mobs:register_mob("integral:integrite_queen", {
 	do_custom = function(self)
 		integral.climb(self)
 		integral.integrite_summon(self)
-		integral.search_replace(self.object:get_pos(), 500, {"air"}, "mobs:cobweb")
+		integral.search_replace(self.object:get_pos(), 3000, {"air"}, "mobs:cobweb")
 	end,
 })
-
 
 integral.integrite_summon = function(self)
 	local hp = self.object:get_hp()
@@ -238,7 +237,6 @@ integral.integrite_summon = function(self)
 		end
 	end
 end
-
 
 integral.integrite_tunneling = function(self, type)
 	-- Types are available for fine-tuning.
@@ -350,9 +348,11 @@ mobs:register_egg("integral:integrite_soldier", "Integrite Soldier", "mobs_cobwe
 mobs:register_egg("integral:integrite_queen", "Integrite Queen", "mobs_cobweb.png", 1)
 
 minetest.register_abm({
+	label = "Integral cobweb sweeping",
 	nodenames = {"mobs:cobweb"},
+	neighbors = {"group:integral"},
 	interval = 500,
-	chance = 50,
+	chance = 25,
 	action = function(pos, node)
 		minetest.set_node(pos, {name = "air"})
 	end

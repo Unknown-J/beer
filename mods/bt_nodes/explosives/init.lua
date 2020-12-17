@@ -3,20 +3,13 @@
 --License: General Public License, version 3 or later
 --Copyright (C) 2016 Vitalie Ciubotaru <vitalie at ciubotaru dot tk>
 
-minetest.log('action', 'MOD: Explosives loading...')
-local explosives_version = '0.0.1'
-
-explosives = rawget(_G, "explosives") or {}
+explosives = {
+	version = "0.0.1"
+}
 
 --internationalization
-explosives.i18n = function(s, a, ...)
-	a={a, ...}
-	local v = s:gsub("@(%d+)", function(n)
-		return a[tonumber(n)]
-	end)
-	return v
-end
-local i18n = explosives.i18n
+local S = minetest.get_translator("explosives")
+explosives.S = S
 
 local radius = tonumber(minetest.settings:get("tnt_radius") or 3)
 local singleplayer = minetest.is_singleplayer()
@@ -38,13 +31,13 @@ local function arm_formspec(pos)
 		'field[0,0;0,0;z;;' .. pos.z .. ']'
 	if timer:is_started() then
 		formspec = formspec ..
-		'label[0,0;' .. i18n('You have @1 seconds to disarm the mine', timer:get_timeout() - timer:get_elapsed()) .. ']' ..
-		'button_exit[0,1;8,1;stop;' .. i18n('Disarm the mine') .. ']'
+		'label[0,0;' .. S('You have @1 seconds to disarm the mine', ("%.1f"):format(timer:get_timeout() - timer:get_elapsed())) .. ']' ..
+		'button_exit[0,1;8,1;stop;' .. S('Disarm the mine') .. ']'
 		return formspec
 	else
 		formspec = formspec ..
-		'label[0,0;' .. i18n('You will have 30 seconds to run away') .. ']' ..
-		'button_exit[0,1;8,1;start;' .. i18n('Arm the mine') .. ']'
+		'label[0,0;' .. S('You will have 30 seconds to run away') .. ']' ..
+		'button_exit[0,1;8,1;start;' .. S('Arm the mine') .. ']'
 		return formspec
 	end
 end
@@ -59,14 +52,14 @@ local function time_formspec(pos)
 		'field[0,0;0,0;z;;' .. pos.z .. ']'
 	if timer:is_started() then
 		formspec = formspec ..
-		'label[0,0;' .. i18n('The bomb will explode in @1 seconds', timer:get_timeout() - timer:get_elapsed()) .. ']' ..
-		'button_exit[0,2;8,1;quit;' .. i18n('Close') .. ']'
+		'label[0,0;' .. S('The bomb will explodes in @1 seconds', ("%.1f"):format(timer:get_timeout() - timer:get_elapsed())) .. ']' ..
+		'button_exit[0,2;8,1;quit;' .. S('Close') .. ']'
 		return formspec
 	else
 		formspec = formspec ..
-		'label[0,0;' .. i18n('Time to explosion in seconds') .. ']' ..
+		'label[0,0;' .. S('Time to explosion in seconds') .. ']' ..
 		'field[3,1;2,1;time;;0]' ..
-		'button_exit[0,2;8,1;start;' .. i18n('Set the timer') .. ']'
+		'button_exit[0,2;8,1;start;' .. S('Set the timer') .. ']'
 		return formspec
 	end
 end
@@ -146,15 +139,15 @@ local function after_dig_node(pos, node, metadata, digger)
 end
 
 local modname = minetest.get_current_modname()
-local modpath = minetest.get_modpath(modname)
+local modpath = minetest.get_modpath(modname) .. "/"
 if enable_mesh then
-	dofile(modpath .. "/mines-mesh.lua")
+	dofile(modpath .. "mines-mesh.lua")
 else
-	dofile(modpath .. "/mines-nodebox.lua")
+	dofile(modpath .. "mines-nodebox.lua")
 end
 
 minetest.register_node("explosives:landmine_dirt", {
-	description = i18n('Land mine in dirt'),
+	description = S('Land mine in dirt'),
 	tiles = {"default_dirt.png"},
 	groups = {
 		dig_immediate = 3,
@@ -175,7 +168,7 @@ minetest.register_node("explosives:landmine_dirt", {
 })
 
 minetest.register_node("explosives:landmine_dirt_armed", {
-	description = i18n('Land mine in dirt (armed)'),
+	description = S('Land mine in dirt (armed)'),
 	tiles = {"default_dirt.png"},
 	groups = {
 		landmine = 1,
@@ -193,7 +186,7 @@ minetest.register_node("explosives:landmine_dirt_armed", {
 })
 
 minetest.register_node("explosives:landmine_dirt_with_grass", {
-	description = i18n('Land mine in dirt with grass'),
+	description = S('Land mine in dirt with grass'),
 	tiles = {
 		"default_grass.png",
 		"default_dirt.png",
@@ -226,7 +219,7 @@ minetest.register_node("explosives:landmine_dirt_with_grass", {
 })
 
 minetest.register_node("explosives:landmine_dirt_with_grass_armed", {
-	description = i18n('Land mine in dirt with grass (armed)'),
+	description = S('Land mine in dirt with grass (armed)'),
 	tiles = {
 		"default_grass.png",
 		"default_dirt.png",
@@ -256,7 +249,7 @@ minetest.register_node("explosives:landmine_dirt_with_grass_armed", {
 })
 
 minetest.register_node("explosives:minefield_sign", {
-	description = i18n('Minefield sign'),
+	description = S('Minefield sign'),
 	tiles = {
 		"default_wood.png",
 		"default_wood.png",
@@ -283,12 +276,12 @@ minetest.register_node("explosives:minefield_sign", {
 	sounds = default.node_sound_wood_defaults(),
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		meta:set_string('infotext', i18n('Danger\nMines'))
+		meta:set_string('infotext', S('Danger\nMines'))
 	end
 })
 
 minetest.register_node("explosives:navalmine_cable", {
-	description = i18n('Naval mine cable'),
+	description = S('Naval mine cable'),
 	tiles = {
 		"explosives_navalmine_cable.png",
 		"explosives_navalmine_cable.png^[transform2"
@@ -317,17 +310,17 @@ if minetest.get_modpath('dye') and dye then
 end
 
 minetest.register_craftitem("explosives:fuze", {
-	description = i18n('Land mine fuze'),
+	description = S('Land mine fuze'),
 	inventory_image = "explosives_landmine_fuze.png"
 })
 
 minetest.register_craftitem("explosives:cable_reel", {
-	description = i18n('Naval mine cable (reel)'),
+	description = S('Naval mine cable (reel)'),
 	inventory_image = "explosives_navalmine_cable_reel.png"
 })
 
 minetest.register_craftitem("explosives:hourglass", {
-	description = i18n('Hourglass'),
+	description = S('Hourglass'),
 	inventory_image = "explosives_hourglass.png"
 })
 
@@ -534,11 +527,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local timer = minetest.get_node_timer({x = fields.x, y = fields.y, z = fields.z})
 	if fields.start then
 		timer:start(30)
-		return true
-	end
-	if fields.stop then
+	elseif fields.stop then
 		timer:stop()
-		return true
 	end
 	return true
 end)
@@ -546,14 +536,13 @@ end)
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "explosives:set_time" then return false end
 	local timer = minetest.get_node_timer({x = fields.x, y = fields.y, z = fields.z})
-	if fields.start then
+	if fields.start and fields.time ~= "" then
 		local timeout = tonumber(fields.time)
-		if timeout ~= nil and timeout > 0 and timeout < 3600 then
+		if timeout > 0 and timeout < 3600 then
 			timer:start(timeout)
 		end
-		return true
 	end
 	return true
 end)
 
-minetest.log('action', 'MOD: Explosives version ' .. explosives_version .. ' loaded.')
+minetest.log("action", "[explosives] Version " .. explosives.version .. " loaded.")

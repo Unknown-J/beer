@@ -44,7 +44,7 @@ end
 
 -- regular mobs
 
-local mobslist = {"golem", "golem_friendly"}
+local mobslist = {"butterfly", "golem", "golem_friendly"}
 
 if dmobs.regulars then
 	for _, mobname in pairs(mobslist) do

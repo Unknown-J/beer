@@ -5,7 +5,7 @@ mail.highlightedmessages = {}
 mail.messages = {}
 
 function mail.load()
-	local file = io.open(minetest.get_worldpath().."/mail.db","r")
+	local file = io.open(minetest.get_worldpath().."/mail.db", "r")
 	if file then
 		local data = file:read("*a")
 		mail.messages = minetest.deserialize(data)
@@ -14,7 +14,7 @@ function mail.load()
 end
 
 function mail.save()
-	local file = io.open(minetest.get_worldpath().."/mail.db","w")
+	local file = io.open(minetest.get_worldpath().."/mail.db", "w")
 	if file and file:write(minetest.serialize(mail.messages)) and file:close() then
 		return true
 	else
@@ -38,7 +38,7 @@ mail.inboxformspec = "size[8,9;]"..
 function mail.send(src,dst,subject,body)
 	if not mail.messages[dst] then mail.messages[dst] = {} end
 	table.insert(mail.messages[dst],1,{unread=true,sender=src,subject=subject,body=body})
-	for _,player in ipairs(minetest.get_connected_players()) do
+	for _, player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
 		if name == dst then
 			if subject == "" then subject = "(No subject)" end
@@ -67,7 +67,7 @@ function mail.showinbox(name)
 	if not mail.messages[name] then mail.messages[name] = {} end
 	local idx, message
 	if mail.messages[name][1] then
-		for idx,message in ipairs(mail.messages[name]) do
+		for idx, message in ipairs(mail.messages[name]) do
 			if idx ~= 1 then formspec = formspec .. "," end
 			if message.unread then
 				formspec = formspec .. "#FF8888"
@@ -92,7 +92,7 @@ end
 
 function mail.showmessage(name,msgnumber)
 	local message = mail.messages[name][msgnumber]
-	local formspec = "size[8,6]"..default.gui_bg..default.gui_bg_img..default.gui_slots.."button[7.5,0;0.5,0.5;back;X]label[0,0;From: %s]label[0,0.5;Subject: %s]textarea[0.25,1;8,4;body;;%s]button[1,5;2,1;reply;Reply]button[3,5;2,1;forward;Forward]button[5,5;2,1;delete;Delete]"
+	local formspec = "size[8,6]button[7.5,0;0.5,0.5;back;X]label[0,0;From: %s]label[0,0.5;Subject: %s]textarea[0.25,1;8,4;body;;%s]button[1,5;2,1;reply;Reply]button[3,5;2,1;forward;Forward]button[5,5;2,1;delete;Delete]"
 	local sender = minetest.formspec_escape(message.sender)
 	local subject = minetest.formspec_escape(message.subject)
 	local body = minetest.formspec_escape(message.body)
@@ -101,7 +101,7 @@ function mail.showmessage(name,msgnumber)
 end
 
 function mail.showcompose(name,defaulttgt,defaultsubj,defaultbody)
-	local formspec = "size[8,8]"..default.gui_bg..default.gui_bg_img..default.gui_slots.."field[0.25,0.5;4,1;to;To:;%s]field[0.25,1.5;4,1;subject;Subject:;%s]textarea[0.25,2.5;8,4;body;;%s]button[1,7;2,1;cancel;Cancel]button[7.5,0;0.5,0.5;cancel;X]button[5,7;2,1;send;Send]"
+	local formspec = "size[8,8]field[0.25,0.5;4,1;to;To:;%s]field[0.25,1.5;4,1;subject;Subject:;%s]textarea[0.25,2.5;8,4;body;;%s]button[1,7;2,1;cancel;Cancel]button[7.5,0;0.5,0.5;cancel;X]button[5,7;2,1;send;Send]"
 	formspec = string.format(formspec,minetest.formspec_escape(defaulttgt),minetest.formspec_escape(defaultsubj),minetest.formspec_escape(defaultbody))
 	minetest.show_formspec(name,"mail:compose",formspec)
 end
@@ -213,12 +213,12 @@ minetest.register_on_joinplayer(function(player)
 		local name = player:get_player_name()
 		local unreadflag = false
 		if mail.messages[name] then
-			for _,message in ipairs(mail.messages[name]) do
+			for _, message in ipairs(mail.messages[name]) do
 				if message.unread then unreadflag = true end
 			end
 		end
 		if unreadflag then
-			minetest.show_formspec(name,"mail:unreadnag","size[3,2]"..default.gui_bg..default.gui_bg_img..default.gui_slots.."label[0,0;You have unread messages in your inbox.]label[0,0.5;Go there now?]button[0.5,0.75;2,1;yes;Yes]button_exit[0.5,1.5;2,1;no;No]")
+			minetest.show_formspec(name,"mail:unreadnag","size[3,2]label[0,0;You have unread messages in your inbox.]label[0,0.5;Go there now?]button[0.5,0.75;2,1;yes;Yes]button_exit[0.5,1.5;2,1;no;No]")
 		end
 	end,player)
 end)

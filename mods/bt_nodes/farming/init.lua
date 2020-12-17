@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.24 (28th April 2017)
+	Farming Redo Mod
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -7,82 +7,44 @@
 
 farming = {
 	mod = "redo",
-	version = "20170428",
+	version = "20201210",
 	path = minetest.get_modpath("farming"),
 	select = {
 		type = "fixed",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
-	}
+	},
+	registered_plants = {},
+	min_light = 12,
+	max_light = 15
 }
 
-farming.DEBUG = false
--- farming.DEBUG = {}  -- Uncomment to turn on profiling code/functions
+local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 
-local DEBUG_abm_runs   = 0
-local DEBUG_abm_time   = 0
-local DEBUG_timer_runs = 0
-local DEBUG_timer_time = 0
-
-if farming.DEBUG then
-
-	function farming.DEBUG.reset_times()
-		DEBUG_abm_runs = 0
-		DEBUG_abm_time = 0
-		DEBUG_timer_runs = 0
-		DEBUG_timer_time = 0
-	end
-
-	function farming.DEBUG.report_times()
-
-		local abm_n     = DEBUG_abm_runs
-		local abm_dt    = DEBUG_abm_time
-		local abm_avg   = (abm_n > 0 and abm_dt / abm_n) or 0
-		local timer_n   = DEBUG_timer_runs
-		local timer_dt  = DEBUG_timer_time
-		local timer_avg = (timer_n > 0 and timer_dt / timer_n) or 0
-		local dt = abm_dt + timer_dt
-
-		print("ABM ran for "..abm_dt.."µs over "..abm_n.." runs: "..abm_avg.."µs/run")
-		print("Timer ran for "..timer_dt.."µs over "..timer_n.." runs: "..timer_avg.."µs/run")
-		print("Total farming time: "..dt.."µs")
-	end
+function farming.is_creative(name)
+	return creative_mode_cache or minetest.check_player_privs(name, {creative = true})
 end
 
-local statistics = dofile(farming.path.."/statistics.lua")
+
+local statistics = dofile(farming.path .. "/statistics.lua")
 
 -- Intllib
 local S = minetest.get_translator("farming")
-
 farming.intllib = S
 
--- Utility Functions
 
+-- Utility Function
 local time_speed = tonumber(minetest.settings:get("time_speed")) or 72
-local SECS_PER_CYCLE = (time_speed > 0 and 24 * 60 * 60 / time_speed) or 0
-
+local SECS_PER_CYCLE = (time_speed > 0 and (24 * 60 * 60) / time_speed) or 0
 local function clamp(x, min, max)
 	return (x < min and min) or (x > max and max) or x
 end
 
-local function in_range(x, min, max)
-	return min <= x and x <= max
-end
 
---- Tests the amount of day or night time between two times.
- --
- -- @param t_game
- --    The current time, as reported by mintest.get_gametime().
- -- @param t_day
- --    The current time, as reported by mintest.get_timeofday().
- -- @param dt
- --    The amount of elapsed time.
- -- @param count_day
- --    If true, count elapsed day time.  Otherwise, count elapsed night time.
- -- @return
- --    The amount of day or night time that has elapsed.
+-- return amount of day or night that has elapsed
+-- dt is time elapsed, count_day if true counts day, otherwise night
+local function day_or_night_time(dt, count_day)
 
-local function day_or_night_time(t_game, t_day, dt, count_day)
-
+	local t_day = minetest.get_timeofday()
 	local t1_day = t_day - dt / SECS_PER_CYCLE
 	local t1_c, t2_c  -- t1_c < t2_c and t2_c always in [0, 1)
 
@@ -116,45 +78,14 @@ local function day_or_night_time(t_game, t_day, dt, count_day)
 	return dt_c * SECS_PER_CYCLE
 end
 
---- Tests the amount of elapsed day time.
- --
- -- @param dt
- --    The amount of elapsed time.
- -- @return
- --    The amount of day time that has elapsed.
- --
-local function day_time(dt)
-	return day_or_night_time(minetest.get_gametime(), minetest.get_timeofday(), dt, true)
-end
-
---- Tests the amount of elapsed night time.
- --
- -- @param dt
- --    The amount of elapsed time.
- -- @return
- --    The amount of night time that has elapsed.
- --
-local function night_time(time_game, time_day, dt, count_day)
-	return day_or_night_time(minetest.get_gametime(), minetest.get_timeofday(), dt, false)
-end
-
 
 -- Growth Logic
-
-local STAGE_LENGTH_AVG = 160.0
+local STAGE_LENGTH_AVG = tonumber(
+		minetest.settings:get("farming_stage_length")) or 200 -- 160
 local STAGE_LENGTH_DEV = STAGE_LENGTH_AVG / 6
-local MIN_LIGHT = 13
-local MAX_LIGHT = 1000
 
---- Determines plant name and stage from node.
- --
- -- Separates node name on the last underscore (_).
- --
- -- @param node
- --    Node or position table, or node name.
- -- @return
- --    List (plant_name, stage), or nothing (nil) if node isn't loaded
 
+-- return plant name and stage from node provided
 local function plant_name_stage(node)
 
 	local name
@@ -188,6 +119,7 @@ local function plant_name_stage(node)
 
 	return name, 0
 end
+
 
 -- Map from node name to
 -- { plant_name = ..., name = ..., stage = n, stages_left = { node_name, ... } }
@@ -282,7 +214,8 @@ local function reg_plant_stages(plant_name, stage, force_last)
 	return stages
 end
 
-register_plant_node = function(node)
+
+local register_plant_node = function(node)
 
 	local plant_name, stage = plant_name_stage(node)
 
@@ -294,6 +227,7 @@ register_plant_node = function(node)
 		return nil
 	end
 end
+
 
 local function set_growing(pos, stages_left)
 
@@ -319,14 +253,8 @@ local function set_growing(pos, stages_left)
 	end
 end
 
--- Detects a plant type node at the given position, starting
--- or stopping the plant growth timer as appopriate
 
--- @param pos
---    The node's position.
--- @param node
---    The cached node table if available, or nil.
-
+-- detects a crop at given position, starting or stopping growth timer when needed
 function farming.handle_growth(pos, node)
 
 	if not pos then
@@ -340,45 +268,29 @@ function farming.handle_growth(pos, node)
 	end
 end
 
+
 minetest.after(0, function()
 
-	for _, node_def in ipairs(minetest.registered_nodes) do
+	for _, node_def in pairs(minetest.registered_nodes) do
 		register_plant_node(node_def)
 	end
 end)
 
-local abm_func = farming.handle_growth
-
-if farming.DEBUG then
-
-	local normal_abm_func = abm_func
-
-	abm_func = function(...)
-
-		local t0 = minetest.get_us_time()
-		local r = { normal_abm_func(...) }
-		local t1 = minetest.get_us_time()
-
-		DEBUG_abm_runs = DEBUG_abm_runs + 1
-		DEBUG_abm_time = DEBUG_abm_time + (t1 - t0)
-
-		return unpack(r)
-	end
-end
 
 -- Just in case a growing type or added node is missed (also catches existing
 -- nodes added to map before timers were incorporated).
-
 minetest.register_abm({
-	nodenames = { "group:growing" },
+	nodenames = {"group:growing"},
 	interval = 300,
 	chance = 1,
-	action = abm_func
+	catch_up = false,
+	action = function(pos, node)
+		farming.handle_growth(pos, node)
+	end
 })
 
--- Plant timer function.
--- Grows plants under the right conditions.
 
+-- Plant timer function that grows plants under the right conditions.
 function farming.plant_growth_timer(pos, elapsed, node_name)
 
 	local stages = plant_stages[node_name]
@@ -393,15 +305,18 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 		return false
 	end
 
-	if stages.plant_name == "farming:cocoa" then
+	-- custom growth check
+	local chk = minetest.registered_nodes[node_name].growth_check
 
-		if not minetest.find_node_near(pos, 1,
-			{"default:jungletree", "moretrees:jungletree_leaves_green"}) then
+	if chk then
 
+		if chk(pos, node_name) then
 			return true
 		end
+
+	-- otherwise check for wet soil beneath crop
 	else
-		local under = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
+		local under = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z})
 
 		if minetest.get_item_group(under.name, "soil") < 3 then
 			return true
@@ -409,19 +324,22 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	end
 
 	local growth
-	local light_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
+	local light_pos = {x = pos.x, y = pos.y, z = pos.z}
 	local lambda = elapsed / STAGE_LENGTH_AVG
 
 	if lambda < 0.1 then
 		return true
 	end
 
+	local MIN_LIGHT = minetest.registered_nodes[node_name].minlight or farming.min_light
+	local MAX_LIGHT = minetest.registered_nodes[node_name].maxlight or farming.max_light
+
 	if max_growth == 1 or lambda < 2.0 then
 
 		local light = (minetest.get_node_light(light_pos) or 0)
 		--print ("light level:", light)
 
-		if not in_range(light, MIN_LIGHT, MAX_LIGHT) then
+		if light < MIN_LIGHT or light > MAX_LIGHT then
 			return true
 		end
 
@@ -429,8 +347,8 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	else
 		local night_light  = (minetest.get_node_light(light_pos, 0) or 0)
 		local day_light    = (minetest.get_node_light(light_pos, 0.5) or 0)
-		local night_growth = in_range(night_light, MIN_LIGHT, MAX_LIGHT)
-		local day_growth   = in_range(day_light,   MIN_LIGHT, MAX_LIGHT)
+		local night_growth = night_light >= MIN_LIGHT and night_light <= MAX_LIGHT
+		local day_growth = day_light >= MIN_LIGHT and day_light <= MAX_LIGHT
 
 		if not night_growth then
 
@@ -438,11 +356,11 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 				return true
 			end
 
-			lambda = day_time(elapsed) / STAGE_LENGTH_AVG
+			lambda = day_or_night_time(elapsed, true) / STAGE_LENGTH_AVG
 
 		elseif not day_growth then
 
-			lambda = night_time(elapsed) / STAGE_LENGTH_AVG
+			lambda = day_or_night_time(elapsed, false) / STAGE_LENGTH_AVG
 		end
 
 		growth = statistics.poisson(lambda, max_growth)
@@ -453,7 +371,10 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	end
 
 	if minetest.registered_nodes[stages.stages_left[growth]] then
-		minetest.swap_node(pos, {name = stages.stages_left[growth]})
+
+		local p2 = minetest.registered_nodes[stages.stages_left[growth] ].place_param2 or 1
+
+		minetest.swap_node(pos, {name = stages.stages_left[growth], param2 = p2})
 	else
 		return true
 	end
@@ -461,46 +382,8 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	return growth ~= max_growth
 end
 
-if farming.DEBUG then
 
-	local timer_func = farming.plant_growth_timer;
-
-	farming.plant_growth_timer = function(pos, elapsed, node_name)
-
-		local t0 = minetest.get_us_time()
-		local r = { timer_func(pos, elapsed, node_name) }
-		local t1 = minetest.get_us_time()
-
-		DEBUG_timer_runs = DEBUG_timer_runs + 1
-		DEBUG_timer_time = DEBUG_timer_time + (t1 - t0)
-
-		return unpack(r)
-	end
-end
-
--- refill placed plant by crabman (26/08/2015)
-local can_refill_plant = {
-	["farming:blueberry_1"] = "farming:blueberries",
-	["farming:carrot_1"] = "farming:carrot",
-	["farming:coffee_1"] = "farming:coffee_beans",
-	["farming:corn_1"] =  "farming:corn",
-	["farming:cotton_1"] = "farming:seed_cotton",
-	["farming:cucumber_1"] = "farming:cucumber",
-	["farming:melon_1"] = "farming:melon_slice",
-	["farming:potato_1"] = "farming:potato",
-	["farming:pumpkin_1"] = "farming:pumpkin_slice",
-	["farming:raspberry_1"] = "farming:raspberries",
-	["farming:rhubarb_1"] = "farming:rhubarb",
-	["farming:tomato_1"] = "farming:tomato",
-	["farming:wheat_1"] = "farming:seed_wheat",
-	["farming:grapes_1"] = "farming:grapes",
-	["farming:beans_1"] = "farming:beans",
-	["farming:rhubarb_1"] = "farming:rhubarb",
-	["farming:cocoa_1"] = "farming:cocoa_beans",
-	["farming:barley_1"] = "farming:seed_barley",
-	["farming:hemp_1"] = "farming:seed_hemp",
-}
-
+-- refill placed plant by crabman (26/08/2015) updated by TenPlus1
 function farming.refill_plant(player, plantname, index)
 
 	local inv = player:get_inventory()
@@ -517,14 +400,14 @@ function farming.refill_plant(player, plantname, index)
 			inv:set_stack("main", index, stack)
 			stack:clear()
 			inv:set_stack("main", i, stack)
-			--minetest.log("action", "farming: refilled stack("..plantname..") of "  .. player:get_player_name()  )
+
 			return
 		end
 	end
 end
 
--- Place Seeds on Soil
 
+-- Place Seeds on Soil
 function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 
 	local pt = pointed_thing
@@ -539,7 +422,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	-- am I right-clicking on something that has a custom on_place set?
 	-- thanks to Krock for helping with this issue :)
 	local def = minetest.registered_nodes[under.name]
-	if def and def.on_rightclick then
+	if placer and itemstack and def and def.on_rightclick then
 		return def.on_rightclick(pt.under, under, placer, itemstack)
 	end
 
@@ -564,25 +447,35 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 		return
 	end
 
-	-- if not protected then add node and remove 1 item from the itemstack
-	if not minetest.is_protected(pt.above, placer:get_player_name()) then
+	-- is player planting seed?
+	local name = placer and placer:get_player_name() or ""
 
-		minetest.set_node(pt.above, {name = plantname, param2 = 1})
+	-- if not protected then add node and remove 1 item from the itemstack
+	if not minetest.is_protected(pt.above, name) then
+
+		local p2 = minetest.registered_nodes[plantname].place_param2 or 1
+
+		minetest.set_node(pt.above, {name = plantname, param2 = p2})
+
+--minetest.get_node_timer(pt.above):start(1)
+--farming.handle_growth(pt.above)--, node)
 
 		minetest.sound_play("default_place_node", {pos = pt.above, gain = 1.0})
 
-		if not minetest.settings:get_bool("creative_mode") then
+		if placer and itemstack
+		and not farming.is_creative(placer:get_player_name()) then
+
+			local name = itemstack:get_name()
 
 			itemstack:take_item()
 
 			-- check for refill
-			if itemstack:get_count() == 0
-			and can_refill_plant[plantname] then
+			if itemstack:get_count() == 0 then
 
 				minetest.after(0.10,
 					farming.refill_plant,
 					placer,
-					can_refill_plant[plantname],
+					name,
 					placer:get_wield_index()
 				)
 			end
@@ -592,25 +485,22 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	end
 end
 
--- Function to register plants (for compatibility)
 
+-- Function to register plants (default farming compatibility)
 farming.register_plant = function(name, def)
-
-	local mname = name:split(":")[1]
-	local pname = name:split(":")[2]
-
-	-- Check def table
-	if not def.description then
-		def.description = S("Seed")
-	end
-
-	if not def.inventory_image then
-		def.inventory_image = "unknown_item.png"
-	end
 
 	if not def.steps then
 		return nil
 	end
+
+	local mname = name:split(":")[1]
+	local pname = name:split(":")[2]
+
+	-- Check def
+	def.description = def.description or S("Seed")
+	def.inventory_image = def.inventory_image or "unknown_item.png"
+	def.minlight = def.minlight or 12
+	def.maxlight = def.maxlight or 15
 
 	-- Register seed
 	minetest.register_node(":" .. mname .. ":seed_" .. pname, {
@@ -620,12 +510,14 @@ farming.register_plant = function(name, def)
 		inventory_image = def.inventory_image,
 		wield_image = def.inventory_image,
 		drawtype = "signlike",
-		groups = {seed = 1, snappy = 3, attached_node = 1},
+		groups = {seed = 1, snappy = 3, attached_node = 1, flammable = 2},
 		paramtype = "light",
 		paramtype2 = "wallmounted",
 		walkable = false,
 		sunlight_propagates = true,
 		selection_box = farming.select,
+		place_param2 = def.place_param2 or nil,
+		next_plant = mname .. ":" .. pname .. "_1",
 
 		on_place = function(itemstack, placer, pointed_thing)
 			return farming.place_seed(itemstack, placer,
@@ -637,6 +529,7 @@ farming.register_plant = function(name, def)
 	minetest.register_craftitem(":" .. mname .. ":" .. pname, {
 		description = pname:gsub("^%l", string.upper),
 		inventory_image = mname .. "_" .. pname .. ".png",
+		groups = def.groups or {flammable = 2},
 	})
 
 	-- Register growing steps
@@ -655,7 +548,10 @@ farming.register_plant = function(name, def)
 			}
 		}
 
-		local g = {snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1, growing = 1}
+		local g = {
+			snappy = 3, flammable = 2, plant = 1, growing = 1,
+			attached_node = 1, not_in_creative_inventory = 1,
+		}
 
 		-- Last step doesn't need growing=1 so Abm never has to check these
 		if i == def.steps then
@@ -664,71 +560,99 @@ farming.register_plant = function(name, def)
 
 		local node_name = mname .. ":" .. pname .. "_" .. i
 
+		local next_plant = nil
+
+		if i < def.steps then
+			next_plant = mname .. ":" .. pname .. "_" .. (i + 1)
+		end
+
 		minetest.register_node(node_name, {
 			drawtype = "plantlike",
 			waving = 1,
 			tiles = {mname .. "_" .. pname .. "_" .. i .. ".png"},
 			paramtype = "light",
+			paramtype2 = def.paramtype2,
+			place_param2 = def.place_param2,
 			walkable = false,
 			buildable_to = true,
+			sunlight_propagates = true,
 			drop = drop,
 			selection_box = farming.select,
 			groups = g,
 			sounds = default.node_sound_leaves_defaults(),
+			minlight = def.minlight,
+			maxlight = def.maxlight,
+			next_plant = next_plant
 		})
-
---		register_plant_node(node_name)
 	end
 
+-- add to farming.registered_plants
+farming.registered_plants[mname .. ":" .. pname] = {
+	crop = mname .. ":" .. pname,
+	seed = mname .. ":seed_" .. pname,
+	steps = def.steps,
+	minlight = def.minlight,
+	maxlight = def.maxlight
+}
+--print(dump(farming.registered_plants[mname .. ":" .. pname]))
 	-- Return info
-	local r = {seed = mname .. ":seed_" .. pname, harvest = mname .. ":" .. pname}
-	return r
+	return {seed = mname .. ":seed_" .. pname, harvest = mname .. ":" .. pname}
 end
 
 
 -- default settings
-farming.carrot = true
-farming.potato = true
-farming.tomato = true
-farming.cucumber = true
-farming.corn = true
-farming.coffee = true
-farming.coffee = true
-farming.melon = true
-farming.sugar = true
-farming.pumpkin = true
+farming.carrot = 0.001
+farming.potato = 0.001
+farming.tomato = 0.001
+farming.cucumber = 0.001
+farming.corn = 0.001
+farming.coffee = 0.001
+farming.melon = 0.001
+farming.pumpkin = 0.001
 farming.cocoa = true
-farming.raspberry = true
-farming.blueberry = true
-farming.rhubarb = true
-farming.beans = true
-farming.grapes = true
+farming.raspberry = 0.001
+farming.blueberry = 0.001
+farming.rhubarb = 0.001
+farming.beans = 0.001
+farming.grapes = 0.001
 farming.barley = true
-farming.hemp = true
-farming.donuts = true
+farming.chili = 0.003
+farming.hemp = 0.003
+farming.garlic = 0.001
+farming.onion = 0.001
+farming.pepper = 0.002
+farming.pineapple = 0.001
+farming.peas = 0.001
+farming.beetroot = 0.001
+farming.mint = 0.005
+farming.cabbage = 0.001
+farming.blackberry = 0.002
+farming.lettuce = 0.001
+farming.grains = true
+farming.rarety = 0.002
 
 
 -- Load new global settings if found inside mod folder
-local input = io.open(farming.path .. "/farming.conf", "r")
+local input = io.open(farming.path.."/farming.conf", "r")
 if input then
 	dofile(farming.path .. "/farming.conf")
 	input:close()
-	input = nil
 end
 
 -- load new world-specific settings if found inside world folder
 local worldpath = minetest.get_worldpath()
-local input = io.open(worldpath .. "/farming.conf", "r")
+input = io.open(worldpath.."/farming.conf", "r")
 if input then
 	dofile(worldpath .. "/farming.conf")
 	input:close()
-	input = nil
 end
+
 
 -- important items
 dofile(farming.path.."/soil.lua")
 dofile(farming.path.."/hoes.lua")
 dofile(farming.path.."/grass.lua")
+dofile(farming.path.."/utensils.lua")
 
 -- default crops
 dofile(farming.path.."/crops/wheat.lua")
@@ -737,6 +661,7 @@ dofile(farming.path.."/crops/cotton.lua")
 
 -- helper function
 local function ddoo(file, check)
+
 	if check then
 		dofile(farming.path .. "/crops/" .. file)
 	end
@@ -750,17 +675,28 @@ ddoo("cucumber.lua", farming.cucumber)
 ddoo("corn.lua", farming.corn)
 ddoo("coffee.lua", farming.coffee)
 ddoo("melon.lua", farming.melon)
-ddoo("sugar.lua", farming.sugar)
 ddoo("pumpkin.lua", farming.pumpkin)
 ddoo("cocoa.lua", farming.cocoa)
 ddoo("raspberry.lua", farming.raspberry)
 ddoo("blueberry.lua", farming.blueberry)
 ddoo("rhubarb.lua", farming.rhubarb)
-ddoo("beanpole.lua", farming.beans)
+ddoo("beans.lua", farming.beans)
 ddoo("grapes.lua", farming.grapes)
 ddoo("barley.lua", farming.barley)
 ddoo("hemp.lua", farming.hemp)
-ddoo("donut.lua", farming.donut)
+ddoo("garlic.lua", farming.garlic)
+ddoo("onion.lua", farming.onion)
+ddoo("pepper.lua", farming.pepper)
+ddoo("pineapple.lua", farming.pineapple)
+ddoo("peas.lua", farming.peas)
+ddoo("beetroot.lua", farming.beetroot)
+ddoo("chili.lua", farming.chili)
+ddoo("ryeoatrice.lua", farming.grains)
+ddoo("mint.lua", farming.mint)
+ddoo("cabbage.lua", farming.cabbage)
+ddoo("blackberry.lua", farming.blackberry)
+ddoo("lettuce.lua", farming.lettuce)
 
-dofile(farming.path.."/mapgen.lua")
-dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
+dofile(farming.path .. "/food.lua")
+dofile(farming.path .. "/mapgen.lua")
+dofile(farming.path .. "/compatibility.lua") -- Farming Plus compatibility

@@ -1,6 +1,5 @@
 local S = mobs.intllib
 
-
 -- Lava Flan by Zeg9 (additional textures by JurajVajda)
 
 mobs:register_mob("mobs_monster:lava_flan", {
@@ -18,13 +17,13 @@ mobs:register_mob("mobs_monster:lava_flan", {
 	textures = {
 		{"zmobs_lava_flan.png"},
 		{"zmobs_lava_flan2.png"},
-		{"zmobs_lava_flan3.png"},
+		{"zmobs_lava_flan3.png"}
 	},
 	blood_texture = "fire_basic_flame.png",
 	makes_footstep_sound = false,
 	sounds = {
 		random = "mobs_lavaflan",
-		war_cry = "mobs_lavaflan",
+		war_cry = "mobs_lavaflan"
 	},
 	walk_velocity = 0.5,
 	run_velocity = 2,
@@ -38,7 +37,7 @@ mobs:register_mob("mobs_monster:lava_flan", {
 	lava_damage = 0,
 	light_damage = 0,
 	immune_to = {
-		{"mobs:pick_lava", -2}, -- lava pick heals 2 health
+		{"mobs:pick_lava", -2} -- lava pick heals 2 health
 	},
 	fly_in = {"default:lava_source", "default:lava_flowing"},
 	animation = {
@@ -51,7 +50,7 @@ mobs:register_mob("mobs_monster:lava_flan", {
 		run_start = 20,
 		run_end = 28,
 		punch_start = 20,
-		punch_end = 28,
+		punch_end = 28
 	},
 	on_die = function(self, pos)
 		local cod = self.cause_of_death or {}
@@ -86,7 +85,6 @@ mobs:register_mob("mobs_monster:lava_flan", {
 	glow = 10
 })
 
-
 mobs:spawn({
 	name = "mobs_monster:lava_flan",
 	nodes = {"default:lava_source"},
@@ -97,9 +95,7 @@ mobs:spawn({
 
 mobs:register_egg("mobs_monster:lava_flan", S("Lava Flan"), "default_lava.png", 1)
 
-
 mobs:alias_mob("mobs:lava_flan", "mobs_monster:lava_flan") -- compatibility
-
 
 -- lava orb
 minetest.register_craftitem(":mobs:lava_orb", {
@@ -114,7 +110,6 @@ minetest.register_craft({
 	recipe = "mobs:lava_orb",
 	burntime = 80,
 })
-
 
 -- Lava Pick (digs and smelts at same time)
 
@@ -181,6 +176,6 @@ minetest.register_craft({
 	recipe = {
 		{"mobs:lava_orb", "mobs:lava_orb", "mobs:lava_orb"},
 		{"", "default:obsidian_shard", ""},
-		{"", "default:obsidian_shard", ""},
+		{"", "default:obsidian_shard", ""}
 	}
 })

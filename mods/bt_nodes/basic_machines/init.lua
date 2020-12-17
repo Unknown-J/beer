@@ -16,29 +16,29 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-basic_machines = {};
+basic_machines = {}
 
-local MP = minetest.get_modpath("basic_machines")
+local MP = minetest.get_modpath("basic_machines") .. "/"
 
-dofile(MP .. "/mark.lua") -- used for markings, borrowed and adapted from worldedit mod
-dofile(MP .. "/mover.lua") -- mover, detector, keypad, distributor
-dofile(MP .. "/technic_power.lua") -- technic power for mover
-dofile(MP .. "/recycler.lua") -- recycle old used tools
-dofile(MP .. "/grinder.lua") -- grind materials into dusts
-dofile(MP .. "/autocrafter.lua") -- borrowed and adapted from pipeworks mod
-dofile(MP .. "/constructor.lua") -- enable crafting of basic machines
-dofile(MP .. "/electronics_constructor.lua") -- enable crafting of small electronic devices
-dofile(MP .. "/digtron_constructor.lua") -- enable crafting of digtron units
+dofile(MP .. "mark.lua") -- used for markings, borrowed and adapted from worldedit mod
+dofile(MP .. "mover.lua") -- mover, detector, keypad, distributor
+dofile(MP .. "technic_power.lua") -- technic power for mover
+dofile(MP .. "recycler.lua") -- recycle old used tools
+dofile(MP .. "grinder.lua") -- grind materials into dusts
+dofile(MP .. "autocrafter.lua") -- borrowed and adapted from pipeworks mod
+dofile(MP .. "constructor.lua") -- enable crafting of basic machines
+dofile(MP .. "electronics_constructor.lua") -- enable crafting of small electronic devices
+dofile(MP .. "digtron_constructor.lua") -- enable crafting of digtron units
 
-dofile(MP .. "/protect.lua") -- enable interaction with players, adds local on protect/chat event handling
+dofile(MP .. "protect.lua") -- enable interaction with players, adds local on protect/chat event handling
 
 -- OPTIONAL ADDITIONAL STUFF ( comment to disable )
 
-dofile(MP .. "/ball.lua") -- interactive flying ball, can activate blocks or be used as a weapon
-dofile(MP .. "/enviro.lua") -- enviro blocks that can change surrounding enviroment physics, uncomment spawn/join code to change global physics, disabled by default
+dofile(MP .. "ball.lua") -- interactive flying ball, can activate blocks or be used as a weapon
+dofile(MP .. "enviro.lua") -- enviro blocks that can change surrounding enviroment physics, uncomment spawn/join code to change global physics, disabled by default
+dofile(MP .. "mesecon_doors.lua") -- if you want open/close doors with signal, also steel doors are made impervious to dig through, removal by repeat punch
 minetest.after(0, function()
-	dofile(MP .. "/mesecon_doors.lua") -- if you want open/close doors with signal, also steel doors are made impervious to dig through, removal by repeat punch
-	dofile(MP .. "/mesecon_lights.lua") -- adds ability for other light blocks to toggle light
+	dofile(MP .. "mesecon_lights.lua") -- adds ability for other light blocks to toggle light
 end)
 
 
@@ -51,23 +51,22 @@ minetest.register_privilege("machines", {
 -- CHARCOAL
 
 minetest.register_craftitem("basic_machines:charcoal", {
-	description = "Wood charcoal",
-	inventory_image = "default_coal_lump.png",
+	description = "Wood Charcoal",
+	inventory_image = "charcoal.png"
 })
 
-
 minetest.register_craft({
-	type = 'cooking',
-	recipe = "default:tree",
-	cooktime = 30,
+	type = "cooking",
 	output = "basic_machines:charcoal",
+	recipe = "group:tree",
+	cooktime = 30
 })
 
 minetest.register_craft({
 	output = "default:coal_lump",
 	recipe = {
 		{"basic_machines:charcoal"},
-		{"basic_machines:charcoal"},
+		{"basic_machines:charcoal"}
 	}
 })
 
@@ -75,14 +74,14 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "basic_machines:charcoal",
 	-- note: to make it you need to use 1 tree block for fuel + 1 tree block, thats 2, caloric value 2*30=60
-	burntime = 40, -- coal lump has 40, tree block 30, coal block 370 (9*40=360!)
+	burntime = 40 -- coal lump has 40, tree block 30, coal block 370 (9*40=360!)
 })
 
-minetest.register_craftitem( "basic_machines:control_logic_unit", {
-        description = "Control Logic Unit",
-        inventory_image = "basic_machines_control_logic_unit.png",
+minetest.register_craftitem("basic_machines:control_logic_unit", {
+	description = "Control Logic Unit",
+	inventory_image = "basic_machines_control_logic_unit.png"
 })
 
 
 -- COMPATIBILITY
-print("[basic machines] loaded")
+print("[MOD] basic_machines " .. basic_machines.version .. " loaded.")

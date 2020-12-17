@@ -34,11 +34,12 @@ end
 dofile(skins.modpath.."/skinlist.lua")
 dofile(skins.modpath.."/players.lua")
 
+local admin = minetest.settings:get("name")
 
 skins.update_player_skin = function(player)
 	local name = player:get_player_name()
 
-	if name ~= minetest.settings:get("name") and
+	if name ~= admin and
 	  not skins.is_skin(skins.skins[name]) then
 		skins.skins[name] = skins.default
 	end
@@ -58,7 +59,7 @@ minetest.register_on_joinplayer(function(player)
 	if not skins.is_skin(skins.skins[player_name]) then
 		skins.skins[player_name] = skins.default
 	end
-	if player_name == minetest.settings:get("name") then
+	if player_name == admin then
 		skins.skins[player_name] = skins.admin
 	end
 	skins.update_player_skin(player)

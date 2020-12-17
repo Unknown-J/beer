@@ -7,7 +7,7 @@ Remove Protectors around players (separate names with spaces)=Retirer les protec
 <names list>=<liste de noms>
 Replace Protector Owner with name provided=Remplacer le propriétaire du protecteur par le nom fourni
 <owner name> <name to replace with>=<nom du propriétaire> <nom à remplacer>
-#Replacing Protector name '@1' with '@2'
+#Replacing Protector name '@1' with '@2'=
 Show protected areas of your nearby protectors=Affichez les zones protégées de vos protecteurs à proximité
 Protector Names to remove: @1=Noms de protecteurs à supprimer: @1
 Name List Reset=Liste de noms réinitialiser
@@ -37,7 +37,7 @@ Protection Block=Bloc de protection
 Protection (owned by @1)=Protection (détenue par @1)
 Protection Logo=Logo de protection
 [MOD] Protector Redo loaded=[MOD] Protector Redo chargé
-#Spawn @1 has been protected up to a @2 block radius.
+#Spawn @1 has been protected up to a @2 block radius.=
 This area is owned by @1=Cette zone appartient à @1!
 
 ### pvp.lua ###

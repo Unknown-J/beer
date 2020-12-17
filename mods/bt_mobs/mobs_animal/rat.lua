@@ -1,6 +1,4 @@
-
 local S = mobs.intllib
-
 
 -- Rat by PilzAdam
 
@@ -15,11 +13,11 @@ mobs:register_mob("mobs_animal:rat", {
 	mesh = "mobs_rat.b3d",
 	textures = {
 		{"mobs_rat.png"},
-		{"mobs_rat2.png"},
+		{"mobs_rat2.png"}
 	},
 	makes_footstep_sound = false,
 	sounds = {
-		random = "mobs_rat",
+		random = "mobs_rat"
 	},
 	walk_velocity = 1,
 	run_velocity = 2,
@@ -32,9 +30,7 @@ mobs:register_mob("mobs_animal:rat", {
 	on_rightclick = function(self, clicker)
 		mobs:capture_mob(self, clicker, 50, 90, 0, true, "mobs_animal:rat")
 	end,
---[[
-	do_custom = function(self, dtime)
-
+--[[do_custom = function(self, dtime)
 		self.rat_timer = (self.rat_timer or 0) + dtime
 
 		if self.rat_timer < 1 then return end -- every 1 second
@@ -47,17 +43,13 @@ mobs:register_mob("mobs_animal:rat", {
 
 		return false -- return but skip doing rest of API
 	end,
-]]
---[[
 	on_blast = function(obj, damage)
 		print ("--- damage is", damage)
 		print ("---    mob is", obj.object:get_luaentity().name)
 		-- return's do_damage, do_knockback and drops
 		return false, true, {"default:mese"}
-	end,
-]]
+	end--]]
 })
-
 
 local function rat_spawn(self, pos)
 	self = self:get_luaentity()
@@ -73,27 +65,24 @@ mobs:spawn({
 	active_object_count = 2,
 	max_height = 0,
 	chance = 200000,
---	on_spawn = rat_spawn,
+--	on_spawn = rat_spawn
 })
 
-
-mobs:register_egg("mobs_animal:rat", S("Rat"), "mobs_rat_inventory.png", 0)
-
+mobs:register_egg("mobs_animal:rat", S("Rat"), "mobs_rat_inv.png")
 
 mobs:alias_mob("mobs:rat", "mobs_animal:rat") -- compatibility
-
 
 -- cooked rat, yummy!
 minetest.register_craftitem(":mobs:rat_cooked", {
 	description = S("Cooked Rat"),
 	inventory_image = "mobs_cooked_rat.png",
 	on_use = minetest.item_eat(3),
-	groups = {food_rat = 1, flammable = 2},
+	groups = {food_rat = 1, flammable = 2}
 })
 
 minetest.register_craft({
 	type = "cooking",
 	output = "mobs:rat_cooked",
 	recipe = "mobs_animal:rat",
-	cooktime = 5,
+	cooktime = 5
 })

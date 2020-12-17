@@ -8,10 +8,6 @@ underworlds_mod.path = minetest.get_modpath(minetest.get_current_modname())
 underworlds_mod.world = minetest.get_worldpath()
 
 underworlds_mod.integration = minetest.settings:get_bool('underworlds_mod_integration')
-if underworlds_mod.integration == nil then
-	underworlds_mod.integration = false
-end
-
 
 underworlds_mod.underzones = {
 	Caina = {
@@ -20,33 +16,33 @@ underworlds_mod.underzones = {
 		column_node = 'default:ice',
 		column_node_rare  =  'underworlds:thin_ice',
 		floor_node = 'default:ice',
-    high_chunk = -20,
-    low_chunk = -22,
+		high_chunk = -20,
+		low_chunk = -22,
 		regular_columns = false,
 		stalactite = 'underworlds:icicle_down',
 		stalactite_chance = 12,
 		stone_depth = 2,
 		vary = true,
-		special_floor_nodes = { 'default:coalblock', 'default:steelblock' },
-		special_floor_nodes_chances = { 50, 200 },
+		special_floor_nodes = {'default:coalblock', 'default:steelblock'},
+		special_floor_nodes_chances = {50, 200}
 	},
 	Dis = {
 		name = 'Dis',
-    ceiling_height = 2,
+		ceiling_height = 2,
 		ceiling_node = 'underworlds:hot_brass',
-    city = true,
+		city = true,
 		column_node = 'default:steelblock',
-    floor_depth = 10,
+		floor_depth = 10,
 		floor_node = 'underworlds:hot_brass',
-    high_chunk = -30,
-    low_chunk = -30,
+		high_chunk = -30,
+		low_chunk = -30,
 		regular_columns = true,
 		stone_depth = 1,
 		vary = false,
-		special_ceiling_nodes = { 'default:copperblock', 'default:bronzeblock' },
-		special_ceiling_nodes_chances = { 50, 200 },
-		special_floor_nodes = { 'default:copperblock', 'default:bronzeblock' },
-		special_floor_nodes_chances = { 400, 800 },
+		special_ceiling_nodes = {'default:copperblock', 'default:bronzeblock'},
+		special_ceiling_nodes_chances = {50, 200},
+		special_floor_nodes = {'default:copperblock', 'default:bronzeblock'},
+		special_floor_nodes_chances = {400, 800}
 	},
 	Phlegethos = {
 		name = 'Phlegethos',
@@ -56,17 +52,17 @@ underworlds_mod.underzones = {
 		floor_node = 'underworlds:hot_cobble',
 		fluid = 'default:lava_source',
 		fluid_chance = 1200,
-    high_chunk = -40,
-    low_chunk = -42,
+		high_chunk = -40,
+		low_chunk = -42,
 		lake = 'default:lava_source',
 		lake_level = 5,
 		regular_columns = false,
 		stone_depth = 1,
 		vary = true,
-		special_ceiling_nodes = { 'default:coalblock', 'default:obsidian' },
-		special_ceiling_nodes_chances = { 25, 50 },
-		special_floor_nodes = { 'default:obsidian', 'default:diamondblock' },
-		special_floor_nodes_chances = { 200, 1200 },
+		special_ceiling_nodes = {'default:coalblock', 'default:obsidian'},
+		special_ceiling_nodes_chances = {25, 50},
+		special_floor_nodes = {'default:obsidian', 'default:diamondblock'},
+		special_floor_nodes_chances = {200, 1200}
 	},
 	Minauros = {
 		name = 'Minauros',
@@ -76,28 +72,28 @@ underworlds_mod.underzones = {
 		floor_node = 'underworlds:polluted_dirt',
 		fluid = 'underworlds:water_poison_source',
 		fluid_chance = 2000,
-    high_chunk = -50,
+		high_chunk = -50,
 		lake = 'underworlds:water_poison_source',
 		lake_level = 10,
-    low_chunk = -52,
+		low_chunk = -52,
 		regular_columns = false,
 		stone_depth = 2,
 		vary = true,
-		special_ceiling_nodes = { 'default:coalblock' },
-		special_ceiling_nodes_chances = { 15 },
-		special_floor_nodes = { 'default:goldblock', 'default:mese' },
-		special_floor_nodes_chances = { 600, 1200 },
+		special_ceiling_nodes = {'default:coalblock'},
+		special_ceiling_nodes_chances = {15},
+		special_floor_nodes = {'default:goldblock', 'default:mese'},
+		special_floor_nodes_chances = {600, 1200}
 	},
 	Styx = {
 		name = 'Styx',
 		ceiling_node = 'default:ice',
 		floor_node = 'default:ice',
-    high_chunk = -60,
-    low_chunk = -62,
+		high_chunk = -60,
+		low_chunk = -62,
 		regular_columns = false,
 		stone_depth = 2,
-    sea_chunk = -16,
-		vary = true,
+		sea_chunk = -16,
+		vary = true
 	},
 	Nessus = {
 		name = 'Nessus',
@@ -107,74 +103,75 @@ underworlds_mod.underzones = {
 		floor_node = 'underworlds:hot_cobble',
 		fluid = 'default:lava_source',
 		fluid_chance = 1000,
-    high_chunk = -73,
-    low_chunk = -75,
+		high_chunk = -73,
+		low_chunk = -75,
 		lake = 'underworlds:water_death_source',
 		lake_level = 20,
 		regular_columns = false,
 		stone_depth = 1,
 		vary = true,
-        special_ceiling_nodes = { 'default:obsidian', 'default:coalblock' },
-        special_ceiling_nodes_chances = { 5, 10 },
-        special_floor_nodes = { 'underworlds:hot_stone', 'default:obsidian',
-                                'default:goldblock', 'default:diamondblock',
-                                'default:mese', 'nyancat:nyancat_rainbow',
-                                'nyancat:nyancat' },
-		special_floor_nodes_chances = { 200, 20, 400, 800, 800, 4000, 12000 },
+		special_ceiling_nodes = {'default:obsidian', 'default:coalblock'},
+		special_ceiling_nodes_chances = {5, 10},
+		special_floor_nodes = {'underworlds:hot_stone', 'default:obsidian',
+			'default:goldblock', 'default:diamondblock',
+			'default:mese', 'nyancat:nyancat_rainbow',
+			'nyancat:nyancat'
+		},
+		special_floor_nodes_chances = {200, 20, 400, 800, 800, 4000, 12000}
 	},
---[[	Mantellum = {
+	Mantellum = {
 		name = 'Mantellum',
 		ceiling_node = 'underworlds:hot_cobble',
 		floor_node = 'underworlds:hot_cobble',
-    high_chunk = -120,
-    low_chunk = -125,
+		high_chunk = -120,
+		low_chunk = -125,
 		lake = 'default:lava_source',
 		lake_level = 600,
 		regular_columns = false,
 		stone_depth = 50,
-		vary = true,
-	},]]--
+		vary = true
+	},
 	Coreum = {
 		name = 'Coreum',
 		ceiling_node = 'underworlds:hot_cobble',
 		column_node = 'nyancat:nyancat_rainbow',
 		column_node_rare  =  'nyancat:nyancat',
 		floor_node = 'default:obsidian',
-    high_chunk = -170,
-    low_chunk = -190,
+		high_chunk = -170,
+		low_chunk = -190,
 		lake = 'default:lava_source',
 		lake_level = 20,
 		regular_columns = false,
 		stone_depth = 1,
 		vary = true,
-		special_floor_nodes = { 'default:mese', 'default:diamondblock', 'moreores:mithril_block', 'default:goldblock' },
-		special_floor_nodes_chances = { 5, 5, 5, 5 },
+		special_floor_nodes = {'default:mese', 'default:diamondblock', 'moreores:mithril_block', 'default:goldblock'},
+		special_floor_nodes_chances = {5, 5, 5, 5}
 	},
 	Gaia = {
 		name = 'Gaia',
 		ceiling_node = 'default:stone',
-    high_chunk = -230,
-    low_chunk = -250,
+		high_chunk = -230,
+		low_chunk = -250,
 		lake = 'default:water_source',
 		lake_level = 150,
 		regular_columns = false,
 		stone_depth = 1,
 		vary = true,
-        special_ceiling_nodes = { 'default:dirt' },
-        special_ceiling_nodes_chances = { 100 },
-	},
+		special_ceiling_nodes = {'default:dirt'},
+		special_ceiling_nodes_chances = {100}
+	}
 }
 
 for _, uz in pairs(underworlds_mod.underzones) do
-  if uz.low_chunk and uz.high_chunk then
-    uz.lower_bound = uz.low_chunk * 80 - 32
-    uz.floor = uz.lower_bound + (uz.floor_depth or 20)
-    uz.upper_bound = uz.high_chunk * 80 + 47
-    uz.ceiling = uz.upper_bound - (uz.ceiling_height or 20)
-  end
-  if uz.sea_chunk then
-    uz.sealevel = uz.sea_chunk * 80
-  end
+	if uz.low_chunk and uz.high_chunk then
+		uz.lower_bound = uz.low_chunk * 80 - 32
+		uz.floor = uz.lower_bound + (uz.floor_depth or 20)
+		uz.upper_bound = uz.high_chunk * 80 + 47
+		uz.ceiling = uz.upper_bound - (uz.ceiling_height or 20)
+	end
+	if uz.sea_chunk then
+		uz.sealevel = uz.sea_chunk * 80
+	end
 end
 
 
@@ -281,7 +278,7 @@ minetest.register_abm({
 	chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		if pos.y < -5800 then
-			if minetest.get_node( { x = pos.x, y = pos.y + 1, z = pos.z } ).name ~= "default:snow" then
+			if minetest.get_node({x = pos.x, y = pos.y + 1, z = pos.z}).name ~= "default:snow" then
 				for _,object in ipairs(minetest.get_objects_inside_radius(pos, 15.1/16)) do -- 15.1/16    1.3
 					if object:is_player() and object:get_hp() > 0 then
 						object:set_hp(object:get_hp()-2)

@@ -1,6 +1,5 @@
 --stone golem
 
-
 mobs:register_mob("dmobs:golem", {
 	type = "monster",
 	reach = 3,
@@ -12,11 +11,9 @@ mobs:register_mob("dmobs:golem", {
 	collisionbox = {-0.4, 0, -0.4, 0.4, 2.5, 0.4},
 	visual = "mesh",
 	mesh = "golem.b3d",
-	textures = {
-		{"dmobs_golem.png"},
-	},
+	textures = {{"dmobs_golem.png"}},
 	blood_texture = "default_stone.png",
-	visual_size = {x=1, y=1},
+	visual_size = {x = 1, y = 1},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
 	run_velocity = 2.5,
@@ -40,15 +37,15 @@ mobs:register_mob("dmobs:golem", {
 		run_start = 46,
 		run_end = 66,
 		punch_start = 20,
-		punch_end = 45,
+		punch_end = 45
 	},
 	sounds = {
-		random = "mobs_golem_footstep",
-		war_cry = "mobs_golem_growl",
-		attack = "mobs_golem_growl",
-		damage = "mobs_golem_growl",
-		jump = "mobs_golem_footstep",
-		distance = 20,
+		war_cry = "dmobs_golem_growl",
+		attack = "dmobs_golem_growl",
+		damage = "dmobs_golem_growl",
+		jump = "dmobs_golem_footstep",
+		random = "dmobs_golem_footstep",
+		distance = 20
 	},
 })
 

@@ -8,7 +8,7 @@ minetest.register_node("nyancat:nyancat", {
 	groups = {cracky = 2},
 	is_ground_content = false,
 	legacy_facedir_simple = true,
-	sounds = default.node_sound_defaults(),
+	sounds = default.node_sound_defaults()
 })
 
 minetest.register_node("nyancat:nyancat_rainbow", {
@@ -23,19 +23,19 @@ minetest.register_node("nyancat:nyancat_rainbow", {
 	paramtype2 = "facedir",
 	groups = {cracky = 2},
 	is_ground_content = false,
-	sounds = default.node_sound_defaults(),
+	sounds = default.node_sound_defaults()
 })
 
 minetest.register_craft({
 	type = "fuel",
 	recipe = "nyancat:nyancat",
-	burntime = 1,
+	burntime = 1
 })
 
 minetest.register_craft({
 	type = "fuel",
 	recipe = "nyancat:nyancat_rainbow",
-	burntime = 1,
+	burntime = 1
 })
 
 nyancat = {}

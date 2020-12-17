@@ -97,55 +97,60 @@ function clearPlayerPos(playerName)
 end
 
 -- Mining scores
-minerNodes = {}
-minerNodes["default:stone_with_coal"] = 1
-minerNodes["default:coalblock"] = 2
-minerNodes["moreores:mineral_tin"] = 1
-minerNodes["default:stone_with_iron"] = 2
-minerNodes["default:stone_with_copper"] = 2
-minerNodes["moreores:mineral_silver"] = 3
-minerNodes["default:stone_with_gold"] = 3
-minerNodes["default:stone_with_mese"] = 4
-minerNodes["default:stone_with_diamond"] = 5
-minerNodes["default:mese"] = 6
-minerNodes["default:diamondblock"] = 8
-minerNodes["moreores:mineral_mithril"] = 10
-minerNodes["nyancat:nyancat_rainbow"] = 20
-minerNodes["nyancat:nyancat"] = 50
+minerNodes = {
+	["default:coalblock"] = 2,
+	["default:diamondblock"] = 8,
+	["default:mese"] = 6,
+	["default:stone_with_coal"] = 1,
+	["default:stone_with_copper"] = 2,
+	["default:stone_with_diamond"] = 5,
+	["default:stone_with_gold"] = 3,
+	["default:stone_with_iron"] = 2,
+	["default:stone_with_mese"] = 4,
+	["moreores:mineral_mithril"] = 10,
+	["moreores:mineral_silver"] = 3,
+	["moreores:mineral_tin"] = 1,
+	["nyancat:nyancat"] = 50,
+	["nyancat:nyancat_rainbow"] = 20
+}
 
-farmNodes = {}
-farmNodes["default:cactus"] = 1
-farmNodes["default:papyrus"] = 1
-farmNodes["farming:barley_5"] = 1
-farmNodes["farming:barley_6"] = 2
-farmNodes["farming:beanpole_5"] = 3
-farmNodes["farming:blueberry_4"] = 2
-farmNodes["farming:carrot_7"] = 1
-farmNodes["farming:carrot_8"] = 2
-farmNodes["farming:cocoa_2"] = 1
-farmNodes["farming:cocoa_3"] = 2
-farmNodes["farming:coffee_5"] = 1
-farmNodes["farming:corn_7"] = 1
-farmNodes["farming:corn_8"] = 2
-farmNodes["farming:cotton_6"] = 1
-farmNodes["farming:cotton_7"] = 2
-farmNodes["farming:cotton_8"] = 3
-farmNodes["farming:cucumber_4"] = 1
-farmNodes["farming:grapes_8"] = 3
-farmNodes["farming:hemp_6"] = 2
-farmNodes["farming:hemp_7"] = 5
-farmNodes["farming:hemp_8"] = 10
-farmNodes["farming:melon_8"] = 20
-farmNodes["farming:potato_3"] = 1
-farmNodes["farming:potato_4"] = 1
-farmNodes["farming:pumpkin_8"] = 2
-farmNodes["farming:raspberry_4"] = 2
-farmNodes["farming:rhubarb_3"] = 2
-farmNodes["farming:tomato_7"] = 1
-farmNodes["farming:tomato_8"] = 1
-farmNodes["farming:wheat_6"] = 1
-farmNodes["farming:wheat_7"] = 2
-farmNodes["farming:wheat_8"] = 3
+farmNodes = {
+	["default:cactus"] = 1,
+	["default:papyrus"] = 1,
+	["farming:barley_5"] = 1,
+	["farming:barley_6"] = 2,
+	["farming:beanpole_5"] = 3,
+	["farming:blueberry_4"] = 2,
+	["farming:carrot_7"] = 1,
+	["farming:carrot_8"] = 2,
+	["farming:cocoa_3"] = 1,
+	["farming:cocoa_4"] = 2,
+	["farming:coffee_5"] = 1,
+	["farming:corn_7"] = 1,
+	["farming:corn_8"] = 2,
+	["farming:cotton_6"] = 1,
+	["farming:cotton_7"] = 2,
+	["farming:cotton_8"] = 3,
+	["farming:cotton_wild"] = 1,
+	["farming:cucumber_4"] = 1,
+	["farming:grapes_8"] = 3,
+	["farming:hemp_6"] = 2,
+	["farming:hemp_7"] = 5,
+	["farming:hemp_8"] = 10,
+	["farming:melon_8"] = 20,
+	["farming:mint_4"] = 2,
+	["farming:pineapple_8"] = 7,
+	["farming:potato_3"] = 1,
+	["farming:potato_4"] = 1,
+	["farming:pumpkin_8"] = 2,
+	["farming:raspberry_4"] = 2,
+	["farming:rhubarb_3"] = 2,
+	["farming:tomato_7"] = 1,
+	["farming:tomato_8"] = 1,
+	["farming:wheat_6"] = 1,
+	["farming:wheat_7"] = 2,
+	["farming:wheat_8"] = 3
+}
 
 -- Mining and farming events using the above tables to determine the scores
 minetest.register_on_dignode(function(pos, oldnode, digger)
@@ -189,134 +194,139 @@ end)
 
 buildNodes = {}
 
-buildNodes["default:stone"] = 2
 buildNodes["default:cobble"] = 1
-buildNodes["default:stonebrick"] = 2
-buildNodes["default:stone_block"] = 4
 buildNodes["default:mossycobble"] = 1
+buildNodes["default:stone"] = 2
+buildNodes["default:stone_block"] = 4
+buildNodes["default:stonebrick"] = 2
 
-buildNodes["default:desert_stone"] = 2
 buildNodes["default:desert_cobble"] = 1
-buildNodes["default:desert_stonebrick"] = 2
+buildNodes["default:desert_stone"] = 2
 buildNodes["default:desert_stone_block"] = 4
+buildNodes["default:desert_stonebrick"] = 2
 
-buildNodes["default:sandstone"] = 1
-buildNodes["default:sandstonebrick"] = 2
-buildNodes["default:sandstone_block"] = 4
 buildNodes["default:desert_sandstone"] = 1
-buildNodes["default:desert_sandstone_brick"] = 2
 buildNodes["default:desert_sandstone_block"] = 4
+buildNodes["default:desert_sandstone_brick"] = 2
+buildNodes["default:sandstone"] = 1
+buildNodes["default:sandstone_block"] = 4
+buildNodes["default:sandstonebrick"] = 2
 buildNodes["default:silver_sandstone"] = 1
-buildNodes["default:silver_sandstone_brick"] = 2
 buildNodes["default:silver_sandstone_block"] = 4
+buildNodes["default:silver_sandstone_brick"] = 2
 
 buildNodes["default:obsidian"] = 5
-buildNodes["default:obsidianbrick"] = 10
 buildNodes["default:obsidian_block"] = 20
+buildNodes["default:obsidianbrick"] = 10
 
-buildNodes["default:tree"] = 1
-buildNodes["default:wood"] = 2
-buildNodes["default:jungletree"] = 1
-buildNodes["default:junglewood"] = 2
-buildNodes["default:pine_tree"] = 1
-buildNodes["default:pine_wood"] = 2
 buildNodes["default:acacia_tree"] = 1
 buildNodes["default:acacia_wood"] = 2
 buildNodes["default:aspen_tree"] = 1
 buildNodes["default:aspen_wood"] = 2
+buildNodes["default:jungletree"] = 1
+buildNodes["default:junglewood"] = 2
+buildNodes["default:pine_tree"] = 1
+buildNodes["default:pine_wood"] = 2
+buildNodes["default:tree"] = 1
+buildNodes["default:wood"] = 2
 
-buildNodes["default:tinblock"] = 2
-buildNodes["default:steelblock"] = 3
-buildNodes["default:copperblock"] = 4
 buildNodes["default:bronzeblock"] = 5
+buildNodes["default:copperblock"] = 4
+buildNodes["default:diamondblock"] = 10
 buildNodes["default:goldblock"] = 6
 buildNodes["default:mese"] = 8
-buildNodes["default:diamondblock"] = 10
+buildNodes["default:steelblock"] = 3
+buildNodes["default:tinblock"] = 2
 
-buildNodes["default:chest"] = 2
 buildNodes["default:bookshelf"] = 4
-buildNodes["default:sign_wall_wood"] = 2
-buildNodes["default:sign_wall_steel"] = 3
-buildNodes["default:ladder_wood"] = 2
-buildNodes["default:ladder_steel"] = 3
-buildNodes["default:fence_wood"] = 3
+buildNodes["default:brick"] = 2
+buildNodes["default:chest"] = 2
 buildNodes["default:fence_acacia_wood"] = 3
+buildNodes["default:fence_aspen_wood"] = 3
 buildNodes["default:fence_junglewood"] = 3
 buildNodes["default:fence_pine_wood"] = 3
-buildNodes["default:fence_aspen_wood"] = 3
+buildNodes["default:fence_rail_acacia_wood"] = 3
+buildNodes["default:fence_rail_aspen_wood"] = 3
+buildNodes["default:fence_rail_junglewood"] = 3
+buildNodes["default:fence_rail_pine_wood"] = 3
+buildNodes["default:fence_rail_wood"] = 3
+buildNodes["default:fence_wood"] = 3
 buildNodes["default:glass"] = 2
-buildNodes["default:obsidian_glass"] = 4
-buildNodes["default:brick"] = 2
-buildNodes["default:meselamp"] = 4
+buildNodes["default:ladder_steel"] = 3
+buildNodes["default:ladder_wood"] = 2
 buildNodes["default:mese_post_light"] = 5
+buildNodes["default:meselamp"] = 4
+buildNodes["default:obsidian_glass"] = 4
+buildNodes["default:sign_wall_steel"] = 3
+buildNodes["default:sign_wall_wood"] = 2
 
 buildNodes["stairs:slab_acacia_wood"] = 3
-buildNodes["stairs:stair_acacia_wood"] = 4
 buildNodes["stairs:slab_aspen_wood"] = 3
-buildNodes["stairs:stair_aspen_wood"] = 4
 buildNodes["stairs:slab_brick"] = 3
-buildNodes["stairs:stair_brick"] = 4
 buildNodes["stairs:slab_bronzeblock"] = 5
-buildNodes["stairs:stair_bronzeblock"] = 7
 buildNodes["stairs:slab_cobble"] = 2
-buildNodes["stairs:stair_cobble"] = 3
 buildNodes["stairs:slab_copperblock"] = 6
-buildNodes["stairs:stair_copperblock"] = 8
 buildNodes["stairs:slab_desert_cobble"] = 2
-buildNodes["stairs:stair_desert_cobble"] = 3
 buildNodes["stairs:slab_desert_sandstone"] = 2
-buildNodes["stairs:stair_desert_sandstone"] = 3
 buildNodes["stairs:slab_desert_sandstone_block"] = 4
-buildNodes["stairs:stair_desert_sandstone_block"] = 5
 buildNodes["stairs:slab_desert_sandstone_brick"] = 3
-buildNodes["stairs:stair_desert_sandstone_brick"] = 4
 buildNodes["stairs:slab_desert_stone"] = 3
-buildNodes["stairs:stair_desert_stone"] = 4
 buildNodes["stairs:slab_desert_stone_block"] = 4
-buildNodes["stairs:stair_desert_stone_block"] = 5
 buildNodes["stairs:slab_desert_stonebrick"] = 3
-buildNodes["stairs:stair_desert_stonebrick"] = 4
 buildNodes["stairs:slab_goldblock"] = 7
-buildNodes["stairs:stair_goldblock"] = 9
 buildNodes["stairs:slab_ice"] = 4
-buildNodes["stairs:stair_ice"] = 5
 buildNodes["stairs:slab_junglewood"] = 3
-buildNodes["stairs:stair_junglewood"] = 4
 buildNodes["stairs:slab_mossycobble"] = 3
-buildNodes["stairs:stair_mossycobble"] = 4
 buildNodes["stairs:slab_obsidian"] = 10
-buildNodes["stairs:stair_obsidian"] = 12
 buildNodes["stairs:slab_obsidian_block"] = 12
-buildNodes["stairs:stair_obsidian_block"] = 14
 buildNodes["stairs:slab_obsidianbrick"] = 14
-buildNodes["stairs:stair_obsidianbrick"] = 16
 buildNodes["stairs:slab_pine_wood"] = 3
-buildNodes["stairs:stair_pine_wood"] = 4
 buildNodes["stairs:slab_sandstone"] = 3
-buildNodes["stairs:stair_sandstone"] = 4
 buildNodes["stairs:slab_sandstone_block"] = 4
-buildNodes["stairs:stair_sandstone_block"] = 5
 buildNodes["stairs:slab_sandstonebrick"] = 3
-buildNodes["stairs:stair_sandstonebrick"] = 4
 buildNodes["stairs:slab_silver_sandstone"] = 3
-buildNodes["stairs:stair_silver_sandstone"] = 4
 buildNodes["stairs:slab_silver_sandstone_block"] = 4
-buildNodes["stairs:stair_silver_sandstone_block"] = 5
 buildNodes["stairs:slab_silver_sandstone_brick"] = 3
-buildNodes["stairs:stair_silver_sandstone_brick"] = 4
 buildNodes["stairs:slab_snowblock"] = 3
-buildNodes["stairs:stair_snowblock"] = 4
 buildNodes["stairs:slab_steelblock"] = 4
-buildNodes["stairs:stair_steelblock"] = 6
 buildNodes["stairs:slab_stone"] = 4
-buildNodes["stairs:stair_stone"] = 5
 buildNodes["stairs:slab_stone_block"] = 5
-buildNodes["stairs:stair_stone_block"] = 6
 buildNodes["stairs:slab_stonebrick"] = 5
-buildNodes["stairs:stair_stonebrick"] = 6
 buildNodes["stairs:slab_straw"] = 4
-buildNodes["stairs:stair_straw"] = 5
 buildNodes["stairs:slab_wood"] = 3
+buildNodes["stairs:stair_acacia_wood"] = 4
+buildNodes["stairs:stair_aspen_wood"] = 4
+buildNodes["stairs:stair_brick"] = 4
+buildNodes["stairs:stair_bronzeblock"] = 7
+buildNodes["stairs:stair_cobble"] = 3
+buildNodes["stairs:stair_copperblock"] = 8
+buildNodes["stairs:stair_desert_cobble"] = 3
+buildNodes["stairs:stair_desert_sandstone"] = 3
+buildNodes["stairs:stair_desert_sandstone_block"] = 5
+buildNodes["stairs:stair_desert_sandstone_brick"] = 4
+buildNodes["stairs:stair_desert_stone"] = 4
+buildNodes["stairs:stair_desert_stone_block"] = 5
+buildNodes["stairs:stair_desert_stonebrick"] = 4
+buildNodes["stairs:stair_goldblock"] = 9
+buildNodes["stairs:stair_ice"] = 5
+buildNodes["stairs:stair_junglewood"] = 4
+buildNodes["stairs:stair_mossycobble"] = 4
+buildNodes["stairs:stair_obsidian"] = 12
+buildNodes["stairs:stair_obsidian_block"] = 14
+buildNodes["stairs:stair_obsidianbrick"] = 16
+buildNodes["stairs:stair_pine_wood"] = 4
+buildNodes["stairs:stair_sandstone"] = 4
+buildNodes["stairs:stair_sandstone_block"] = 5
+buildNodes["stairs:stair_sandstonebrick"] = 4
+buildNodes["stairs:stair_silver_sandstone"] = 4
+buildNodes["stairs:stair_silver_sandstone_block"] = 5
+buildNodes["stairs:stair_silver_sandstone_brick"] = 4
+buildNodes["stairs:stair_snowblock"] = 4
+buildNodes["stairs:stair_steelblock"] = 6
+buildNodes["stairs:stair_stone"] = 5
+buildNodes["stairs:stair_stone_block"] = 6
+buildNodes["stairs:stair_stonebrick"] = 6
+buildNodes["stairs:stair_straw"] = 5
 buildNodes["stairs:stair_wood"] = 4
 
 -- Builder ranking based on place node event
@@ -391,10 +401,10 @@ ranking.score_distance = function(player)
 	   pos.z < -32000 or pos.z > 32000
 	then
 		if lastPos then
-			player:set_pos( { x = lastPos.x, y = lastPos.y, z = lastPos.z } )
+			player:set_pos({x = lastPos.x, y = lastPos.y, z = lastPos.z})
 		elseif beds.spawn[player:get_player_name()] then
 			lastPos = beds.spawn[player:get_player_name()]
-			player:set_pos( { x = lastPos.x, y = lastPos.y, z = lastPos.z } )
+			player:set_pos({x = lastPos.x, y = lastPos.y, z = lastPos.z})
 		end
 	else
 		playerLastPos[player:get_player_name()] = pos
@@ -523,7 +533,7 @@ craftLevels["throwing:arrow_nyan"] = 113
 -- Intelligence ranking based on crafting using the above machines
 minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv)
 	if craftLevels[itemstack:get_name()] and ranking.get_rank_raw(player, "experience") < craftLevels[itemstack:get_name()] then
-		minetest.sound_play("ranking_error", { to_player = player:get_player_name(), gain = 0.5 })
+		minetest.sound_play("ranking_error", {to_player = player:get_player_name(), gain = 0.5}, true)
 		minetest.chat_send_player(player:get_player_name(), "You cannot craft this yet, you need at least "..craftLevels[itemstack:get_name()].." experience")
 
 		for i = 1, player:get_inventory():get_size("craft") do
@@ -600,9 +610,11 @@ giftTable[19] = { "protector:protect2 64",  "protector:chest 16", "protector:doo
 				  "protector:door_steel 8", "protector:trapdoor_steel 8" } -- Of Unknown Origin
 giftTable[20] = { "farming:joint" } -- The True Definition of Cheater
 
+local admin = minetest.settings:get("name")
+
 -- Give gift on reaching certain XP level
 ranking.on_xp_increase = function(player, xplevel)
-	if player:get_player_name() ~= minetest.settings:get("name") then
+	if player:get_player_name() ~= admin then
 		local stacks = giftTable[xplevel]
 		for i = 1, #stacks do
 			local stack = ItemStack(stacks[i])
@@ -619,7 +631,7 @@ ranking.on_xp_increase = function(player, xplevel)
 					" has reached the level of: "..ranks["experience"].levels[xplevel].name
 		ranking.playerXP[player:get_player_name()] = xplevel
 
-		minetest.sound_play("ranking_level", { to_player = player:get_player_name(), gain = 2.0 })
+		minetest.sound_play("ranking_level", {to_player = player:get_player_name(), gain = 2.0}, true)
 		minetest.chat_send_all(msg)
 		if levelMessages[xplevel] then
 			minetest.chat_send_player(player:get_player_name(), levelMessages[xplevel])
@@ -631,7 +643,6 @@ minetest.register_chatcommand("rank", {
 	params = "<player>",
 	description = "Show rankings for given player in a form. Leave player empty to display own stats.",
 	func = function(name, param)
-
 		local player
 		local specialPlayer
 
@@ -643,7 +654,7 @@ minetest.register_chatcommand("rank", {
 			end
 		elseif param == "SatanicBibleBot" then
 			specialPlayer = "SatanicBibleBot"
-		elseif param == minetest.settings:get("name") then
+		elseif param == admin then
 			specialPlayer = "ADMIN"
 		else
 			player = minetest.get_player_by_name(param)

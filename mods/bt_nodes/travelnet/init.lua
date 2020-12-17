@@ -1,5 +1,3 @@
-
-
 --[[
     Teleporter networks that allow players to choose a destination out of a list
     Copyright (C) 2013 Sokomine
@@ -655,6 +653,8 @@ travelnet.open_close_door = function( pos, player, mode )
 end
 
 
+local admin = minetest.settings:get("name")
+
 travelnet.on_receive_fields = function(pos, formname, fields, player)
    if( not( pos )) then
       return;
@@ -837,7 +837,7 @@ travelnet.on_receive_fields = function(pos, formname, fields, player)
 
    -- transport the player to the target location
    local target_pos = travelnet.targets[ owner_name ][ station_network ][ fields.target ].pos;
-   local time = name == minetest.settings:get("name") and 0 or 2
+   local time = name == admin and 0 or 2
 
 	minetest.after(time, function(player, pos, target_pos)
 		if player then
@@ -1034,4 +1034,4 @@ if( travelnet.abm_enabled ) then
 end
 
 -- upon server start, read the savefile
-travelnet.restore_data();
+travelnet.restore_data()

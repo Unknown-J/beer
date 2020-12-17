@@ -1,5 +1,5 @@
-local machines_timer=5
-local machines_minstep = 1
+local machines_timer = basic_machines.machines_timer or 5
+local machines_minstep = basic_machines.machines_minstep or 1
 
 -- BATTERY
 
@@ -12,12 +12,13 @@ local battery_update_meta = function(pos)
 
 	meta:set_string("formspec",
 		"size[8,6.5]"..	-- width, height
+		"bgcolor[#333333;false]"..
 		"label[0,0;FUEL] ".."label[6,0;UPGRADE] "..
-		"label[1,0;ENERGY ".. energy .."/ ".. capacity..", maximum power output ".. maxpower .."]"..
+		"label[1,0;ENERGY ".. energy .." / ".. capacity.."\nmaximum power output ".. maxpower .."]"..
 		"label[1,1;UPGRADE LEVEL ".. meta:get_int("upgrade") .. " (mese and diamond block)]"..
 		"list["..list_name..";fuel;0.,0.5;1,1;]".. "list["..list_name..";upgrade;6.,0.5;2,1;]" ..
 		"list[current_player;main;0,2.5;8,4;]"..
-		"button[4.5,0.35;1.5,1;OK;REFRESH]"..
+		"button[4.5,0.35;1.5,0.9;OK;REFRESH]"..
 		"listring["..list_name..";upgrade]"..
 		"listring[current_player;main]"..
 		"listring["..list_name..";fuel]"..
@@ -27,14 +28,13 @@ end
 
 --[power crystal name] = energy provided
 basic_machines.energy_crystals = {
-	["basic_machines:power_cell"]=1,
-	["basic_machines:power_block"]=11,
-	["basic_machines:power_rod"]=100,
+	["basic_machines:power_cell"] = 1,
+	["basic_machines:power_block"] = 11,
+	["basic_machines:power_rod"] = 100
 }
 
 
 battery_recharge = function(pos)
-
 	local meta = minetest.get_meta(pos);
 	local energy = meta:get_float("energy");
 	local capacity = meta:get_float("capacity");
@@ -48,34 +48,38 @@ battery_recharge = function(pos)
 	if add_energy>0 then
 		if pos.y>1500 then add_energy=2*add_energy end -- in space recharge is more efficient
 		crystal = true;
-		if energy+add_energy<=capacity then
+		if add_energy<=capacity then
 			stack:take_item(1);
 			inv:set_stack("fuel", 1, stack)
 		else
 			meta:set_string("infotext", "recharge problem: capacity " .. capacity .. ", needed " .. energy+add_energy)
+			return energy
 		end
-	else -- try do determine caloric value
+	else -- try do determine caloric value of fuel inside battery
 		local fuellist = inv:get_list("fuel");if not fuellist then return energy end
 		local fueladd, afterfuel = minetest.get_craft_result({method = "fuel", width = 1, items = fuellist})
 		if fueladd.time > 0 then
 			add_energy = fueladd.time/40;
 			if energy+add_energy<=capacity then
 				inv:set_stack("fuel", 1, afterfuel.items[1]);
+			else
+				meta:set_string("infotext", "recharge problem: capacity " .. capacity .. ", needed " .. energy+add_energy)
+				return energy
 			end
 		end
 	end
 
 	if add_energy>0 then
-		if energy+add_energy<=capacity then
-			energy=energy+add_energy
-			meta:set_float("energy",energy);
-			meta:set_string("infotext", "(R) energy: " .. math.ceil(energy*10)/10 .. " / ".. capacity);
-			--TODO2: add entity power status display
-			minetest.sound_play("electric_zap", {pos=pos,gain=0.05,max_hear_distance = 8,})
-		end
+		energy=energy+add_energy
+		if energy < 0 then energy = 0 end
+		if energy>capacity then energy = capacity end -- excess energy is wasted
+		meta:set_float("energy",energy);
+		meta:set_string("infotext", "(R) energy: " .. math.ceil(energy*10)/10 .. " / ".. capacity);
+		--TODO2: add entity power status display
+		minetest.sound_play("electric_zap", {pos=pos,gain=0.05, max_hear_distance = 8,})
 	end
 
-	return energy; -- new battery energy level
+	return energy -- new battery energy level
 end
 
 battery_upgrade = function(pos)
@@ -127,7 +131,7 @@ minetest.register_node("basic_machines:battery", {
 	end,
 
 	mesecons = {effector = {
-		action_on = function (pos, node,ttl)
+		action_on = function (pos, node, ttl)
 			if type(ttl)~="number" then ttl = 1 end
 			if ttl<0 then return end -- machines_TTL prevents infinite recursion
 
@@ -143,13 +147,14 @@ minetest.register_node("basic_machines:battery", {
 					local fmeta = minetest.get_meta(pos);
 					local fuel_totaltime = fmeta:get_float("fuel_totaltime") or 0;
 					local fuel_time = fmeta:get_float("fuel_time") or 0;
-					local t0 = meta:get_int("ftime"); -- furnace time
-					local t1 = minetest.get_gametime();
+					local t0 = meta:get_int("ftime") -- furnace time
+					local t1 = minetest.get_gametime()
 
-					if t1-t0<machines_minstep then  -- to prevent too quick furnace acceleration, punishment is cooking reset
+					if t1 - t0 < machines_minstep then -- to prevent too quick furnace acceleration, punishment is cooking reset
+						if t1 - t0 < 0 then meta:set_int("ftime", 0) end
 						fmeta:set_float("src_time",0); return
 					end
-					meta:set_int("ftime",t1);
+					meta:set_int("ftime", t1)
 
 					local upgrade = meta:get_int("upgrade");upgrade=upgrade*0.1;
 
@@ -157,11 +162,7 @@ minetest.register_node("basic_machines:battery", {
 					local src_time = fmeta:get_float("src_time") or 0
 					energy = energy - 0.25*upgrade; -- use energy to accelerate burning
 
-					fmeta:set_float("src_time",src_time+machines_timer*upgrade); -- with max 99 upgrades battery furnace works 6x faster
-					--end
-
-					if fuel_time>40 or fuel_totaltime == 0 or node=="default:furnace" then -- must burn for at least 40 secs or furnace out of fuel
-
+					if fuel_time>40 or fuel_totaltime == 0 or node=="default:furnace" then -- to add burn time: must burn for at least 40 secs or furnace out of fuel
 						fmeta:set_float("fuel_totaltime",60);fmeta:set_float("fuel_time",0) -- add 60 second burn time to furnace
 						energy=energy-0.5; -- use up energy to add fuel
 
@@ -170,9 +171,14 @@ minetest.register_node("basic_machines:battery", {
 						-- update energy display
 					end
 
-					meta:set_float("energy",energy);
-					meta:set_string("infotext", "energy: " .. math.ceil(energy*10)/10 .. " / ".. capacity);
+					if energy<0 then
+						energy = 0
+					else -- only accelerate if we had enough energy, note: upgrade*0.1*0.25<power_rod is limit upgrade, so upgrade = 40*100 = 4000
+						fmeta:set_float("src_time",src_time+machines_timer*upgrade); -- accelerated smelt: with 99 upgrade battery furnace works 11x faster
+					end
 
+					meta:set_float("energy",energy)
+					meta:set_string("infotext", "energy: " .. math.ceil(energy*10)/10 .. " / ".. capacity)
 
 					if energy>=1 then -- no need to recharge yet, will still work next time
 						return
@@ -185,7 +191,7 @@ minetest.register_node("basic_machines:battery", {
 						end
 					end
 				else
-					pos.y=pos.y-1;
+					pos.y=pos.y-1
 				end
 
 			end
@@ -195,68 +201,67 @@ minetest.register_node("basic_machines:battery", {
 			if energy<capacity then -- not full, try to recharge
 				battery_recharge(pos);
 			end
-
 		end
-		}},
+	}},
 
-		on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-			local meta = minetest.get_meta(pos);
-			local privs = minetest.get_player_privs(player:get_player_name());
-			if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return end -- only owner can interact with recycler
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		local meta = minetest.get_meta(pos);
+		local privs = minetest.get_player_privs(player:get_player_name());
+		if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return end -- only owner can interact with recycler
+		battery_update_meta(pos);
+	end,
+
+	on_receive_fields = function(pos, formname, fields, sender)
+		if fields.quit then return end
+		local meta = minetest.get_meta(pos);
+		battery_update_meta(pos);
+	end,
+
+	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
+		local meta = minetest.get_meta(pos);
+		local privs = minetest.get_player_privs(player:get_player_name());
+		if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return 0 end
+		return stack:get_count();
+	end,
+
+	allow_metadata_inventory_take = function(pos, listname, index, stack, player)
+		local meta = minetest.get_meta(pos);
+		local privs = minetest.get_player_privs(player:get_player_name());
+		if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return 0 end
+		return stack:get_count();
+	end,
+
+	on_metadata_inventory_put = function(pos, listname, index, stack, player)
+		if listname=="fuel" then
+			battery_recharge(pos);
 			battery_update_meta(pos);
-		end,
-
-		on_receive_fields = function(pos, formname, fields, sender)
-			if fields.quit then return end
-			local meta = minetest.get_meta(pos);
+		elseif listname == "upgrade" then
+			battery_upgrade(pos);
 			battery_update_meta(pos);
-		end,
-
-		allow_metadata_inventory_put = function(pos, listname, index, stack, player)
-			local meta = minetest.get_meta(pos);
-			local privs = minetest.get_player_privs(player:get_player_name());
-			if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return 0 end
-			return stack:get_count();
-		end,
-
-		allow_metadata_inventory_take = function(pos, listname, index, stack, player)
-			local meta = minetest.get_meta(pos);
-			local privs = minetest.get_player_privs(player:get_player_name());
-			if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return 0 end
-			return stack:get_count();
-		end,
-
-		on_metadata_inventory_put = function(pos, listname, index, stack, player)
-			if listname=="fuel" then
-				battery_recharge(pos);
-				battery_update_meta(pos);
-			elseif listname == "upgrade" then
-				battery_upgrade(pos);
-				battery_update_meta(pos);
-			end
-			return stack:get_count();
-		end,
-
-		on_metadata_inventory_take = function(pos, listname, index, stack, player)
-			if listname == "upgrade" then
-				battery_upgrade(pos);
-				battery_update_meta(pos);
-			end
-			return stack:get_count();
-		end,
-
-		allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-			return 0;
-		end,
-
-		can_dig = function(pos)
-			local meta = minetest.get_meta(pos);
-			local inv = meta:get_inventory();
-
-			if not (inv:is_empty("fuel")) or not (inv:is_empty("upgrade")) then return false end -- fuel AND upgrade inv must be empty to be dug
-
-			return true
 		end
+		return stack:get_count();
+	end,
+
+	on_metadata_inventory_take = function(pos, listname, index, stack, player)
+		if listname == "upgrade" then
+			battery_upgrade(pos);
+			battery_update_meta(pos);
+		end
+		return stack:get_count();
+	end,
+
+	allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+		return 0;
+	end,
+
+	can_dig = function(pos)
+		local meta = minetest.get_meta(pos);
+		local inv = meta:get_inventory();
+
+		if not (inv:is_empty("fuel")) or not (inv:is_empty("upgrade")) then return false end -- fuel AND upgrade inv must be empty to be dug
+
+		return true
+	end
 })
 
 
@@ -286,7 +291,7 @@ end
 generator_upgrade = function(pos)
 	local meta = minetest.get_meta(pos);
 	local inv = meta:get_inventory();
-	local count1,count2;count1=0;count2=0;
+	local count1, count2 = 0
 	local stack,item,count;
 	for i=1,2 do
 		stack = inv:get_stack("upgrade", i);item = stack:get_name();count= stack:get_count();
@@ -313,96 +318,95 @@ minetest.register_node("basic_machines:generator", {
 		inv:set_size("fuel", 1*1); -- here generated power crystals are placed
 		inv:set_size("upgrade", 2*1);
 		meta:set_int("upgrade",0); -- upgrade level determines quality of produced crystals
-
 	end,
 
-		on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-			local meta = minetest.get_meta(pos);
-			local privs = minetest.get_player_privs(player:get_player_name());
-			if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return end -- only owner can interact with recycler
-			generator_update_meta(pos);
-		end,
+	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+		local meta = minetest.get_meta(pos);
+		local privs = minetest.get_player_privs(player:get_player_name());
+		if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return end -- only owner can interact with recycler
+		generator_update_meta(pos);
+	end,
 
-		on_receive_fields = function(pos, formname, fields, sender)
-			if fields.quit then return end
-			if fields.help then
-				local text = "Generator slowly produces power crystals. Those can be used to recharge batteries and come in 3 flavors:\n\n low (0-20), medium (20-99) and high level (99). Upgrading the generator will increase the rate at which the crystals are produces.\n\nYou can automate the process of recharging by using mover in inventory mode, taking from inventory \"fuel\"";
-				local form = "size[6,7]textarea[0,0;6.5,8.5;help;GENERATOR HELP;".. text.."]"
-				minetest.show_formspec(sender:get_player_name(), "basic_machines:help_mover", form)
-				return
-			end
-			local meta = minetest.get_meta(pos);
-
-
-			generator_update_meta(pos);
-		end,
-
-		allow_metadata_inventory_put = function(pos, listname, index, stack, player)
-			local meta = minetest.get_meta(pos);
-			local privs = minetest.get_player_privs(player:get_player_name());
-			if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return 0 end
-			return stack:get_count();
-		end,
-
-		allow_metadata_inventory_take = function(pos, listname, index, stack, player)
-			local meta = minetest.get_meta(pos);
-			local privs = minetest.get_player_privs(player:get_player_name());
-			if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return 0 end
-			return stack:get_count();
-		end,
-
-		on_metadata_inventory_put = function(pos, listname, index, stack, player)
-			if listname == "upgrade" then
-				generator_upgrade(pos);
-				generator_update_meta(pos);
-			end
-			return stack:get_count();
-		end,
-
-		on_metadata_inventory_take = function(pos, listname, index, stack, player)
-			if listname == "upgrade" then
-				generator_upgrade(pos);
-				generator_update_meta(pos);
-			end
-			return stack:get_count();
-		end,
-
-		allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-			return 0;
-		end,
-
-		can_dig = function(pos)
-			local meta = minetest.get_meta(pos);
-			local inv = meta:get_inventory();
-
-			if not inv:is_empty("upgrade") then return false end  -- fuel inv is not so important as generator generates it
-
-			return true
+	on_receive_fields = function(pos, formname, fields, sender)
+		if fields.quit then return end
+		if fields.help then
+			local text = "Generator slowly produces power crystals. Those can be used to recharge batteries and come in 3 flavors:\n\n low (0-20), medium (20-99) and high level (99). Upgrading the generator will increase the rate at which the crystals are produces.\n\nYou can automate the process of recharging by using mover in inventory mode, taking from inventory \"fuel\"";
+			local form = "size[6,7]textarea[0,0;6.5,8.5;help;GENERATOR HELP;".. text.."]"
+			minetest.show_formspec(sender:get_player_name(), "basic_machines:help_mover", form)
+			return
 		end
+		local meta = minetest.get_meta(pos);
+
+
+		generator_update_meta(pos);
+	end,
+
+	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
+		local meta = minetest.get_meta(pos);
+		local privs = minetest.get_player_privs(player:get_player_name());
+		if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return 0 end
+		return stack:get_count();
+	end,
+
+	allow_metadata_inventory_take = function(pos, listname, index, stack, player)
+		local meta = minetest.get_meta(pos);
+		local privs = minetest.get_player_privs(player:get_player_name());
+		if minetest.is_protected(pos,player:get_player_name()) and not privs.privs then return 0 end
+		return stack:get_count();
+	end,
+
+	on_metadata_inventory_put = function(pos, listname, index, stack, player)
+		if listname == "upgrade" then
+			generator_upgrade(pos);
+			generator_update_meta(pos);
+		end
+		return stack:get_count();
+	end,
+
+	on_metadata_inventory_take = function(pos, listname, index, stack, player)
+		if listname == "upgrade" then
+			generator_upgrade(pos);
+			generator_update_meta(pos);
+		end
+		return stack:get_count();
+	end,
+
+	allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+		return 0;
+	end,
+
+	can_dig = function(pos)
+		local meta = minetest.get_meta(pos);
+		local inv = meta:get_inventory();
+
+		if not inv:is_empty("upgrade") then return false end  -- fuel inv is not so important as generator generates it
+
+		return true
+	end
 })
 
 
 minetest.register_abm({
 	nodenames = {"basic_machines:generator"},
-	neighbors = {""},
+	neighbors = {},
 	interval = 19,
 	chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		local meta = minetest.get_meta(pos);
 		local upgrade = meta:get_int("upgrade");
 		local inv = meta:get_inventory();
-		local stack = inv:get_stack("fuel", 1);
+		local stack = inv:get_stack("fuel", 1)
 		local crystal, text;
 
 		if upgrade >= 99 then
 			crystal = "basic_machines:power_rod"
 			text = "high upgrade: power rod";
-			elseif upgrade >=20 then
-				crystal ="basic_machines:power_block " .. math.floor(1+(upgrade-20)*9/79);
-				text = "medium upgrade: power block";
-			else
-				crystal ="basic_machines:power_cell " .. math.floor(1+upgrade*9/20);
-				text = "low upgrade: power cell";
+		elseif upgrade >=20 then
+			crystal ="basic_machines:power_block " .. math.floor(1+(upgrade-20)*9/79);
+			text = "medium upgrade: power block";
+		else
+			crystal ="basic_machines:power_cell " .. math.floor(1+upgrade*9/20);
+			text = "low upgrade: power cell";
 		end
 		local morecrystal = ItemStack(crystal)
 		stack:add_item(morecrystal);
@@ -412,15 +416,10 @@ minetest.register_abm({
 })
 
 
-
-
 -- API for power distribution
 function basic_machines.check_power(pos, power_draw) -- mover checks power source - battery
-
-	--minetest.chat_send_all(" battery: check_power " .. minetest.pos_to_string(pos) .. " " .. power_draw)
-
-	if minetest.get_node(pos).name ~= "basic_machines:battery"
-		then return 0
+	if minetest.get_node(pos).name ~= "basic_machines:battery" then
+		return -1 -- battery not found!
 	end
 
 	local meta = minetest.get_meta(pos);
@@ -429,7 +428,7 @@ function basic_machines.check_power(pos, power_draw) -- mover checks power sourc
 	local maxpower = meta:get_float("maxpower");
 
 	if power_draw>maxpower then
-		meta:set_string("infotext", "Power draw required : " .. power_draw .. " maximum power output " .. maxpower .. ". Please upgrade battery")
+		meta:set_string("infotext", "Power draw required : " .. power_draw .. ", maximum power output " .. maxpower .. ". Please upgrade battery")
 		return 0;
 	end
 

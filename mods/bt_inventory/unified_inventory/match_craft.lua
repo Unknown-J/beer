@@ -22,7 +22,7 @@ Example output:
 		["default:axe_diamond"] = 2, -- unstackable item are counted too
 		["wool:white"] = 6
 	}
-]]--
+--]]
 function unified_inventory.count_items(inv, lists)
 	local counts = {}
 

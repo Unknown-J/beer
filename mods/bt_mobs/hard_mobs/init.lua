@@ -2,42 +2,25 @@
 -- Copyright Duane Robertson (duane@duanerobertson.com), 2017
 -- Distributed under the LGPLv2.1 (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
 
+hard_mobs_mod = {
+	version = "1.0",
+	path = minetest.get_modpath(minetest.get_current_modname()),
+	world = minetest.get_worldpath()
+}
 
-local check_for_death
-if minetest.get_modpath('mobs') then
-	if mobs and mobs.dw then
-		check_for_death = mobs.check_for_death
-	else
-		check_for_death = function(self, cause)
-			self.old_health = self.health
-		end
-	end
-else
-	return
-end
-
-
-hard_mobs_mod = {}
-hard_mobs_mod.version = "1.0"
-hard_mobs_mod.path = minetest.get_modpath(minetest.get_current_modname())
-hard_mobs_mod.world = minetest.get_worldpath()
-
-
-local maximum_multiplier = 3  -- Set this to change the maximum difficulty.
-local minimum_multiplier = 1  -- Set this to change the minimum difficulty.
-local speed_factor = 0.5  -- Mob speed increases by n * difficulty (2.5).
-local good_loot_chance = 10  -- chance = floor(difficulty - 1) / n
-local hc_delay = 3  -- Mobs are checked every n seconds.
-local change_walk_velocity = true  -- Make mobs walk faster.
-local scale_upward = true  -- Increase stats above ground level.
-
+local maximum_multiplier = 3	  -- Set this to change the maximum difficulty.
+local minimum_multiplier = 1	  -- Set this to change the minimum difficulty.
+local speed_factor = 0.5		  -- Mob speed increases by n * difficulty (2.5).
+local good_loot_chance = 10		  -- Chance = floor(difficulty - 1) / n
+local hc_delay = 3				  -- Mobs are checked every n seconds.
+local change_walk_velocity = true -- Make mobs walk faster.
+local scale_upward = true		  -- Increase stats above ground level.
 
 local good_loot_table = {
 	'default:mese',
 	'default:diamondblock',
 	'default:mithril_block'
 }
-
 
 local extra_loot_on_die = function(self, pos)
 	if self and pos and self.difficulty then
@@ -53,12 +36,12 @@ local extra_loot_on_die = function(self, pos)
 					y = 6,
 					z = math.random(-10, 10) / 9,
 				})
-				--print('dropped '..loot)
+				-- print('dropped ' .. loot)
 			elseif obj then
 				obj:remove() -- item does not exist
 			end
-		--else
-			--print('rolled too high')
+		-- else
+			-- print('rolled too high')
 		end
 	end
 
@@ -67,6 +50,14 @@ local extra_loot_on_die = function(self, pos)
 	end
 end
 
+local check_for_death = nil
+if mobs and mobs.dw then
+	check_for_death = mobs.check_for_death
+else
+	check_for_death = function(self, cause)
+		self.old_health = self.health
+	end
+end
 
 local hardness = (31000 / maximum_multiplier) / minimum_multiplier
 local last_hc_check = 0
@@ -80,14 +71,14 @@ minetest.register_globalstep(function(dtime)
 		return
 	end
 
-	-- Execute only after an interval.
+	-- Execute only after an interval
 	if last_hc_check and time - last_hc_check < hc_delay then
 		return
 	end
 
 	-- Promote mobs based on spawn position
 	for _, mob in pairs(minetest.luaentities) do
-		if not mob.initial_promotion then
+		if not mob.initial_promotion and not mob.hp then
 			local pos = mob.object:get_pos()
 			if pos and mob.hp_max and mob.health and mob.damage then
 				local y = pos.y > 0 and 0 or pos.y
@@ -103,15 +94,15 @@ minetest.register_globalstep(function(dtime)
 				end
 				mob.run_velocity = mob.run_velocity * math.max(1, speed_factor * factor)
 				mob.difficulty = factor
-				-- local ent = mob.object:get_luaentity()
-				-- local name = ent and ent.name or ""
 				mob.old_on_die = mob.on_die
 				mob.on_die = extra_loot_on_die
 				mob.object:set_hp(mob.health)
 				mob.initial_promotion = true
 				check_for_death(mob)
 
-				--print('Promoting '..name..': '..mob.health..' health, '..mob.damage..' damage  (x'..(math.floor(factor * 100) / 100)..')')
+				-- local ent = mob.object:get_luaentity()
+				-- local name = ent and ent.name or ""
+				-- minetest.chat_send_all('Promoting ' .. name .. ': ' .. mob.health .. ' health, ' .. mob.damage .. ' damage  (x' .. (math.floor(factor * 100) / 100) .. ')')
 			end
 		end
 	end

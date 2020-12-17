@@ -1,4 +1,3 @@
-
 local S = protector.intllib
 
 -- get static spawn position
@@ -15,11 +14,9 @@ local protector_night_pvp = minetest.settings:get_bool("protector_night_pvp")
 -- disables PVP in your own protected areas
 if minetest.settings:get_bool("enable_pvp")
 and minetest.settings:get_bool("protector_pvp") then
-
 	if minetest.register_on_punchplayer then
-
 		minetest.register_on_punchplayer(function(player, hitter,
-				time_from_last_punch, tool_capabilities, dir, damage)
+			time_from_last_punch, tool_capabilities, dir, damage)
 
 			if not player
 			or not hitter then
@@ -32,13 +29,14 @@ and minetest.settings:get_bool("protector_pvp") then
 
 			-- no pvp at spawn area
 			local pos = player:get_pos()
-
---[[			if pos.x < statspawn.x + protector_spawn
-			and pos.x > statspawn.x - protector_spawn
-			and pos.y < statspawn.y + protector_spawn
-			and pos.y > statspawn.y - protector_spawn
-			and pos.z < statspawn.z + protector_spawn
-			and pos.z > statspawn.z - protector_spawn then
+--[[
+			if pos.x < statspawn.x + protector_spawn and
+			  pos.x > statspawn.x - protector_spawn and
+			  pos.y < statspawn.y + protector_spawn and
+			  pos.y > statspawn.y - protector_spawn and
+			  pos.z < statspawn.z + protector_spawn and
+			  pos.z > statspawn.z - protector_spawn
+			 then
 				return true
 			end
 
@@ -53,19 +51,17 @@ and minetest.settings:get_bool("protector_pvp") then
 				else
 					return false
 				end
-			end]]--
-
+			end
+--]]
 			-- is player being punched inside a protected area ?
 			if minetest.is_protected(pos, hitter:get_player_name()) then
 				return true
 			end
 
 			return false
-
 		end)
 	else
 		print(S("[Protector] pvp_protect not active, update your version of Minetest"))
-
 	end
 else
 	print(S("[Protector] pvp_protect is disabled"))

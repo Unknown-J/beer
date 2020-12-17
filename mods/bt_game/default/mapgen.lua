@@ -1658,7 +1658,7 @@ function default.register_floatland_biomes(floatland_level, shadow_limit)
 		y_max = 5000,
 		y_min = floatland_level + 2,
 		heat_point = 50,
-		humidity_point = 35,
+		humidity_point = 35
 	})
 
 	-- Coniferous forest
@@ -1675,7 +1675,43 @@ function default.register_floatland_biomes(floatland_level, shadow_limit)
 		y_max = 5000,
 		y_min = floatland_level + 2,
 		heat_point = 50,
-		humidity_point = 70,
+		humidity_point = 70
+	})
+
+	-- Rainforest
+
+	minetest.register_biome({
+		name = "floatland_rainforest",
+		node_top = "default:dirt_with_rainforest_litter",
+		depth_top = 1,
+		node_filler = "default:dirt",
+		depth_filler = 3,
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_min = floatland_level + 2,
+		y_max = 5000,
+		heat_point = 55,
+		humidity_point = 65
+	})
+
+	-- Sandstone desert
+
+	minetest.register_biome({
+		name = "floatland_sandstone_desert",
+		node_top = "default:sand",
+		depth_top = 1,
+		node_filler = "default:sand",
+		depth_filler = 1,
+		node_stone = "default:sandstone",
+		node_riverbed = "default:sand",
+		depth_riverbed = 2,
+		node_dungeon = "default:sandstonebrick",
+		node_dungeon_stair = "stairs:stair_sandstone_block",
+		y_min = floatland_level + 2,
+		y_max = 5000,
+		heat_point = 50,
+		humidity_point = 0
 	})
 
 	-- Floatland ocean / underground
@@ -1692,43 +1728,7 @@ function default.register_floatland_biomes(floatland_level, shadow_limit)
 		y_max = 5000,
 		y_min = shadow_limit,
 		heat_point = 50,
-		humidity_point = 50,
-	})
-
-	-- Rainforest
-
-	minetest.register_biome({
-		name = "floatland_rainforest",
-
-		node_top = "default:dirt_with_rainforest_litter",
-		depth_top = 1,
-		node_filler = "default:dirt",
-		depth_filler = 3,
-		node_dungeon = "default:cobble",
-		node_dungeon_alt = "default:mossycobble",
-		node_dungeon_stair = "stairs:stair_cobble",
-		y_min = floatland_level + 2,
-		y_max = 5000,
-		heat_point = 55,
-		humidity_point = 65,
-	})
-
-	-- Sandstone desert
-
-	minetest.register_biome({
-		name = "floatland_sandstone_desert",
-		node_top = "default:sand",
-		depth_top = 1,
-		node_filler = "default:sand",
-		depth_filler = 1,
-		node_stone = "default:sandstone",
-		node_dungeon = "default:cobble",
-		node_dungeon_alt = "default:mossycobble",
-		node_dungeon_stair = "stairs:stair_cobble",
-		y_min = floatland_level + 2,
-		y_max = 5000,
-		heat_point = 50,
-		humidity_point = 0,
+		humidity_point = 50
 	})
 
 	-- Lower atmosphere ice
@@ -1746,7 +1746,7 @@ function default.register_floatland_biomes(floatland_level, shadow_limit)
 		y_min = 5001,
 		y_max = 10000,
 		heat_point = 0,
-		humidity_point = 73,
+		humidity_point = 73
 	})
 
 	-- Lower atmosphere tundra
@@ -1760,7 +1760,7 @@ function default.register_floatland_biomes(floatland_level, shadow_limit)
 		y_min = 5001,
 		y_max = 10000,
 		heat_point = 0,
-		humidity_point = 40,
+		humidity_point = 40
 	})
 
 	-- Lower atmosphere alpine
@@ -1775,7 +1775,7 @@ function default.register_floatland_biomes(floatland_level, shadow_limit)
 		y_min = 5001,
 		y_max = 10000,
 		heat_point = 50,
-		humidity_point = 35,
+		humidity_point = 35
 	})
 end
 

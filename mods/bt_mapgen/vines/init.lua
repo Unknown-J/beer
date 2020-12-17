@@ -1,14 +1,16 @@
 vines = {
   name = 'vines',
+  translator = minetest.get_translator("vines"),
   recipes = {}
 }
 
-dofile( minetest.get_modpath( vines.name ) .. "/functions.lua" )
-dofile( minetest.get_modpath( vines.name ) .. "/aliases.lua" )
-dofile( minetest.get_modpath( vines.name ) .. "/recipes.lua" )
-dofile( minetest.get_modpath( vines.name ) .. "/crafts.lua" )
-dofile( minetest.get_modpath( vines.name ) .. "/nodes.lua" )
-dofile( minetest.get_modpath( vines.name ) .. "/shear.lua" )
-dofile( minetest.get_modpath( vines.name ) .. "/vines.lua" )
+local MP = minetest.get_modpath(vines.name) .. "/"
+
+dofile(MP .. "aliases.lua")
+dofile(MP .. "crafts.lua")
+dofile(MP .. "functions.lua")
+dofile(MP .. "nodes.lua")
+dofile(MP .. "vines.lua")
+dofile(MP .. "shear.lua")
 
 print("[Vines] Loaded!")

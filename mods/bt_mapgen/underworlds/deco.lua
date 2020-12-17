@@ -2,110 +2,107 @@
 -- Copyright Duane Robertson (duane@duanerobertson.com), 2017
 -- Distributed under the LGPLv2.1 (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
 
-
 local newnode
 local light_max = default.light_max or 10
 
-
 local spel = {
-  {type1="stalactite", type2="stalagmite", tile="default_stone.png"},
-  {type1="stalactite_slimy", type2="stalagmite_slimy", tile="default_stone.png^underworlds_algae.png"},
-  {type1="stalactite_mossy", type2="stalagmite_mossy", tile="default_stone.png^underworlds_moss.png"},
-  {type1="icicle_down", type2="icicle_up", desc="Icicle", tile="caverealms_thin_ice.png", drop="default:ice"},
+	{type1="stalactite", type2="stalagmite", tile="default_stone.png"},
+	{type1="stalactite_slimy", type2="stalagmite_slimy", tile="default_stone.png^underworlds_algae.png"},
+	{type1="stalactite_mossy", type2="stalagmite_mossy", tile="default_stone.png^underworlds_moss.png"},
+	{type1="icicle_down", type2="icicle_up", desc="Icicle", tile="caverealms_thin_ice.png", drop="default:ice"}
 }
 
 -- Speleothems can be made into cobblestone, to get them out of inventory.
 minetest.register_craft({
-  output = "default:cobble",
-  recipe = {
-    {"", "", ""},
-    {"underworlds:stalactite", "underworlds:stalactite", ""},
-    {"underworlds:stalactite", "underworlds:stalactite", ""},
-  },
+	output = "default:cobble",
+	recipe = {
+		{"", "", ""},
+		{"underworlds:stalactite", "underworlds:stalactite", ""},
+		{"underworlds:stalactite", "underworlds:stalactite", ""}
+	}
 })
 
 minetest.register_craft({
-  output = "default:cobble",
-  recipe = {
-    {"", "", ""},
-    {"underworlds:stalagmite", "underworlds:stalagmite", ""},
-    {"underworlds:stalagmite", "underworlds:stalagmite", ""},
-  },
+	output = "default:cobble",
+	recipe = {
+		{"", "", ""},
+		{"underworlds:stalagmite", "underworlds:stalagmite", ""},
+		{"underworlds:stalagmite", "underworlds:stalagmite", ""}
+	}
 })
 
 -- What's a cave without speleothems?
 for _, desc in pairs(spel) do
-  minetest.register_node("underworlds:"..desc.type1, {
-    description = (desc.desc or "Stalactite"),
-    tiles = {desc.tile},
-    is_ground_content = true,
-    walkable = false,
-    paramtype = "light",
-    drop = (desc.drop or "underworlds:stalactite"),
-    drawtype = "nodebox",
-    node_box = { type = "fixed",
-    fixed = {
-      {-0.07, 0.0, -0.07, 0.07, 0.5, 0.07},
-      {-0.04, -0.25, -0.04, 0.04, 0.0, 0.04},
-      {-0.02, -0.5, -0.02, 0.02, 0.25, 0.02},
-    } },
-    groups = {rock=1, cracky=3},
-    sounds = default.node_sound_stone_defaults(),
-  })
+	minetest.register_node("underworlds:"..desc.type1, {
+		description = (desc.desc or "Stalactite"),
+		tiles = {desc.tile},
+		is_ground_content = true,
+		walkable = false,
+		paramtype = "light",
+		drop = (desc.drop or "underworlds:stalactite"),
+		drawtype = "nodebox",
+		node_box = {type = "fixed", fixed = {
+				{-0.07, 0.0, -0.07, 0.07, 0.5, 0.07},
+				{-0.04, -0.25, -0.04, 0.04, 0.0, 0.04},
+				{-0.02, -0.5, -0.02, 0.02, 0.25, 0.02}
+		}},
+		groups = {rock = 1, cracky = 3},
+		sounds = default.node_sound_stone_defaults()
+	})
 
-  minetest.register_node("underworlds:"..desc.type2, {
-    description = (desc.desc or "Stalagmite"),
-    tiles = {desc.tile},
-    is_ground_content = true,
-    walkable = false,
-    paramtype = "light",
-    drop = "underworlds:stalagmite",
-    drawtype = "nodebox",
-    node_box = { type = "fixed",
-    fixed = {
-      {-0.07, -0.5, -0.07, 0.07, 0.0, 0.07},
-      {-0.04, 0.0, -0.04, 0.04, 0.25, 0.04},
-      {-0.02, 0.25, -0.02, 0.02, 0.5, 0.02},
-    } },
-    groups = {rock=1, cracky=3},
-    sounds = default.node_sound_stone_defaults(),
-  })
+	minetest.register_node("underworlds:"..desc.type2, {
+		description = (desc.desc or "Stalagmite"),
+		tiles = {desc.tile},
+		is_ground_content = true,
+		walkable = false,
+		paramtype = "light",
+		drop = "underworlds:stalagmite",
+		drawtype = "nodebox",
+		node_box = {type = "fixed", fixed = {
+			{-0.07, -0.5, -0.07, 0.07, 0.0, 0.07},
+			{-0.04, 0.0, -0.04, 0.04, 0.25, 0.04},
+			{-0.02, 0.25, -0.02, 0.02, 0.5, 0.02}
+		}},
+		groups = {rock = 1, cracky = 3},
+		sounds = default.node_sound_stone_defaults()
+	})
 end
 
 -- stone, hot
 minetest.register_node("underworlds:hot_stone", {
-  description = "Hot Stone",
-  tiles = {"default_desert_stone.png^[colorize:#FF0000:150"},
-  is_ground_content = true,
-  groups = {crumbly=2, surface_hot=3},
-  light_source = light_max - 5,
-  damage_per_second = 1,
-  sounds = default.node_sound_stone_defaults({
-    footstep = {name="default_stone_footstep", gain=0.25},
-  }),
+	description = "Hot Stone",
+	tiles = {"default_desert_stone.png^[colorize:#FF0000:150"},
+	is_ground_content = true,
+	groups = {crumbly = 2, surface_hot = 3},
+	light_source = light_max - 5,
+	damage_per_second = 1,
+	sounds = default.node_sound_stone_defaults({
+		footstep = {name = "default_stone_footstep", gain = 0.25}
+	})
 })
 
 -- Glowing fungal stone provides an eerie light.
 minetest.register_node("underworlds:glowing_fungal_stone", {
-  description = "Glowing Fungal Stone",
-  tiles = {"default_stone.png^vmg_glowing_fungal.png",},
-  is_ground_content = true,
-  light_source = light_max - 4,
-  groups = {cracky=3, stone=1},
-  drop = {items={ {items={"default:cobble"},}, {items={"integral:glowing_fungus",},},},},
-  sounds = default.node_sound_stone_defaults(),
+	description = "Glowing Fungal Stone",
+	tiles = {"default_stone.png^vmg_glowing_fungal.png",},
+	is_ground_content = true,
+	light_source = light_max - 4,
+	groups = {cracky = 3, stone = 1},
+	drop = {items = {{items = {"default:cobble"}}, {items = {"integral:glowing_fungus"}}}},
+	sounds = default.node_sound_stone_defaults()
 })
 
 -- Glowing fungus grows underground.
---[[minetest.register_craftitem("underworlds:glowing_fungus", {
-  description = "Glowing Fungus",
-  drawtype = "plantlike",
-  paramtype = "light",
-  tiles = {"vmg_glowing_fungus.png"},
-  inventory_image = "vmg_glowing_fungus.png",
-  groups = {dig_immediate = 3},
-})]]--
-
+--[[
+minetest.register_craftitem("underworlds:glowing_fungus", {
+	description = "Glowing Fungus",
+	drawtype = "plantlike",
+	paramtype = "light",
+	tiles = {"vmg_glowing_fungus.png"},
+	inventory_image = "vmg_glowing_fungus.png",
+	groups = {dig_immediate = 3}
+})
+--]]
 -- black (oily) sand
 local newnode = underworlds_mod.clone_node("default:sand")
 newnode.description = "Black Sand"
@@ -115,20 +112,21 @@ minetest.register_node("underworlds:black_sand", newnode)
 
 -- cobble, hot - cobble with lava instead of mortar XD
 minetest.register_node("underworlds:hot_cobble", {
-  description = "Hot Cobble",
-  tiles = {"caverealms_hot_cobble.png"},
-  is_ground_content = true,
-  groups = {crumbly=2, surface_hot=3},
-  --light_source = 2,
-  damage_per_second = 1,
-  sounds = default.node_sound_stone_defaults({
-    footstep = {name="default_stone_footstep", gain=0.25},
-  }),
+	description = "Hot Cobble",
+	tiles = {"caverealms_hot_cobble.png"},
+	is_ground_content = true,
+	groups = {crumbly = 2, surface_hot = 3},
+	--light_source = 2,
+	damage_per_second = 1,
+	sounds = default.node_sound_stone_defaults({
+		footstep = {name = "default_stone_footstep", gain = 0.25}
+	})
 })
 
 newnode = underworlds_mod.clone_node("default:water_source")
 newnode.description = "Poisonous Water"
 newnode.groups.poison = 3
+newnode.groups.water = nil
 newnode.light_source = 6
 newnode.liquid_alternative_flowing = "underworlds:water_poison_flowing"
 newnode.liquid_alternative_source = "underworlds:water_poison_source"
@@ -141,6 +139,7 @@ minetest.register_node("underworlds:water_poison_source", newnode)
 newnode = underworlds_mod.clone_node("default:water_flowing")
 newnode.description = "Poisonous Water"
 newnode.groups.poison = 3
+newnode.groups.water = nil
 newnode.light_source = 6
 newnode.liquid_alternative_flowing = "underworlds:water_poison_flowing"
 newnode.liquid_alternative_source = "underworlds:water_poison_source"
@@ -154,6 +153,7 @@ minetest.register_node("underworlds:water_poison_flowing", newnode)
 newnode = underworlds_mod.clone_node("default:water_source")
 newnode.description = "Deadly Water"
 newnode.groups.poison = 3
+newnode.groups.water = nil
 newnode.light_source = 6
 newnode.liquid_alternative_flowing = "underworlds:water_death_flowing"
 newnode.liquid_alternative_source = "underworlds:water_death_source"
@@ -166,6 +166,7 @@ minetest.register_node("underworlds:water_death_source", newnode)
 newnode = underworlds_mod.clone_node("default:water_flowing")
 newnode.description = "Deadly Water"
 newnode.groups.poison = 3
+newnode.groups.water = nil
 newnode.light_source = 6
 newnode.liquid_alternative_flowing = "underworlds:water_death_flowing"
 newnode.liquid_alternative_source = "underworlds:water_death_source"
@@ -176,19 +177,40 @@ newnode.special_tiles[2].name = "underworlds_water_death_flowing_animated.png"
 newnode.damage_per_second = 4 * 2
 minetest.register_node("underworlds:water_death_flowing", newnode)
 
+bucket.register_liquid(
+	"underworlds:water_poison_source",
+	"underworlds:water_poison_flowing",
+	"underworlds:bucket_poisonous_water",
+	"underworlds_bucket_water_poison.png",
+	"Poisonous Water Bucket",
+	{tool = 1}
+)
+
+bucket.register_liquid(
+	"underworlds:water_death_source",
+	"underworlds:water_death_flowing",
+	"underworlds:bucket_death_water",
+	"underworlds_bucket_water_death.png",
+	"Deadly Water Bucket",
+	{tool = 1}
+)
+
+minetest.register_alias("bucket:bucket_poisonous_water", "underworlds:bucket_poisonous_water")
+minetest.register_alias("bucket:bucket_death_water", "underworlds:bucket_death_water")
+
 -- ice, thin -- transparent
 minetest.register_node("underworlds:thin_ice", {
-  description = "Thin Ice",
-  tiles = {"caverealms_thin_ice.png"},
-  is_ground_content = true,
-  groups = {cracky=3},
-  sounds = default.node_sound_glass_defaults(),
-  use_texture_alpha = true,
-  light_source = 1,
-  drawtype = "glasslike",
-  sunlight_propagates = true,
-  freezemelt = "default:water_source",
-  paramtype = "light",
+	description = "Thin Ice",
+	tiles = {"caverealms_thin_ice.png"},
+	is_ground_content = true,
+	groups = {cracky = 3},
+	sounds = default.node_sound_glass_defaults(),
+	use_texture_alpha = true,
+	light_source = 1,
+	drawtype = "glasslike",
+	sunlight_propagates = true,
+	freezemelt = "default:water_source",
+	paramtype = "light"
 })
 
 -- Iron, hot
@@ -224,7 +246,7 @@ minetest.register_node('underworlds:sticks_default', {
 	paramtype = 'light',
 	is_ground_content = false,
 	drop = 'default:stick 2',
-	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, leafdecay = 3, flammable = 2, leaves = 1}
 })
 
 -- Black leaves

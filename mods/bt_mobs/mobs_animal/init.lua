@@ -15,5 +15,6 @@ dofile(path .. "bee.lua") -- KrupnoPavel
 dofile(path .. "bunny.lua") -- ExeterDad
 dofile(path .. "kitten.lua") -- Jordach/BFD
 dofile(path .. "penguin.lua") -- D00Med
+dofile(path .. "panda.lua") -- AspireMint
 
 print (S("[MOD] Mobs Redo 'Animals' loaded"))

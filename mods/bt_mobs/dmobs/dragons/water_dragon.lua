@@ -15,17 +15,13 @@ mobs:register_mob("dmobs:waterdragon", {
 	hp_max = 127,
 	armor = 100,
 	collisionbox = {-0.4, -0.5, -0.4, 0.4, 5, 0.4},
-	visual_size = {x=4, y=4},
+	visual_size = {x = 4, y = 4},
 	visual = "mesh",
 	mesh = "water_dragon.b3d",
-	textures = {
-		{"dmobs_waterdragon.png"},
-	},
+	textures = {{"dmobs_waterdragon.png"}},
 	blood_texture = "mobs_blood.png",
 	makes_footstep_sound = true,
-	sounds = {
-		random = "mobs_dirtmonster",
-	},
+	sounds = {random = "mobs_dirtmonster"},
 	view_range = 20,
 	rotate = 180,
 	walk_velocity = 0.01,
@@ -33,7 +29,7 @@ mobs:register_mob("dmobs:waterdragon", {
 	jump = false,
 	drops = {
 		{name = "dmobs:dragon_gem_ice", chance = 1, min = 1, max = 1},
-		{name = "dmobs:dragon_gem_fire", chance = 1, min = 1, max = 1},
+		{name = "dmobs:dragon_gem_fire", chance = 1, min = 1, max = 1}
 	},
 	water_damage = 0,
 	lava_damage = 5,
@@ -51,31 +47,29 @@ mobs:register_mob("dmobs:waterdragon", {
 		punch_start = 40,
 		punch_end = 60,
 		shoot_start = 20,
-		shoot_end = 40,
+		shoot_end = 40
 	},
 	do_custom = function(self)
 	--follow thanks to TenPlus1 and Byakuren
-            if not self.hydra then
-                self.hydra = true -- flip switch so this part is done only once
+		if not self.hydra then
+			self.hydra = true -- flip switch so this part is done only once
 
-                -- get head position and define a few temp variables
-                local pos = self.object:get_pos()
-                local obj, obj2, ent
+			-- get head position and define a few temp variables
+			local pos = self.object:get_pos()
+			local obj, obj2, ent
 
-                -- add body and make it follow head
-                obj = minetest.add_entity({x=pos.x+1, y=pos.y, z=pos.z}, "dmobs:waterdragon_2")
-                ent = obj:get_luaentity()
-                ent.following = self.object
+			-- add body and make it follow head
+			obj = minetest.add_entity({x=pos.x+1, y=pos.y, z=pos.z}, "dmobs:waterdragon_2")
+			ent = obj:get_luaentity()
+			ent.following = self.object
 
-                -- add body and make it follow previous body segment
-                obj2 = minetest.add_entity({x=pos.x-1, y=pos.y, z=pos.z}, "dmobs:waterdragon_2")
-                ent = obj2:get_luaentity()
-                ent.following = self.object
-            end
-    end,
+			-- add body and make it follow previous body segment
+			obj2 = minetest.add_entity({x=pos.x-1, y=pos.y, z=pos.z}, "dmobs:waterdragon_2")
+			ent = obj2:get_luaentity()
+			ent.following = self.object
+		end
+    end
 })
-
-
 
 mobs:register_mob("dmobs:waterdragon_2", {
 	type = "monster",
@@ -94,18 +88,16 @@ mobs:register_mob("dmobs:waterdragon_2", {
 	hp_max = 60,
 	armor = 50,
 	collisionbox = {-0.4, -0.2, -0.4, 0.4, 5, 0.4},
-	visual_size = {x=3, y=3},
+	visual_size = {x = 3, y = 3},
 	visual = "mesh",
 	mesh = "water_dragon.b3d",
-	textures = {
-		{"dmobs_waterdragon.png"},
-	},
+	textures = {{"dmobs_waterdragon.png"}},
 	blood_texture = "mobs_blood.png",
 	makes_footstep_sound = true,
-   sounds = {
-	  shoot_attack = "mobs_fireball",
-	  random = "velociraptor",
-   },
+	sounds = {
+		shoot_attack = "mobs_fireball",
+		random = "dmobs_velociraptor"
+	},
 	view_range = 15,
 	rotate = 180,
 	floats = 0,
@@ -127,9 +119,8 @@ mobs:register_mob("dmobs:waterdragon_2", {
 		punch_start = 40,
 		punch_end = 60,
 		shoot_start = 20,
-		shoot_end = 40,
-	},
+		shoot_end = 40
+	}
 })
-
 
 mobs:register_egg("dmobs:waterdragon", "Boss Waterdragon", "dmobs_egg4.png", 1)

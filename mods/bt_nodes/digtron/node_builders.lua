@@ -6,9 +6,6 @@ local S = digtron.S
 
 local builder_formspec =
 	"size[8,5.2]" ..
-	default.gui_bg ..
-	default.gui_bg_img ..
-	default.gui_slots ..
 	"list[context;main;0.5,0;1,1;]" ..
 	"label[0.5,0.8;" .. S("Block to build") .. "]" ..
 	"field[2.3,0.8;1,0.1;period;" .. S("Periodicity") .. ";${period}]" ..

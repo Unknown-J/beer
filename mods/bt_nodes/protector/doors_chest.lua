@@ -6,7 +6,7 @@ local S = protector.intllib
 local F = minetest.formspec_escape
 
 -- MineClone2 support
-local mcl = not minetest.registered_items["default:steel_ingot"]
+-- local mcl = not minetest.registered_items["default:steel_ingot"]
 
 -- Registers a door
 function register_door(name, def)
@@ -311,8 +311,8 @@ register_door(name, {
 	sounds = default.node_sound_wood_defaults(),
 	sunlight = false,
 })
-
---[[if mcl then
+--[[
+if mcl then
 minetest.register_craft({
 	output = name,
 	recipe = {
@@ -335,8 +335,8 @@ minetest.register_craft({
 		{"doors:door_wood", "default:copper_ingot"}
 	}
 })
-end]]--
-
+end
+--]]
 -- Protected Steel Door
 
 local name = "protector:door_steel"
@@ -353,8 +353,8 @@ register_door(name, {
 	sounds = default.node_sound_wood_defaults(),
 	sunlight = false,
 })
-
---[[if mcl then
+--[[
+if mcl then
 minetest.register_craft({
 	output = name,
 	recipe = {
@@ -377,8 +377,8 @@ minetest.register_craft({
 		{"doors:door_steel", "default:copper_ingot"}
 	}
 })
-end]]--
-
+end
+--]]
 ----trapdoor----
 
 function register_trapdoor(name, def)
@@ -453,8 +453,8 @@ register_trapdoor("protector:trapdoor", {
 	},
 	sounds = default.node_sound_wood_defaults(),
 })
-
---[[if mcl then
+--[[
+if mcl then
 minetest.register_craft({
 	output = "protector:trapdoor",
 	recipe = {
@@ -476,8 +476,8 @@ minetest.register_craft({
 		{"doors:trapdoor", "default:copper_ingot"}
 	}
 })
-end]]--
-
+end
+--]]
 -- Protected Steel Trapdoor
 
 register_trapdoor("protector:trapdoor_steel", {
@@ -492,8 +492,8 @@ register_trapdoor("protector:trapdoor_steel", {
 	},
 	sounds = default.node_sound_wood_defaults(),
 })
-
---[[if mcl then
+--[[
+if mcl then
 minetest.register_craft({
 	output = "protector:trapdoor_steel",
 	recipe = {
@@ -515,8 +515,8 @@ minetest.register_craft({
 		{"doors:trapdoor_steel", "default:copper_ingot"}
 	}
 })
-end]]--
-
+end
+--]]
 -- Protected Chest
 
 minetest.register_node("protector:chest", {
@@ -617,9 +617,6 @@ minetest.register_node("protector:chest", {
 
 		local spos = pos.x .. "," .. pos.y .. "," ..pos.z
 		local formspec = "size[8,9]"
---			.. default.gui_bg
---			.. default.gui_bg_img
---			.. default.gui_slots
 			.. "list[nodemeta:".. spos .. ";main;0,0.3;8,4;]"
 			.. "button[0,4.5;2,0.25;toup;" .. F(S("To Chest")) .. "]"
 			.. "field[2.3,4.8;4,0.25;chestname;;"
@@ -709,10 +706,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	end
 end)
-
+--[[
 -- Protected Chest recipes
-
---[[if mcl then
+if mcl then
 minetest.register_craft({
 	output = "protector:chest",
 	recipe = {
@@ -735,4 +731,5 @@ minetest.register_craft({
 		{"default:chest", "default:copper_ingot"},
 	}
 })
-end]]--
+end
+--]]

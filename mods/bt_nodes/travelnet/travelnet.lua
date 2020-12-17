@@ -25,13 +25,13 @@ minetest.register_node("travelnet:travelnet", {
 		fixed = {
 
 			{ 0.45, -0.5,-0.5,  0.5,  1.45, 0.5},
-			{-0.5 , -0.5, 0.45, 0.45, 1.45, 0.5}, 
+			{-0.5 , -0.5, 0.45, 0.45, 1.45, 0.5},
 			{-0.5,  -0.5,-0.5 ,-0.45, 1.45, 0.5},
 
 			--groundplate to stand on
-			{ -0.5,-0.5,-0.5,0.5,-0.45, 0.5}, 
+			{ -0.5,-0.5,-0.5,0.5,-0.45, 0.5},
 			--roof
-			{ -0.5, 1.45,-0.5,0.5, 1.5, 0.5}, 
+			{ -0.5, 1.45,-0.5,0.5, 1.5, 0.5},
 
 			-- control panel
 			--                { -0.2, 0.6,  0.3, 0.2, 1.1,  0.5},
@@ -52,7 +52,7 @@ minetest.register_node("travelnet:travelnet", {
 	travelnet.reset_formspec( meta );
         meta:set_string("owner",          placer:get_player_name() );
     end,
-    
+
     on_receive_fields = travelnet.on_receive_fields,
     on_punch          = function(pos, node, puncher)
                              travelnet.update_formspec(pos, puncher:get_player_name(), nil)
@@ -90,4 +90,5 @@ minetest.register_node("travelnet:travelnet", {
 minetest.register_craft({
         output = "travelnet:travelnet",
         recipe = travelnet.travelnet_recipe,
-})]]--
+})
+--]]

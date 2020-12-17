@@ -1,4 +1,3 @@
-
 local S = mobs.intllib
 
 -- Bee by KrupnoPavel
@@ -13,16 +12,16 @@ mobs:register_mob("mobs_animal:bee", {
 	visual = "mesh",
 	mesh = "mobs_bee.x",
 	textures = {
-		{"mobs_bee.png"},
+		{"mobs_bee.png"}
 	},
 	makes_footstep_sound = false,
 	sounds = {
-		random = "mobs_bee",
-	},	
+		random = "mobs_bee"
+	},
 	walk_velocity = 1,
 	jump = true,
 	drops = {
-		{name = "mobs:honey", chance = 2, min = 1, max = 2},
+		{name = "mobs:honey", chance = 2, min = 1, max = 2}
 	},
 	water_damage = 2,
 	lava_damage = 2,
@@ -34,11 +33,11 @@ mobs:register_mob("mobs_animal:bee", {
 		stand_start = 0,
 		stand_end = 30,
 		walk_start = 35,
-		walk_end = 65,
+		walk_end = 65
 	},
 	on_rightclick = function(self, clicker)
 		mobs:capture_mob(self, clicker, 50, 90, 0, true, "mobs_animal:bee")
-	end,
+	end
 })
 
 mobs:spawn({
@@ -47,10 +46,10 @@ mobs:spawn({
 	min_light = 10,
 	chance = 9000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
-mobs:register_egg("mobs_animal:bee", S("Bee"), "mobs_bee_inv.png", 0)
+mobs:register_egg("mobs_animal:bee", S("Bee"), "mobs_bee_inv.png")
 
 -- compatibility
 mobs:alias_mob("mobs:bee", "mobs_animal:bee")
@@ -60,6 +59,7 @@ minetest.register_craftitem(":mobs:honey", {
 	description = S("Honey"),
 	inventory_image = "mobs_honey_inv.png",
 	on_use = minetest.item_eat(6),
+	groups = {food_honey = 1, food_sugar = 1, flammable = 1}
 })
 
 -- beehive (when placed spawns bee)
@@ -71,15 +71,12 @@ minetest.register_node(":mobs:beehive", {
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = true,
-	groups = {oddly_breakable_by_hand = 3, flammable = 1},
+	groups = {oddly_breakable_by_hand = 3, flammable = 1, disable_suffocation = 1},
 	sounds = default.node_sound_defaults(),
-
 	on_construct = function(pos)
-
 		local meta = minetest.get_meta(pos)
 
 		meta:set_string("formspec", "size[8,6]"
-			..default.gui_bg..default.gui_bg_img..default.gui_slots
 			.. "image[3,0.8;0.8,0.8;mobs_bee_inv.png]"
 			.. "list[context;beehive;4,0.5;1,1;]"
 			.. "list[current_player;main;0,2.35;8,4;]"
@@ -87,11 +84,8 @@ minetest.register_node(":mobs:beehive", {
 
 		meta:get_inventory():set_size("beehive", 1)
 	end,
-
 	after_place_node = function(pos, placer, itemstack)
-
 		if placer and placer:is_player() then
-
 			minetest.set_node(pos, {name = "mobs:beehive", param2 = 1})
 
 			if math.random(1, 4) == 1 then
@@ -99,36 +93,29 @@ minetest.register_node(":mobs:beehive", {
 			end
 		end
 	end,
-
 	on_punch = function(pos, node, puncher)
-
 		-- yep, bee's don't like having their home punched by players
 		puncher:set_hp(puncher:get_hp() - 4)
 	end,
-
 	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
-
 		if listname == "beehive" then
 			return 0
 		end
 
 		return stack:get_count()
 	end,
-
 	can_dig = function(pos,player)
-
 		local meta = minetest.get_meta(pos)
 
 		-- only dig beehive if no honey inside
 		return meta:get_inventory():is_empty("beehive")
-	end,
-
+	end
 })
 
 minetest.register_craft({
 	output = "mobs:beehive",
 	recipe = {
-		{"mobs:bee","mobs:bee","mobs:bee"},
+		{"mobs:bee","mobs:bee","mobs:bee"}
 	}
 })
 
@@ -145,14 +132,14 @@ minetest.register_craft({
 	recipe = {
 		{"mobs:honey", "mobs:honey", "mobs:honey"},
 		{"mobs:honey", "mobs:honey", "mobs:honey"},
-		{"mobs:honey", "mobs:honey", "mobs:honey"},
+		{"mobs:honey", "mobs:honey", "mobs:honey"}
 	}
 })
 
 minetest.register_craft({
 	output = "mobs:honey 9",
 	recipe = {
-		{"mobs:honey_block"},
+		{"mobs:honey_block"}
 	}
 })
 

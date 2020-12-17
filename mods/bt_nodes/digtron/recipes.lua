@@ -9,7 +9,8 @@ minetest.register_craftitem("digtron:digtron_core", {
     _doc_items_usagehelp = digtron.doc.core_usagehelp,
 })
 
---[[minetest.register_craft({
+--[[
+minetest.register_craft({
 	output = "digtron:digtron_core",
 	recipe = {
 			{"","default:steel_ingot",""},
@@ -162,8 +163,7 @@ minetest.register_craft({
 			{"","digtron:digtron_core","default:steel_ingot"},
 			{"","default:steel_ingot","default:steel_ingot"}
 			}
-})
-]]--
+})--]]
 -- For swapping digger types
 minetest.register_craft({
 	output = "digtron:digger",

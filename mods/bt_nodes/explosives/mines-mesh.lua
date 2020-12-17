@@ -1,11 +1,11 @@
-local i18n = explosives.i18n
+local S = explosives.S
 local set_arm = explosives.set_arm
 local set_time = explosives.set_time
 local boom = explosives.boom
 local detonate = explosives.detonate
 
 minetest.register_node("explosives:landmine", {
-	description = i18n('Land mine'),
+	description = S('Land mine'),
 	paramtype = "light",
 	paramtype2 = "facedir", --optional
 	tiles = {"explosives_landmine.png"},
@@ -29,7 +29,7 @@ minetest.register_node("explosives:landmine", {
 })
 
 minetest.register_node("explosives:landmine_armed", {
-	description = i18n('Land mine (armed)'),
+	description = S('Land mine (armed)'),
 	paramtype = "light",
 	paramtype2 = "facedir", --optional
 	tiles = {"explosives_landmine.png"},
@@ -51,7 +51,7 @@ minetest.register_node("explosives:landmine_armed", {
 })
 
 minetest.register_node("explosives:navalmine", {
-	description = i18n('Naval mine'),
+	description = S('Naval mine'),
 	paramtype = "light",
 	paramtype2 = "facedir", --optional
 	tiles = {"explosives_navalmine.png"},
@@ -79,7 +79,7 @@ minetest.register_node("explosives:navalmine", {
 })
 
 minetest.register_node("explosives:navalmine_armed", {
-	description = i18n('Naval mine (armed)'),
+	description = S('Naval mine (armed)'),
 	paramtype = "light",
 	paramtype2 = "facedir", --optional
 	tiles = {"explosives_navalmine.png"},
@@ -100,7 +100,7 @@ minetest.register_node("explosives:navalmine_armed", {
 })
 
 minetest.register_node("explosives:timebomb", {
-	description = i18n('Time bomb'),
+	description = S('Time bomb'),
 	paramtype = "light",
 	paramtype2 = "facedir",
 	tiles = {"explosives_timebomb.png"},

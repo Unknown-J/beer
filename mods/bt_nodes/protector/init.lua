@@ -632,9 +632,9 @@ minetest.register_node("protector:protect2", {
 		end
 	end,
 })
-
+--[[
 -- recipes to switch between protectors
---[[minetest.register_craft({
+minetest.register_craft({
 	type = "shapeless",
 	output = "protector:protect",
 	recipe = {"protector:protect2"}
@@ -644,9 +644,8 @@ minetest.register_craft({
 	type = "shapeless",
 	output = "protector:protect2",
 	recipe = {"protector:protect"}
-})]]--
-
-
+})
+--]]
 -- check formspec buttons or when name entered
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 

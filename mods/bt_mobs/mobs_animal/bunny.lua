@@ -1,6 +1,4 @@
-
 local S = mobs.intllib
-
 
 -- Bunny by ExeterDad
 
@@ -18,7 +16,7 @@ mobs:register_mob("mobs_animal:bunny", {
 	textures = {
 		{"mobs_bunny_grey.png"},
 		{"mobs_bunny_brown.png"},
-		{"mobs_bunny_white.png"},
+		{"mobs_bunny_white.png"}
 	},
 	sounds = {},
 	makes_footstep_sound = false,
@@ -40,25 +38,23 @@ mobs:register_mob("mobs_animal:bunny", {
 		walk_start = 16,
 		walk_end = 24,
 		punch_start = 16,
-		punch_end = 24,
+		punch_end = 24
 	},
-	follow = {"farming:carrot", "farming_plus:carrot_item"},
+	follow = {"farming:carrot", "farming_plus:carrot_item", "default:grass_1"},
 	view_range = 8,
 	replace_rate = 10,
 	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
 	replace_with = "air",
 	on_rightclick = function(self, clicker)
-
 		-- feed or tame
-		if mobs:feed_tame(self, clicker, 4, true, true) then
-			return
-		end
+		if mobs:feed_tame(self, clicker, 4, true, true) then return end
+		if mobs:protect(self, clicker) then return end
+		if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
 
 		-- Monty Python tribute
 		local item = clicker:get_wielded_item()
 
 		if item:get_name() == "mobs:lava_orb" then
-
 			if not mobs.is_creative(clicker:get_player_name()) then
 				item:take_item()
 				clicker:set_wielded_item(item)
@@ -70,18 +66,13 @@ mobs:register_mob("mobs_animal:bunny", {
 
 			self.type = "monster"
 			self.health = 20
-
+			self.passive = false
 			return
 		end
-
-		mobs:protect(self, clicker)
-		mobs:capture_mob(self, clicker, 30, 50, 80, false, nil)
 	end,
-
 	attack_type = "dogfight",
-	damage = 5,
+	damage = 5
 })
-
 
 local spawn_on = "default:dirt_with_grass"
 
@@ -95,11 +86,9 @@ mobs:spawn({
 	min_light = 10,
 	chance = 300000,
 	min_height = 0,
-	day_toggle = true,
+	day_toggle = true
 })
 
-
 mobs:register_egg("mobs_animal:bunny", S("Bunny"), "mobs_bunny_inv.png", 0)
-
 
 mobs:alias_mob("mobs:bunny", "mobs_animal:bunny") -- compatibility

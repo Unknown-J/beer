@@ -54,7 +54,7 @@ Heal=Pulih
 Level=Tahap
 Radiation=Radiasi
 Your @1 got destroyed!=@1 anda telah musnah!
-Your @1 is almost broken!=
+#Your @1 is almost broken!=
 [3d_armor] Fire Nodes disabled=[3d_armor] Nod-nod Api dilumpuhkan
 
 

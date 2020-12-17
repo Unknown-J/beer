@@ -7,8 +7,15 @@ if minetest.registered_nodes["default:permafrost"] then
 	y_off = 10
 end
 
--- rideable horse
+-- horse shoes (speed, jump, break, overlay texture)
+local shoes = {
+	["mobs:horseshoe_steel"] = {7, 4, 2, "mobs_horseshoe_steelo.png"},
+	["mobs:horseshoe_bronze"] = {7, 4, 4, "mobs_horseshoe_bronzeo.png"},
+	["mobs:horseshoe_mese"] = {9, 5, 8, "mobs_horseshoe_meseo.png"},
+	["mobs:horseshoe_diamond"] = {10, 6, 6, "mobs_horseshoe_diamondo.png"}
+}
 
+-- rideable horse
 mobs:register_mob("mob_horse:horse", {
 	type = "animal",
 	visual = "mesh",
@@ -23,7 +30,7 @@ mobs:register_mob("mob_horse:horse", {
 		walk_start = 75,
 		walk_end = 100,
 		run_start = 75,
-		run_end = 100,
+		run_end = 100
 	},
 	textures = {
 		{"mobs_horse.png"},
@@ -35,7 +42,7 @@ mobs:register_mob("mob_horse:horse", {
 	fly = false,
 	walk_chance = 60,
 	view_range = 5,
-	follow = {"farming:wheat"},
+	follow = {"farming:wheat", "default:apple", "farming:corn"},
 	passive = true,
 	hp_min = 12,
 	hp_max = 16,
@@ -45,12 +52,10 @@ mobs:register_mob("mob_horse:horse", {
 	water_damage = 1,
 	makes_footstep_sound = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 2, max = 3},
 		{name = "mobs:leather", chance = 1, min = 1, max = 3},
+		{name = "mobs:meat_raw", chance = 1, min = 2, max = 3}
 	},
-
 	do_custom = function(self, dtime)
-
 		-- set needed values if not already present
 		if not self.v2 then
 			self.v2 = 0
@@ -64,7 +69,6 @@ mobs:register_mob("mob_horse:horse", {
 
 		-- if driver present allow control of horse
 		if self.driver then
-
 			mobs.drive(self, "walk", "stand", false, dtime)
 
 			return false -- skip rest of mob functions
@@ -74,7 +78,6 @@ mobs:register_mob("mob_horse:horse", {
 	end,
 
 	on_die = function(self, pos)
-
 		-- drop saddle when horse is killed while riding
 		-- also detach from horse properly
 		if self.driver then
@@ -82,11 +85,13 @@ mobs:register_mob("mob_horse:horse", {
 			mobs.detach(self.driver, {x = 1, y = 0, z = 1})
 			self.saddle = nil
 		end
-
+		-- drop any horseshoes added
+		if self.shoed then
+			minetest.add_item(pos, self.shoed)
+		end
 	end,
 
 	on_rightclick = function(self, clicker)
-
 		-- make sure player is clicking
 		if not clicker or not clicker:is_player() then
 			return
@@ -97,14 +102,19 @@ mobs:register_mob("mob_horse:horse", {
 			return
 		end
 
+		-- applying protection rune
+		if mobs:protect(self, clicker) then
+			return
+		end
+
 		-- make sure tamed horse is being clicked by owner only
 		if self.tamed and self.owner == clicker:get_player_name() then
-
 			local inv = clicker:get_inventory()
+			local tool = clicker:get_wielded_item()
+			local item = tool:get_name()
 
 			-- detatch player already riding horse
 			if self.driver and clicker == self.driver then
-
 				mobs.detach(clicker, {x = 1, y = 0, z = 1})
 
 				-- add saddle back to inventory
@@ -114,16 +124,55 @@ mobs:register_mob("mob_horse:horse", {
 					minetest.add_item(clicker.get_pos(), "mobs:saddle")
 				end
 
+				self.saddle = nil
 			-- attach player to horse
-			elseif (not self.driver
+			elseif (not self.driver and not self.child
 			and clicker:get_wielded_item():get_name() == "mobs:saddle")
 			or self.saddle then
-
 				self.object:set_properties({stepheight = 1.1})
 				mobs.attach(self, clicker)
 
 				-- take saddle from inventory
-				inv:remove_item("main", "mobs:saddle")
+				if not self.saddle then
+					inv:remove_item("main", "mobs:saddle")
+				end
+
+				self.saddle = true
+			end
+
+			-- apply horseshoes
+			if item:find("mobs:horseshoe") then
+				-- drop any existing shoes
+				if self.shoed then
+					minetest.add_item(self.object:get_pos(), self.shoed)
+				end
+
+				local speed = shoes[item][1]
+				local jump = shoes[item][2]
+				local reverse = shoes[item][3]
+				local overlay = shoes[item][4]
+
+				self.max_speed_forward = speed
+				self.jump_height = jump
+				self.max_speed_reverse = reverse
+				self.accel = speed
+				self.shoed = item
+
+				-- apply horseshoe overlay to current horse texture
+				if overlay then
+					self.texture_mods = "^" .. overlay
+					self.object:set_texture_mod(self.texture_mods)
+				end
+
+				-- show horse speed and jump stats with shoes fitted
+				minetest.chat_send_player(clicker:get_player_name(),
+						S("Horse shoes fitted -")
+						.. S(" speed: ") .. speed
+						.. S(" , jump height: ") .. jump
+						.. S(" , stop speed: ") .. reverse)
+
+				tool:take_item(); clicker:set_wielded_item(tool)
+				return
 			end
 		end
 
@@ -139,7 +188,67 @@ mobs:spawn({
 	chance = 800000,
 	min_height = 0,
 	max_height = 31000,
-	day_toggle = true,
+	day_toggle = true
 })
 
 mobs:register_egg("mob_horse:horse", S("Horse"), "wool_brown.png", 1)
+
+-- steel horseshoes
+minetest.register_craftitem(":mobs:horseshoe_steel", {
+	description = S("Steel HorseShoes (use on horse to apply)"),
+	inventory_image = "mobs_horseshoe_steel.png"
+})
+
+minetest.register_craft({
+	output = "mobs:horseshoe_steel",
+	recipe = {
+		{"", "default:steelblock", ""},
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"default:steel_ingot", "", "default:steel_ingot"}
+	}
+})
+
+-- bronze horseshoes
+minetest.register_craftitem(":mobs:horseshoe_bronze", {
+	description = S("Bronze HorseShoes (use on horse to apply)"),
+	inventory_image = "mobs_horseshoe_bronze.png"
+})
+
+minetest.register_craft({
+	output = "mobs:horseshoe_bronze",
+	recipe = {
+		{"", "default:bronzeblock", ""},
+		{"default:bronze_ingot", "", "default:bronze_ingot"},
+		{"default:bronze_ingot", "", "default:bronze_ingot"}
+	}
+})
+
+-- mese horseshoes
+minetest.register_craftitem(":mobs:horseshoe_mese", {
+	description = S("Mese HorseShoes (use on horse to apply)"),
+	inventory_image = "mobs_horseshoe_mese.png"
+})
+
+minetest.register_craft({
+	output = "mobs:horseshoe_mese",
+	recipe = {
+		{"", "default:mese", ""},
+		{"default:mese_crystal_fragment", "", "default:mese_crystal_fragment"},
+		{"default:mese_crystal_fragment", "", "default:mese_crystal_fragment"}
+	}
+})
+
+-- diamond horseshoes
+minetest.register_craftitem(":mobs:horseshoe_diamond", {
+	description = S("Diamond HorseShoes (use on horse to apply)"),
+	inventory_image = "mobs_horseshoe_diamond.png"
+})
+
+minetest.register_craft({
+	output = "mobs:horseshoe_diamond",
+	recipe = {
+		{"", "default:diamondblock", ""},
+		{"default:diamond", "", "default:diamond"},
+		{"default:diamond", "", "default:diamond"}
+	}
+})

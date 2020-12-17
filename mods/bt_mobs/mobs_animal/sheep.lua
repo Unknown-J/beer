@@ -1,6 +1,5 @@
 local S = mobs.intllib
 
-
 local all_colours = {
 	{"black",      S("Black"),      "#000000b0"},
 	{"blue",       S("Blue"),       "#015dbb70"},
@@ -16,15 +15,15 @@ local all_colours = {
 	{"red",        S("Red"),        "#ff0000a0"},
 	{"violet",     S("Violet"),     "#2000c970"},
 	{"white",      S("White"),      "#abababc0"},
-	{"yellow",     S("Yellow"),     "#e3ff0070"},
+	{"yellow",     S("Yellow"),     "#e3ff0070"}
 }
-
 
 -- Sheep by PilzAdam, texture converted to minetest by AMMOnym from Summerfield pack
 
 for _, col in ipairs(all_colours) do
-
 	mobs:register_mob("mobs_animal:sheep_"..col[1], {
+		stay_near = {"farming:straw", 10},
+		stepheight = 0.6,
 		type = "animal",
 		passive = true,
 		hp_min = 8,
@@ -34,23 +33,25 @@ for _, col in ipairs(all_colours) do
 		visual = "mesh",
 		mesh = "mobs_sheep.b3d",
 		textures = {
-			{"mobs_sheep_base.png^(mobs_sheep_wool.png^[colorize:" .. col[3] .. ")"},
+			{"mobs_sheep_base.png^(mobs_sheep_wool.png^[colorize:" .. col[3] .. ")"}
 		},
 		gotten_texture = {"mobs_sheep_shaved.png"},
 		gotten_mesh = "mobs_sheep_shaved.b3d",
 		makes_footstep_sound = true,
 		sounds = {
-			random = "mobs_sheep",
+			random = "mobs_sheep"
 		},
 		walk_velocity = 1,
 		run_velocity = 2,
 		runaway = true,
 		jump = true,
+		jump_height = 6,
+		pushable = true,
 		drops = {
 			{name = "mobs:meat_raw", chance = 2, min = 1, max = 2},
-			--{name = "wool:"..col[1], chance = 1, min = 1, max = 1}
+			-- {name = "wool:"..col[1], chance = 1, min = 1, max = 1}
 		},
-		water_damage = 1,
+		water_damage = 0,
 		lava_damage = 5,
 		light_damage = 0,
 		animation = {
@@ -60,26 +61,45 @@ for _, col in ipairs(all_colours) do
 			stand_end = 80,
 			walk_start = 81,
 			walk_end = 100,
+
+			die_start = 1, -- we dont have a specific death animation so we will
+			die_end = 2, --   re-use 2 standing frames at a speed of 1 fps and
+			die_speed = 1, -- have mob rotate when dying.
+			die_loop = false,
+			die_rotate = true
 		},
-		follow = {"farming:wheat", "default:grass_5"},
+		follow = {"farming:wheat", "default:grass_1"},
 		view_range = 8,
 		replace_rate = 10,
-		replace_what = {"default:grass_3", "default:grass_4", "default:grass_5", "farming:wheat_8"},
-		replace_with = "air",
-		replace_offset = -1,
+		replace_what = {
+			{"group:grass", "air", -1},
+			{"default:dirt_with_grass", "default:dirt", -2}
+		},
 		fear_height = 3,
+		on_replace = function(self, pos, oldnode, newnode)
+			self.food = (self.food or 0) + 1
 
+			-- if sheep replaces 8x grass then it regrows wool
+			if self.food >= 8 then
+				self.food = 0
+				self.gotten = false
+
+				self.object:set_properties({
+					textures = {"mobs_sheep_base.png^(mobs_sheep_wool.png^[colorize:" .. col[3] .. ")"},
+					mesh = "mobs_sheep.b3d"
+				})
+			end
+		end,
 		on_rightclick = function(self, clicker)
-
 			--are we feeding?
 			if mobs:feed_tame(self, clicker, 8, true, true) then
+				--if fed 7 times then sheep regrows wool
+				if self.food and self.food > 6 then
 
-				--if full grow fuzz
-				if self.gotten == false then
-
+					self.gotten = false
 					self.object:set_properties({
 						textures = {"mobs_sheep_base.png^(mobs_sheep_wool.png^[colorize:" .. col[3] .. ")"},
-						mesh = "mobs_sheep.b3d",
+						mesh = "mobs_sheep.b3d"
 					})
 				end
 
@@ -88,12 +108,13 @@ for _, col in ipairs(all_colours) do
 
 			local item = clicker:get_wielded_item()
 			local itemname = item:get_name()
+			local name = clicker:get_player_name()
 
 			--are we giving a haircut>
 			if itemname == "mobs:shears" then
-
 				if self.gotten ~= false
 				or self.child ~= false
+				or name ~= self.owner
 				or not minetest.get_modpath("wool") then
 					return
 				end
@@ -120,28 +141,22 @@ for _, col in ipairs(all_colours) do
 
 				self.object:set_properties({
 					textures = {"mobs_sheep_shaved.png"},
-					mesh = "mobs_sheep_shaved.b3d",
+					mesh = "mobs_sheep_shaved.b3d"
 				})
 
 				return
 			end
 
-			local name = clicker:get_player_name()
-
 			--are we coloring?
 			if itemname:find("dye:") then
-
 				if self.gotten == false
 				and self.child == false
 				and self.tamed == true
 				and name == self.owner then
-
 					local colr = string.split(itemname, ":")[2]
 
 					for _, c in pairs(all_colours) do
-
 						if c[1] == colr then
-
 							local pos = self.object:get_pos()
 
 							self.object:remove()
@@ -153,7 +168,7 @@ for _, col in ipairs(all_colours) do
 							ent.tamed = true
 
 							-- take item
-							if not minetest.settings:get_bool("creative_mode") then
+							if not mobs.is_creative(clicker:get_player_name()) then
 								item:take_item()
 								clicker:set_wielded_item(item)
 							end
@@ -167,20 +182,18 @@ for _, col in ipairs(all_colours) do
 			end
 
 			-- protect mod with mobs:protector item
-			mobs:protect(self, clicker)
+			if mobs:protect(self, clicker) then return end
 
 			--are we capturing?
-			mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
+			if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
 		end
 	})
 
-	mobs:register_egg("mobs_animal:sheep_" .. col[1], S("@1 Sheep", col[2]), "wool_" .. col[1] .. ".png", 1)
+	mobs:register_egg("mobs_animal:sheep_"..col[1], S("@1 Sheep", col[2]), "wool_"..col[1]..".png^mobs_sheep_inv.png")
 
 	-- compatibility
 	mobs:alias_mob("mobs:sheep_" .. col[1], "mobs_animal:sheep_" .. col[1])
-
 end
-
 
 local spawn_on = "default:dirt_with_grass"
 
@@ -191,12 +204,13 @@ end
 mobs:spawn({
 	name = "mobs_animal:sheep_white",
 	nodes = {spawn_on},
-	min_light = 10,
+	neighbors = {"group:grass"},
+	min_light = 14,
+	interval = 60,
 	chance = 300000,
 	min_height = 0,
 	max_height = 31000,
-	day_toggle = true,
+	day_toggle = true
 })
-
 
 mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white") -- compatibility

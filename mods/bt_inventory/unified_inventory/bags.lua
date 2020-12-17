@@ -249,31 +249,31 @@ minetest.register_tool("unified_inventory:bag_large", {
 })
 
 -- register bag crafts
-if minetest.get_modpath("farming") ~= nil then
+if minetest.get_modpath("farming") and minetest.get_modpath("mobs") then
 	minetest.register_craft({
 		output = "unified_inventory:bag_small",
 		recipe = {
-			{"",           "farming:string", ""},
-			{"group:wool", "group:wool",     "group:wool"},
-			{"group:wool", "group:wool",     "group:wool"},
-		},
+			{"default:mese", "farming:string", "default:mese"},
+			{"mobs:leather", "group:wool",     "mobs:leather"},
+			{"mobs:leather", "group:wool",     "mobs:leather"},
+		}
 	})
 
 	minetest.register_craft({
 		output = "unified_inventory:bag_medium",
 		recipe = {
-			{"",               "",                            ""},
-			{"farming:string", "unified_inventory:bag_small", "farming:string"},
-			{"farming:string", "unified_inventory:bag_small", "farming:string"},
-		},
+			{"default:mese", "farming:string",              "default:mese"},
+			{"mobs:leather", "unified_inventory:bag_small", "mobs:leather"},
+			{"mobs:leather", "unified_inventory:bag_small", "mobs:leather"},
+		}
 	})
 
 	minetest.register_craft({
 		output = "unified_inventory:bag_large",
 		recipe = {
-			{"",               "",                             ""},
-			{"farming:string", "unified_inventory:bag_medium", "farming:string"},
-			{"farming:string", "unified_inventory:bag_medium", "farming:string"},
-	    },
+			{"default:mese", "farming:string",               "default:mese"},
+			{"mobs:leather", "unified_inventory:bag_medium", "mobs:leather"},
+			{"mobs:leather", "unified_inventory:bag_medium", "mobs:leather"},
+	    }
 	})
 end

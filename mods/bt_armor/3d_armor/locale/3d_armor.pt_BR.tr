@@ -54,7 +54,7 @@ Heal=Saúde
 Level=Nível
 Radiation=Radiação
 Your @1 got destroyed!=@1 foi destruído(a)!
-Your @1 is almost broken!=
+#Your @1 is almost broken!=
 [3d_armor] Fire Nodes disabled=[3d_armor] Nodes de gofo desabilitados
 
 

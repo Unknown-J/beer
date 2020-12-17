@@ -13,7 +13,7 @@ local S = armor.get_translator
 
 -- integration test
 if minetest.settings:get_bool("enable_3d_armor_integration_test") then
-        dofile(modpath.."/integration_test.lua")
+	dofile(modpath.."/integration_test.lua")
 end
 
 
@@ -66,7 +66,7 @@ end
 
 if minetest.get_modpath("technic") then
 	armor.formspec = armor.formspec..
-		"label[5,2.5;"..F(S("Radiation"))..":  armor_group_radiation]"
+		"label[5,2.5;"..F(S("Radiation"))..": armor_group_radiation]"
 	armor:register_armor_group("radiation")
 end
 local skin_mods = {"skins", "u_skins", "simple_skins", "wardrobe"}
@@ -95,9 +95,9 @@ dofile(modpath.."/armor.lua")
 
 armor.formspec = armor.formspec..
 	"label[5,1;"..F(S("Level"))..": armor_level]"..
-	"label[5,1.5;"..F(S("Heal"))..":  armor_attr_heal]"
+	"label[5,1.5;"..F(S("Heal"))..": armor_attr_heal]"
 if armor.config.fire_protect then
-	armor.formspec = armor.formspec.."label[5,2;"..F(S("Fire"))..":  armor_attr_fire]"
+	armor.formspec = armor.formspec.."label[5,2;"..F(S("Fire"))..": armor_attr_fire]"
 end
 armor:register_on_damage(function(player, index, stack)
 	local name = player:get_player_name()
@@ -193,6 +193,9 @@ local function init_player_armor(initplayer)
 			armor:set_player_armor(player)
 		end,
 		allow_put = function(inv, listname, index, put_stack, player)
+			if player:get_player_name() ~= name then
+				return 0
+			end
 			local element = armor:get_element(put_stack:get_name())
 			if not element then
 				return 0
@@ -208,9 +211,15 @@ local function init_player_armor(initplayer)
 			return 1
 		end,
 		allow_take = function(inv, listname, index, stack, player)
+			if player:get_player_name() ~= name then
+				return 0
+			end
 			return stack:get_count()
 		end,
 		allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
+			if player:get_player_name() ~= name then
+				return 0
+			end
 			return count
 		end,
 	}, name)
@@ -305,7 +314,7 @@ minetest.register_on_joinplayer(function(player)
 	local player_name = player:get_player_name()
 
 	minetest.after(0, function()
-    local pplayer = minetest.get_player_by_name(player_name)
+		local pplayer = minetest.get_player_by_name(player_name)
 		if pplayer and init_player_armor(pplayer) == false then
 			pending_players[pplayer] = 0
 		end
@@ -330,7 +339,10 @@ if armor.config.drop == true or armor.config.destroy == true then
 		local drop = {}
 		for i=1, armor_inv:get_size("armor") do
 			local stack = armor_inv:get_stack("armor", i)
-			if stack:get_count() > 0 and stack:get_name() ~= "painting:paintedcanvas" and stack:get_name() ~= "painted_3d_armor:banner_armor" then
+			if stack:get_count() > 0 and
+			  stack:get_name() ~= "painting:paintedcanvas" and
+			  stack:get_name() ~= "painted_3d_armor:banner_armor"
+			then
 				table.insert(drop, stack)
 				armor:run_callbacks("on_unequip", player, i, stack)
 				armor_inv:set_stack("armor", i, nil)

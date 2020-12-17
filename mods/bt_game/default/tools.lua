@@ -54,6 +54,21 @@ minetest.register_tool("default:pick_stone", {
 	groups = {pickaxe = 1}
 })
 
+minetest.register_tool("default:pick_bronze", {
+	description = S("Bronze Pickaxe"),
+	inventory_image = "default_tool_bronzepick.png",
+	tool_capabilities = {
+		full_punch_interval = 1.0,
+		max_drop_level=1,
+		groupcaps={
+			cracky = {times={[1]=4.50, [2]=1.80, [3]=0.90}, uses=20, maxlevel=2},
+		},
+		damage_groups = {fleshy=4},
+	},
+	sound = {breaks = "default_tool_breaks"},
+	groups = {pickaxe = 1}
+})
+
 minetest.register_tool("default:pick_steel", {
 	description = S("Steel Pickaxe"),
 	inventory_image = "default_tool_steelpick.png",
@@ -62,21 +77,6 @@ minetest.register_tool("default:pick_steel", {
 		max_drop_level=1,
 		groupcaps={
 			cracky = {times={[1]=4.00, [2]=1.60, [3]=0.80}, uses=20, maxlevel=2},
-		},
-		damage_groups = {fleshy=4},
-	},
-	sound = {breaks = "default_tool_breaks"},
-	groups = {pickaxe = 1}
-})
-
-minetest.register_tool("default:pick_bronze", {
-	description = S("Bronze Pickaxe"),
-	inventory_image = "default_tool_bronzepick.png",
-	tool_capabilities = {
-		full_punch_interval = 1.0,
-		max_drop_level=1,
-		groupcaps={
-			cracky = {times={[1]=4.00, [2]=1.60, [3]=0.80}, uses=30, maxlevel=2},
 		},
 		damage_groups = {fleshy=4},
 	},
@@ -150,6 +150,22 @@ minetest.register_tool("default:shovel_stone", {
 	groups = {shovel = 1}
 })
 
+minetest.register_tool("default:shovel_bronze", {
+	description = S("Bronze Shovel"),
+	inventory_image = "default_tool_bronzeshovel.png",
+	wield_image = "default_tool_bronzeshovel.png^[transformR90",
+	tool_capabilities = {
+		full_punch_interval = 1.1,
+		max_drop_level=1,
+		groupcaps={
+			crumbly = {times={[1]=1.65, [2]=1.05, [3]=0.45}, uses=25, maxlevel=2},
+		},
+		damage_groups = {fleshy=3},
+	},
+	sound = {breaks = "default_tool_breaks"},
+	groups = {shovel = 1}
+})
+
 minetest.register_tool("default:shovel_steel", {
 	description = S("Steel Shovel"),
 	inventory_image = "default_tool_steelshovel.png",
@@ -159,22 +175,6 @@ minetest.register_tool("default:shovel_steel", {
 		max_drop_level=1,
 		groupcaps={
 			crumbly = {times={[1]=1.50, [2]=0.90, [3]=0.40}, uses=30, maxlevel=2},
-		},
-		damage_groups = {fleshy=3},
-	},
-	sound = {breaks = "default_tool_breaks"},
-	groups = {shovel = 1}
-})
-
-minetest.register_tool("default:shovel_bronze", {
-	description = S("Bronze Shovel"),
-	inventory_image = "default_tool_bronzeshovel.png",
-	wield_image = "default_tool_bronzeshovel.png^[transformR90",
-	tool_capabilities = {
-		full_punch_interval = 1.1,
-		max_drop_level=1,
-		groupcaps={
-			crumbly = {times={[1]=1.50, [2]=0.90, [3]=0.40}, uses=40, maxlevel=2},
 		},
 		damage_groups = {fleshy=3},
 	},
@@ -248,6 +248,21 @@ minetest.register_tool("default:axe_stone", {
 	groups = {axe = 1}
 })
 
+minetest.register_tool("default:axe_bronze", {
+	description = S("Bronze Axe"),
+	inventory_image = "default_tool_bronzeaxe.png",
+	tool_capabilities = {
+		full_punch_interval = 1.0,
+		max_drop_level=1,
+		groupcaps={
+			choppy={times={[1]=2.75, [2]=1.70, [3]=1.15}, uses=20, maxlevel=2},
+		},
+		damage_groups = {fleshy=4},
+	},
+	sound = {breaks = "default_tool_breaks"},
+	groups = {axe = 1}
+})
+
 minetest.register_tool("default:axe_steel", {
 	description = S("Steel Axe"),
 	inventory_image = "default_tool_steelaxe.png",
@@ -256,21 +271,6 @@ minetest.register_tool("default:axe_steel", {
 		max_drop_level=1,
 		groupcaps={
 			choppy={times={[1]=2.50, [2]=1.40, [3]=1.00}, uses=20, maxlevel=2},
-		},
-		damage_groups = {fleshy=4},
-	},
-	sound = {breaks = "default_tool_breaks"},
-	groups = {axe = 1}
-})
-
-minetest.register_tool("default:axe_bronze", {
-	description = S("Bronze Axe"),
-	inventory_image = "default_tool_bronzeaxe.png",
-	tool_capabilities = {
-		full_punch_interval = 1.0,
-		max_drop_level=1,
-		groupcaps={
-			choppy={times={[1]=2.50, [2]=1.40, [3]=1.00}, uses=30, maxlevel=2},
 		},
 		damage_groups = {fleshy=4},
 	},
@@ -300,7 +300,7 @@ minetest.register_tool("default:axe_diamond", {
 		full_punch_interval = 0.9,
 		max_drop_level=1,
 		groupcaps={
-			choppy={times={[1]=2.10, [2]=0.90, [3]=0.50}, uses=30, maxlevel=2},
+			choppy={times={[1]=2.10, [2]=0.90, [3]=0.50}, uses=30, maxlevel=3},
 		},
 		damage_groups = {fleshy=7},
 	},
@@ -342,6 +342,21 @@ minetest.register_tool("default:sword_stone", {
 	groups = {sword = 1}
 })
 
+minetest.register_tool("default:sword_bronze", {
+	description = S("Bronze Sword"),
+	inventory_image = "default_tool_bronzesword.png",
+	tool_capabilities = {
+		full_punch_interval = 0.8,
+		max_drop_level=1,
+		groupcaps={
+			snappy={times={[1]=2.75, [2]=1.30, [3]=0.375}, uses=25, maxlevel=2},
+		},
+		damage_groups = {fleshy=6},
+	},
+	sound = {breaks = "default_tool_breaks"},
+	groups = {sword = 1}
+})
+
 minetest.register_tool("default:sword_steel", {
 	description = S("Steel Sword"),
 	inventory_image = "default_tool_steelsword.png",
@@ -350,21 +365,6 @@ minetest.register_tool("default:sword_steel", {
 		max_drop_level=1,
 		groupcaps={
 			snappy={times={[1]=2.5, [2]=1.20, [3]=0.35}, uses=30, maxlevel=2},
-		},
-		damage_groups = {fleshy=6},
-	},
-	sound = {breaks = "default_tool_breaks"},
-	groups = {sword = 1}
-})
-
-minetest.register_tool("default:sword_bronze", {
-	description = S("Bronze Sword"),
-	inventory_image = "default_tool_bronzesword.png",
-	tool_capabilities = {
-		full_punch_interval = 0.8,
-		max_drop_level=1,
-		groupcaps={
-			snappy={times={[1]=2.5, [2]=1.20, [3]=0.35}, uses=40, maxlevel=2},
 		},
 		damage_groups = {fleshy=6},
 	},
@@ -400,29 +400,6 @@ minetest.register_tool("default:sword_diamond", {
 	},
 	sound = {breaks = "default_tool_breaks"},
 	groups = {sword = 1}
-})
-
-minetest.register_tool("default:sword_admin", {
-	description = S("Admin Sword"),
-	inventory_image = "default_tool_adminsword.png",
-	wield_scale = {x = 1, y = 1.6, z = 1},
-	range = 5,
-	tool_capabilities = {
-		full_punch_interval = 0.1,
-		max_drop_level = 3,
-		groupcaps = {
-			snappy = {times={[1] = 0.30, [2] = 0.20, [3] = 0.10}, uses = 0, maxlevel = 3},
-		},
-		damage_groups = {fleshy = 10000},
-	},
-	sound = {breaks = "default_tool_breaks"},
-	groups = {not_in_creative_inventory = 1},
-	on_drop = function(itemstack, dropper, pos)
-		return
-	end,
-	after_use = function(itemstack, user, node, digparams)
-		return itemstack
-	end,
 })
 
 --

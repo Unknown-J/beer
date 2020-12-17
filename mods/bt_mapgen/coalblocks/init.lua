@@ -7,7 +7,7 @@ minetest.register_ore({
     clust_size     = 8,
     y_min		   = 700,
     y_max		   = 1000,
-    noise_params   = { offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=3, persist=0.70 }
+    noise_params   = {offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=3, persist=0.70}
 })
 
 minetest.register_ore({
@@ -19,7 +19,7 @@ minetest.register_ore({
     clust_size     = 8,
     y_min		   = 700,
     y_max		   = 1000,
-    noise_params   = { offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=3, persist=0.70 }
+    noise_params   = {offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=3, persist=0.70}
 })
 
 minetest.register_ore({
@@ -31,7 +31,7 @@ minetest.register_ore({
     clust_size     = 8,
     y_min		   = 700,
     y_max		   = 1000,
-    noise_params   = { offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=3, persist=0.70 }
+    noise_params   = {offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=3, persist=0.70}
 })
 
 minetest.register_ore({
@@ -43,7 +43,7 @@ minetest.register_ore({
     clust_size     = 16,
     y_min		   = 2000,
     y_max		   = 3000,
-    noise_params   = { offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=5, persist=0.70 }
+    noise_params   = {offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=5, persist=0.70}
 })
 
 minetest.register_ore({
@@ -55,7 +55,7 @@ minetest.register_ore({
     clust_size     = 16,
     y_min		   = 2000,
     y_max		   = 3000,
-    noise_params   = { offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=5, persist=0.70 }
+    noise_params   = {offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=5, persist=0.70}
 })
 
 minetest.register_ore({
@@ -67,5 +67,5 @@ minetest.register_ore({
     clust_size     = 16,
     y_min		   = 2000,
     y_max		   = 3000,
-    noise_params   = { offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=5, persist=0.70 }
+    noise_params   = {offset=0, scale=1, spread={x=100, y=100, z=100}, seed=23, octaves=5, persist=0.70}
 })

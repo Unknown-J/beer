@@ -17,11 +17,9 @@ local gdragon_base = {
 	collisionbox = {-0.6, -1.4, -0.6, 0.6, 0.6, 0.6},
 	visual = "mesh",
 	mesh = "dragon.b3d",
-	textures = {
-	  {"dmobs_dragon_great.png"},
-	},
+	textures = {{"dmobs_dragon_great.png"}},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=2.5, y=2.5},
+	visual_size = {x = 2.5, y = 2.5},
 	makes_footstep_sound = true,
 	runaway = false,
 	jump_chance = 30,
@@ -31,7 +29,7 @@ local gdragon_base = {
 	fall_damage = 0,
 	sounds = {
 		shoot_attack = "mobs_fireball",
-	  random = "roar",
+		random = "dmobs_roar"
 	},
 	walk_velocity = 3,
 	run_velocity = 5,
@@ -39,7 +37,7 @@ local gdragon_base = {
 	fly = true,
 	drops = {
 		{name = "dmobs:dragon_egg_great", chance = 1, min = 1, max = 1},
-		{name = "mobs:lava_orb", chance = 1, min = 1, max = 1},
+		{name = "mobs:lava_orb", chance = 1, min = 1, max = 1}
 	},
 	fall_speed = 0,
 	stepheight = 10,
@@ -59,7 +57,7 @@ local gdragon_base = {
 		punch_start = 22,
 		punch_end = 47,
 	},
-	knock_back = 2,
+	knock_back = 2
 }
 
 mobs:register_mob("dmobs:dragon_great", dmobs.deepclone(gdragon_base) )
@@ -72,7 +70,6 @@ gdragon_base.on_rightclick = dmobs.dragon.ride
 gdragon_base.do_custom = dmobs.dragon.do_custom
 
 mobs:register_mob("dmobs:dragon_great_tame", dmobs.deepclone(gdragon_base) )
-
 
 mobs:register_egg("dmobs:dragon_great", "Boss Dragon", "dmobs_egg1.png", 1)
 mobs:register_egg("dmobs:dragon_great_tame", "Great Dragon", "default_lava_source_animated.png", 1)

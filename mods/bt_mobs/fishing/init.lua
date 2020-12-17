@@ -1,8 +1,4 @@
 -----------------------------------------------------------------------------------------------
-local title		= "Fishing - Crabman77's (MFF team) version"
-local version 	= "1.0.0"
-local mname		= "fishing"
------------------------------------------------------------------------------------------------
 -- original by wulfsdad (http://forum.minetest.net/viewtopic.php?id=4375)
 -- rewrited by Mossmanikin (https://forum.minetest.net/viewtopic.php?id=6480)
 -- this version rewrited by Crabman77
@@ -12,70 +8,89 @@ local mname		= "fishing"
 -- Dependencies: 			default
 -- Supports:				animal_clownfish, animal_fish_blue_white, animal_rat, mobs
 -----------------------------------------------------------------------------------------------
+local mname = "fishing"
+local WP = minetest.get_worldpath() .. "/" .. mname .. "/"
+local MP = minetest.get_modpath(mname) .. "/"
 
-minetest.log("action","[mod fishing] Loading...")
-local path = minetest.get_modpath("fishing").."/"
+minetest.mkdir(WP)
 
-fishing_setting = {}
-fishing_setting.func = {}
-fishing_setting.is_creative_mode = minetest.settings:get_bool("creative_mode")
-fishing_setting.file_settings = minetest.get_worldpath() .. "/fishing_config.txt"
-fishing_setting.file_trophies = minetest.get_worldpath() .. "/fishing_trophies.txt"
-fishing_setting.file_contest = minetest.get_worldpath() .. "/fishing_contest.txt"
-fishing_setting.settings = {}
-fishing_setting.contest = {}
---for random object
-random_objects = {}
-fishing_setting.baits = {}
-fishing_setting.hungry = {}
-fishing_setting.prizes = {}
-fishing_setting.trophies = {}
-fishing_setting.func.S = function (s) return s end
+fishing = {
+	baits = {},
+	contest = {},
+	files = {
+		contest = WP .. "fishing_contest.txt",
+		planned = WP .. "fishing_planned.txt",
+		settings = WP .. "fishing_settings.txt",
+		trophies = WP .. "fishing_trophies.txt"
+	},
+	func = {},
+	hungry = {},
+	planned = {},
+	prizes = {},
+	registered_trophies = {},
+	settings = {},
+	trophies = {},
+	version = "1.0.0"
+}
 
-dofile(path .."settings.txt")
-dofile(path .."functions.lua")
+local files = fishing.files
+local func = fishing.func
+local settings = fishing.settings
 
---default_settings
-fishing_setting.settings["message"] = MESSAGES
-fishing_setting.settings["worm_is_mob"] = WORM_IS_MOB
-fishing_setting.settings["worm_chance"] = WORM_CHANCE
-fishing_setting.settings["new_worm_source"] = NEW_WORM_SOURCE
-fishing_setting.settings["wear_out"] = WEAR_OUT
-fishing_setting.settings["simple_deco_fishing_pole"] = SIMPLE_DECO_FISHING_POLE
-fishing_setting.settings["bobber_view_range"] = BOBBER_VIEW_RANGE
-fishing_setting.settings["fish_chance"] = FISH_CHANCE
-fishing_setting.settings["shark_chance"] = SHARK_CHANCE
-fishing_setting.settings["treasure_chance"] = TREASURE_CHANCE
-fishing_setting.settings["treasure_enable"] = TREASURE_RANDOM_ENABLE
-fishing_setting.settings["escape_chance"] = ESCAPE_CHANCE
+func.S = minetest.get_translator("fishing")
 
--- to mobs_fish|mobs_sharks modpack
-if (minetest.get_modpath("mobs_fish") ~= nil or minetest.get_modpath("mobs_sharks") ~= nil) then
-  fishing_setting.have_true_fish = true
+-- default settings
+fishing.contest = {
+	bobber_nb = 4,
+	contest = false,
+	duration = 3600,
+	nb_fish = {},
+	planned_contest = false,
+	warning_said = false
+}
+fishing.settings = {
+	bobber_view_range = 7,
+	escape_chance = 5,
+	fish_chance = 60,
+	have_true_fish = false,
+	message = true,
+	new_worms_source = true,
+	shark_chance = 50,
+	simple_deco_fishing_pole = true,
+	treasure_chance = 5,
+	treasure_enable = true,
+	wear_out = true,
+	worm_chance = 66,
+	worm_is_mob = true
+}
+if minetest.get_modpath("mobs_fish") or minetest.get_modpath("mobs_sharks") then
+	settings.have_true_fish = true
 end
 
--- load config file if exist in worldpath
-fishing_setting.func.load()
+dofile(MP .. "baits.lua")
+dofile(MP .. "baitball.lua")
+dofile(MP .. "bobber.lua")
+dofile(MP .. "bobber_shark.lua")
+dofile(MP .. "crafting.lua")
+dofile(MP .. "fishes.lua")
+dofile(MP .. "functions.lua")
+dofile(MP .. "poles.lua")
+dofile(MP .. "prizes.lua")
+dofile(MP .. "trophies.lua")
+dofile(MP .. "worms.lua")
 
-dofile(path .."worms.lua")
-dofile(path .."crafting.lua")
-dofile(path .."baits.lua")
-dofile(path .."prizes.lua")
-dofile(path .."baitball.lua")
-dofile(path .."bobber.lua")
-dofile(path .."bobber_shark.lua")
-dofile(path .."fishes.lua")
-dofile(path .."trophies.lua")
-dofile(path .."poles.lua")
+-- load settings files
+func.load(files.contest, "contest")
+func.load(files.settings, "settings")
+func.load_planned()
+func.load_trophies()
 
---random hungry bait
-fishing_setting.func.hungry_random()
---load table caught fish by players
-fishing_setting.func.load_trophies()
---load table contest
-fishing_setting.func.load_contest()
-fishing_setting.func.tick()
-
+func.tick()
+if fishing.contest.planned_contest then
+	func.planned_tick()
+end
+func.hungry_random()
+func.request_save(true)
 -----------------------------------------------------------------------------------------------
-minetest.log("action", "[Mod] "..title.." ["..version.."] ["..mname.."] Loaded...")
+minetest.log("action", "[" .. mname .. "] Version " .. fishing.version .. " loaded.")
 -----------------------------------------------------------------------------------------------

@@ -4,13 +4,12 @@ function integral.clone_node(name)
 	return node2
 end
 
-
 minetest.register_node("integral:integral_bark", {
 	description = "Integral Bark",
 	tiles = {"default_tree.png"},
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, integral = 1},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 minetest.register_node("integral:integral_wood", {
@@ -18,7 +17,7 @@ minetest.register_node("integral:integral_wood", {
 	tiles = {"integral_integral_wood.png"},
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, flammable = 3, integral = 1},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 minetest.register_node("integral:integral_ironwood", {
@@ -26,7 +25,7 @@ minetest.register_node("integral:integral_ironwood", {
 	tiles = {"integral_integral_wood.png^[colorize:#B7410E:80"},
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, level=1, integral = 1},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 minetest.register_node("integral:integral_diamondwood", {
@@ -34,14 +33,14 @@ minetest.register_node("integral:integral_diamondwood", {
 	tiles = {"integral_integral_wood.png^[colorize:#5D8AA8:80"},
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, level=2, integral = 1},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 minetest.register_node("integral:petrified_wood", {
 	description = "Petrified Wood",
 	tiles = {"ores_petrified_wood.png"},
 	groups = {cracky = 3, stone = 1},
-	sounds = default.node_sound_stone_defaults(),
+	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("integral:petrified_integrite", {
@@ -53,7 +52,7 @@ minetest.register_node("integral:petrified_integrite", {
 	paramtype = "light",
 	is_ground_content = false,
 	groups = {cracky = 3},
-	sounds = default.node_sound_stone_defaults(),
+	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("integral:petrified_bee", {
@@ -65,7 +64,7 @@ minetest.register_node("integral:petrified_bee", {
 	paramtype = "light",
 	is_ground_content = false,
 	groups = {cracky = 3},
-	sounds = default.node_sound_stone_defaults(),
+	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("integral:petrified_cow", {
@@ -77,7 +76,7 @@ minetest.register_node("integral:petrified_cow", {
 	paramtype = "light",
 	is_ground_content = false,
 	groups = {cracky = 3},
-	sounds = default.node_sound_stone_defaults(),
+	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("integral:petrified_kitten", {
@@ -89,7 +88,7 @@ minetest.register_node("integral:petrified_kitten", {
 	paramtype = "light",
 	is_ground_content = false,
 	groups = {cracky = 3},
-	sounds = default.node_sound_stone_defaults(),
+	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("integral:petrified_sheep", {
@@ -101,7 +100,7 @@ minetest.register_node("integral:petrified_sheep", {
 	paramtype = "light",
 	is_ground_content = false,
 	groups = {cracky = 3},
-	sounds = default.node_sound_stone_defaults(),
+	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("integral:amber", {
@@ -115,7 +114,7 @@ minetest.register_node("integral:amber", {
 	use_texture_alpha = true,
 	is_ground_content = false,
 	groups = {cracky = 3, level=2},
-	sounds = default.node_sound_stone_defaults(),
+	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_node("integral:syrup", {
@@ -131,69 +130,73 @@ minetest.register_node("integral:syrup", {
 	},
 	groups = {vessel = 1, dig_immediate = 3, attached_node = 1},
 	on_use = minetest.item_eat(2, "vessels:glass_bottle"),
-	sounds = default.node_sound_glass_defaults(),
+	sounds = default.node_sound_glass_defaults()
 })
 
-minetest.register_craftitem("integral:charcoal", {
-	description = "Charcoal Briquette",
-	inventory_image = "default_coal_lump.png",
-	groups = {coal = 1}
-})
+if not basic_machines then
+	minetest.register_craftitem("integral:charcoal", {
+		description = "Charcoal Briquette",
+		inventory_image = "default_coal_lump.png",
+		groups = {coal = 1}
+	})
 
-minetest.register_craft({
-	type = "fuel",
-	recipe = "integral:charcoal",
-	burntime = 50,
-})
+	minetest.register_craft({
+		type = "fuel",
+		recipe = "integral:charcoal",
+		burntime = 50
+	})
+end
 
 minetest.register_craft({
 	type = "cooking",
 	output = "default:sand",
-	recipe = "integral:integral_bark",
+	recipe = "integral:integral_bark"
 })
 
 minetest.register_craft({
 	type = "cooking",
 	output = "default:iron_lump",
-	recipe = "integral:integral_ironwood",
+	recipe = "integral:integral_ironwood"
 })
 
 minetest.register_craft({
 	type = "cooking",
 	output = "default:diamond",
-	recipe = "integral:integral_diamondwood",
+	recipe = "integral:integral_diamondwood"
 })
 
-minetest.register_craft({
-	type = "cooking",
-	output = "integral:charcoal",
-	recipe = "group:tree",
-})
+if not basic_machines then
+	minetest.register_craft({
+		type = "cooking",
+		output = "integral:charcoal",
+		recipe = "group:tree"
+	})
 
-minetest.register_craft({
-	output = 'default:torch 4',
-	recipe = {
-		{'integral:charcoal'},
-		{'group:stick'},
-	}
-})
+	minetest.register_craft({
+		output = 'default:torch 4',
+		recipe = {
+			{'integral:charcoal'},
+			{'group:stick'}
+		}
+	})
+end
 
 minetest.register_craft({
 	output = 'integral:syrup',
 	type = "shapeless",
 	recipe = {
 		'vessels:glass_bottle',
-		'integral:bucket_sap',
+		'integral:bucket_sap'
 	},
-	replacements = {{'integral:bucket_sap', 'bucket:bucket_empty'},},
+	replacements = {{'integral:bucket_sap', 'bucket:bucket_empty'},}
 })
 
 minetest.register_craft( {
 	output = "vessels:glass_bottle 10",
 	recipe = {
-		{ "integral:amber", "", "integral:amber" },
-		{ "integral:amber", "", "integral:amber" },
-		{ "", "integral:amber", "" }
+		{"integral:amber", "", "integral:amber"},
+		{"integral:amber", "", "integral:amber"},
+		{"", "integral:amber", ""}
 	}
 })
 
@@ -204,26 +207,24 @@ minetest.register_node("integral:weightless_water", {
 	tiles = {
 		{
 			name = "default_water_source_animated.png",
+			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
 				aspect_h = 16,
-				length = 2.0,
-			},
+				length = 2.0
+			}
 		},
-	},
-	special_tiles = {
-		-- New-style water source material (mostly unused)
 		{
 			name = "default_water_source_animated.png",
+			backface_culling = true,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
 				aspect_h = 16,
-				length = 2.0,
-			},
-			backface_culling = false,
-		},
+				length = 2.0
+			}
+		}
 	},
 	alpha = 160,
 	paramtype = "light",
@@ -240,7 +241,7 @@ minetest.register_node("integral:weightless_water", {
 	liquid_viscosity = 1,
 	liquid_range = 0,
 	post_effect_color = {a = 120, r = 30, g = 60, b = 90},
-	groups = {water = 3, liquid = 3, puts_out_fire = 1},
+	groups = {water = 3, liquid = 3, cools_lava = 1}
 })
 
 minetest.register_node("integral:sap", {
@@ -250,26 +251,24 @@ minetest.register_node("integral:sap", {
 	tiles = {
 		{
 			name = "integral_sap_source_animated.png",
+			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
 				aspect_h = 16,
-				length = 2.0,
-			},
+				length = 2.0
+			}
 		},
-	},
-	special_tiles = {
-		-- New-style water source material (mostly unused)
 		{
 			name = "integral_sap_source_animated.png",
+			backface_culling = true,
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
 				aspect_h = 16,
-				length = 2.0,
-			},
-			backface_culling = false,
-		},
+				length = 2.0
+			}
+		}
 	},
 	alpha = 160,
 	paramtype = "light",
@@ -286,7 +285,7 @@ minetest.register_node("integral:sap", {
 	liquid_viscosity = 15,
 	liquid_range = 0,
 	post_effect_color = {a = 120, r = 255, g = 191, b = 0},
-	groups = {water = 3, liquid = 3},
+	groups = {liquid = 3}
 })
 
 bucket.register_liquid(
@@ -294,8 +293,8 @@ bucket.register_liquid(
 	"integral:weightless_water",
 	"integral:bucket_water",
 	"bucket_water.png",
-	"Water Bucket",
-	{water_bucket = 1}
+	"Weightless Water Bucket",
+	{tool = 1, water_bucket = 1}
 )
 
 bucket.register_liquid(
@@ -304,8 +303,7 @@ bucket.register_liquid(
 	"integral:bucket_sap",
 	"bucket_sap.png",
 	"Bucket of Sap",
-	{}
-	--{water_bucket = 1}
+	{tool = 1}
 )
 
 integral.last_teleport = {}
@@ -358,70 +356,75 @@ minetest.register_node("integral:integral_root", {
 	description = "Integral Root",
 	tiles = {"integral_integral_wood.png^[colorize:#000000:80"},
 	is_ground_content = false,
-	groups = {tree = 1, level=4},
-	on_punch = teleport,
+	groups = {tree = 1, level = 4},
+	on_punch = teleport
 })
 
 
 -- Make some new leaves with the same properties.
 local newnode = integral.clone_node("default:leaves")
+newnode.description = "Integral Leaves"
 newnode.tiles = {"default_leaves.png^[noalpha"}
-newnode.drop = nil
 newnode.groups.leafdecay = 0
+newnode.drop = nil
 minetest.register_node("integral:leaves1", newnode)
+newnode.description = "Integral Leaves"
 newnode.tiles = {"default_leaves.png^[colorize:#FF0000:15^[noalpha"}
-newnode.drop = nil
 newnode.groups.leafdecay = 0
+newnode.drop = nil
 minetest.register_node("integral:leaves2", newnode)
+newnode.description = "Integral Leaves"
 newnode.tiles = {"default_leaves.png^[colorize:#FFFF00:15^[noalpha"}
-newnode.drop = nil
 newnode.groups.leafdecay = 0
+newnode.drop = nil
 minetest.register_node("integral:leaves3", newnode)
+newnode.description = "Integral Leaves"
 newnode.tiles = {"default_leaves.png^[colorize:#00FFFF:15^[noalpha"}
-newnode.drop = nil
 newnode.groups.leafdecay = 0
+newnode.drop = nil
 minetest.register_node("integral:leaves4", newnode)
+newnode.description = "Integral Leaves"
 newnode.tiles = {"default_leaves.png^[colorize:#00FF00:15^[noalpha"}
 minetest.register_node("integral:leaves5", newnode)
-newnode.drop = nil
 newnode.groups.leafdecay = 0
+newnode.drop = nil
 
 
 minetest.register_craft({
 	output = 'default:wood 4',
-	recipe = {
-		{'integral:integral_wood'},
-	}
+	recipe = {{'integral:integral_wood'}}
 })
 
 do
-	local r = {name="integral:integral_root", param1=255, force_place = true, }
-	local a = {name="air", param1=255, force_place = true, }
+	local r = {name="integral:integral_root", param1=255, force_place = true}
+	local a = {name="air", param1=255, force_place = true}
 	local o = {name="air", param1=0}
 
 	integral.integral_root_schematic = {
-		size = {x=5, y=4, z=5},
-		data = {o, o, o, o, o,
-						o, o, r, o, o,
-						o, o, r, o, o,
-						o, o, o, o, o,
-						o, o, r, o, o,
-						o, o, a, o, o,
-						o, o, a, o, o,
-						o, o, r, o, o,
-						o, r, r, r, o,
-						r, a, a, a, r,
-						r, a, a, a, r,
-						o, r, r, r, o,
-						o, o, r, o, o,
-						o, o, a, o, o,
-						o, o, a, o, o,
-						o, o, r, o, o,
-						o, o, o, o, o,
-						o, o, r, o, o,
-						o, o, r, o, o,
-						o, o, o, o, o,},
-			}
+		size = {x = 5, y = 4, z = 5},
+		data = {
+				o, o, o, o, o,
+				o, o, r, o, o,
+				o, o, r, o, o,
+				o, o, o, o, o,
+				o, o, r, o, o,
+				o, o, a, o, o,
+				o, o, a, o, o,
+				o, o, r, o, o,
+				o, r, r, r, o,
+				r, a, a, a, r,
+				r, a, a, a, r,
+				o, r, r, r, o,
+				o, o, r, o, o,
+				o, o, a, o, o,
+				o, o, a, o, o,
+				o, o, r, o, o,
+				o, o, o, o, o,
+				o, o, r, o, o,
+				o, o, r, o, o,
+				o, o, o, o, o
+		}
+	}
 end
 
 -- Glowing fungal wood provides an eerie light.
@@ -432,7 +435,7 @@ minetest.register_node("integral:glowing_fungal_wood", {
 	drop = {items={ {items={"integral:integral_wood"},}, {items={"integral:glowing_fungus",},},},},
 	light_source = 8,
 	groups = {tree = 1, choppy = 2, flammable = 2, oddly_breakable_by_hand = 1},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_wood_defaults()
 })
 
 minetest.register_node("integral:moon_amber", {
@@ -446,7 +449,7 @@ minetest.register_node("integral:moon_amber", {
 	is_ground_content = false,
 	light_source = default.LIGHT_MAX,
 	groups = {cracky = 3, level=2},
-	sounds = default.node_sound_stone_defaults(),
+	sounds = default.node_sound_stone_defaults()
 })
 
 minetest.register_craft({
@@ -454,11 +457,11 @@ minetest.register_craft({
 	type = "shapeless",
 	recipe = {
 		"integral:moon_juice",
-		"integral:amber",
-	},
+		"integral:amber"
+	}
 })
 
-if valc then
+if minetest.global_exists("valc") then
 	minetest.register_alias("integral:glowing_fungus", "valleys_c:glowing_fungus")
 	minetest.register_alias("integral:moon_juice", "valleys_c:moon_juice")
 	minetest.register_alias("integral:moon_glass", "valleys_c:moon_glass")
@@ -472,7 +475,7 @@ else
 		paramtype = "light",
 		tiles = {"vmg_glowing_fungus.png"},
 		inventory_image = "vmg_glowing_fungus.png",
-		groups = {dig_immediate = 3, attached_node = 1},
+		groups = {dig_immediate = 3, attached_node = 1}
 	})
 
 	-- The fungus can be made into juice and then into glowing glass.
@@ -483,7 +486,7 @@ else
 		tiles = {"vmg_moon_juice.png"},
 		inventory_image = "vmg_moon_juice.png",
 		groups = {dig_immediate = 3, attached_node = 1},
-		sounds = default.node_sound_glass_defaults(),
+		sounds = default.node_sound_glass_defaults()
 	})
 
 	minetest.register_node("integral:moon_glass", {
@@ -494,7 +497,7 @@ else
 		is_ground_content = true,
 		light_source = default.LIGHT_MAX,
 		groups = {cracky=3},
-		sounds = default.node_sound_glass_defaults(),
+		sounds = default.node_sound_glass_defaults()
 	})
 
 	minetest.register_craft({
@@ -502,8 +505,8 @@ else
 		recipe = {
 			{"integral:glowing_fungus", "integral:glowing_fungus", "integral:glowing_fungus"},
 			{"integral:glowing_fungus", "integral:glowing_fungus", "integral:glowing_fungus"},
-			{"integral:glowing_fungus", "vessels:glass_bottle", "integral:glowing_fungus"},
-		},
+			{"integral:glowing_fungus", "vessels:glass_bottle", "integral:glowing_fungus"}
+		}
 	})
 
 	minetest.register_craft({
@@ -512,8 +515,8 @@ else
 		recipe = {
 			"integral:moon_juice",
 			"integral:moon_juice",
-			"default:glass",
-		},
+			"default:glass"
+		}
 	})
 
 	minetest.register_node("integral:glowing_dirt", {
@@ -526,7 +529,7 @@ else
 			base = "integral:glowing_dirt",
 			dry = "integral:glowing_soil",
 			wet = "integral:glowing_soil_wet"
-		},
+		}
 	})
 
 	minetest.register_node("integral:glowing_soil", {
@@ -540,7 +543,7 @@ else
 			base = "integral:glowing_dirt",
 			dry = "integral:glowing_soil",
 			wet = "integral:glowing_soil_wet"
-		},
+		}
 	})
 
 	minetest.register_node("integral:glowing_soil_wet", {
@@ -554,7 +557,7 @@ else
 			base = "integral:glowing_dirt",
 			dry = "integral:glowing_soil",
 			wet = "integral:glowing_soil_wet"
-		},
+		}
 	})
 
 	minetest.register_craft({
@@ -562,24 +565,33 @@ else
 		type = "shapeless",
 		recipe = {
 			"integral:moon_juice",
-			"default:dirt",
-		},
+			"default:dirt"
+		}
 	})
 end
 
+local neighbors = {"air", "mobs:cobweb"}
 local grow_not = {"integral:integral_bark"}
-for i = 1,4 do
-	grow_not[#grow_not+1] = "integral:leaves"..i
+for i = 1, 4 do
+	grow_not[#grow_not + 1] = "integral:leaves" .. i
 end
 minetest.register_abm({
+	label = "Integral tree spreading",
 	nodenames = {"group:integral"},
-	interval = 600,
-	chance = 150,
+	neighbors = neighbors,
+	interval = 900,
+	chance = 125,
 	action = function(pos, node)
-		local n = minetest.find_node_near(pos, 1, grow_not)
-		if not n and pos.y > 150 then
-			n = minetest.find_node_near(pos, 1, "air")
-			if n then
+		local n1 = minetest.find_node_near(pos, 1, grow_not)
+		if not n1 and pos.y > 150 and pos.y < 1650 then
+			local n2 = minetest.find_node_near(pos, 10, "integral:integral_bark")
+			if not n2 then
+				return
+			end
+			local n = minetest.find_node_near(pos, 1, neighbors)
+			local t = {"air"}; table.insert_all(t, grow_not)
+			local count = #minetest.find_nodes_in_area(vector.add(n2, 3), vector.subtract(n2, 3), t)
+			if math.abs(n.y - n2.y) < 4 and count > 211  then -- 7 * 7 * 7 / 1.618
 				local r = math.random(100)
 				if r < 2 then
 					minetest.set_node(n, {name = "integral:integral_diamondwood"})
@@ -592,4 +604,3 @@ minetest.register_abm({
 		end
 	end
 })
-

@@ -5,10 +5,10 @@
 -- Contains code from: 		default
 -- Supports:				animal_clownfish, animal_fish_blue_white
 -----------------------------------------------------------------------------------------------
-
+local S = fishing.func.S
 
 local trophy = {
---	  mod						 item				 name				icon
+--	 mod			item				 	name				icon
     {"fishing",     "fish_raw",            "Fish",              "fishing_fish_raw.png"},
 	{"fishing",     "carp_raw",            "Carp",	            "fishing_carp_raw.png"},
 	{"fishing",     "perch_raw",           "Perch",             "fishing_perch_raw.png"},
@@ -16,9 +16,11 @@ local trophy = {
 	{"fishing",     "pike_raw",            "Northern Pike",     "fishing_pike_raw.png"},
 	{"fishing",     "clownfish_raw",       "Clownfish",         "fishing_clownfish_raw.png"},
 	{"fishing",	    "bluewhite_raw",       "Bluewhite",         "fishing_bluewhite_raw.png"},
-	{"fishing",	    "exoticfish_raw",      "Exoticfish",         "fishing_exoticfish_raw.png"},
-	{"fishing",     "shark_raw",           "Shark",	            "fishing_shark_raw.png"},
+	{"fishing",	    "exoticfish_raw",      "Exotic",	        "fishing_exoticfish_raw.png"},
+	{"fishing",     "shark_raw",           "Shark",	            "fishing_shark_raw.png"}
 }
+
+fishing.registered_trophies = table.copy(trophy)
 
 local function has_trophy_privilege(meta, player)
 	if player:get_player_name() ~= meta:get_string("owner") then
@@ -33,7 +35,7 @@ for i in pairs(trophy) do
 	local 	name = 			trophy[i][3]
 	local 	icon = 			trophy[i][4]
 	minetest.register_node("fishing:trophy_"..item, {
-		description = fishing_setting.func.S(name.." Trophy"),
+		description = S(name .. " Trophy"),
 		inventory_image = "fishing_trophy_plank.png^"..icon.."^fishing_trophy_label.png",
 		drawtype = "nodebox",
 		tiles = {
@@ -42,47 +44,72 @@ for i in pairs(trophy) do
 			"fishing_trophy_plank.png", -- right
 			"fishing_trophy_plank.png", -- left
 			"fishing_trophy_plank.png", -- back
-			"fishing_trophy_plank.png^"..icon.."^fishing_trophy_label.png", -- front
+			"fishing_trophy_plank.png^"..icon.."^fishing_trophy_label.png" -- front
 		},
 		paramtype = "light",
 		paramtype2 = "facedir",
-		walkable = false,
 		node_box = {
 			type = "fixed",
 			fixed = {
-			--	{ left	, bottom , front  ,  right ,  top   ,  back  }
-				{ -1/2  , -1/2   ,  7/16  , 1/2    ,  1/2   ,  1/2  },
+			--	{left, bottom, front, right, top, back}
+				{-1/2, -1/2, 7/16, 1/2, 1/2, 1/2}
 			}
 		},
 		selection_box = {
 			type = "fixed",
 			fixed = {
-				{ -1/2  , -1/2   ,  7/16  , 1/2    ,  1/2   ,  1/2  },
-		}
+				{-1/2, -1/2, 7/16, 1/2, 1/2, 1/2}
+			}
 		},
-		groups = {choppy=2,oddly_breakable_by_hand=3,flammable=2},
+		groups = {choppy = 2, oddly_breakable_by_hand = 3, flammable = 2},
 		sounds = default.node_sound_wood_defaults(),
-		after_place_node = function(pos, placer)
-			local meta = minetest.get_meta(pos)
-			meta:set_string("owner",  placer:get_player_name() or "")
-			meta:set_string("infotext",  fishing_setting.func.S("This Huge "..name.." was caught by the Famous Angler %s !"):format((placer:get_player_name() or "")))
-		end,
+		drop = "",
 		on_construct = function(pos)
 			local meta = minetest.get_meta(pos)
 			meta:set_string("infotext", name)
 			meta:set_string("owner", "")
 		end,
-		can_dig = function(pos,player)
-			local meta = minetest.get_meta(pos);
-			return has_trophy_privilege(meta, player)
+		after_place_node = function(pos, placer)
+			if not placer or not placer:is_player() then return end
+			local item = placer:get_wielded_item()
+			local trophydata = item:get_meta():get_string("")
+			local data = minetest.deserialize(trophydata) or {}
+			local fish, nb, trophy_owner = data.fish, data.nb, data.owner
+			local owner = placer:get_player_name()
+			local text = S("This Huge " .. name .. " was caught by the Famous Angler @1 !", owner)
+			local meta = minetest.get_meta(pos)
+			if fish and nb and trophy_owner then
+				meta:set_string("fishing:trophydata", trophydata)
+				if fishing.trophies[fish][trophy_owner] >= nb then
+					text = S("@1th " .. name .. " of @2", nb, trophy_owner)
+					meta:set_string("description", item:get_meta():get_string("description"))
+				end
+			end
+			meta:set_string("owner", owner)
+			meta:set_string("infotext", text)
 		end,
+		after_dig_node = function(pos, oldnode, oldmetadata, digger)
+			local item = ItemStack({
+				name = oldnode.name,
+				count = 1,
+				metadata = oldmetadata.fields["fishing:trophydata"]
+			})
+			local inv = digger:get_inventory()
+			item:get_meta():set_string("description", oldmetadata.fields.description)
+			if inv and inv:room_for_item("main", oldnode.name) then
+				inv:add_item("main", item)
+			else
+				minetest.spawn_item(pos, item)
+			end
+		end,
+		can_dig = function(pos, player)
+			local meta = minetest.get_meta(pos)
+			return has_trophy_privilege(meta, player)
+		end
 	})
-
---[[
 	minetest.register_craft({
 		type = "shapeless",
 		output = "fishing:trophy_"..item,
-		recipe = {mod..":"..item, "default:sign_wall"},
+		recipe = {mod..":"..item, "default:sign_wall"}
 	})
---]]
 end

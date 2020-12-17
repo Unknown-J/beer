@@ -51,7 +51,7 @@ end
 -- Poison player
 local function poisenp(tick, time, time_left, player)
 	-- First check if player is still there
-	if not player:is_player() or player:get_player_name() == minetest.settings:get("name") then
+	if not player:is_player() then
 		return
 	end
 	time_left = time_left + tick
@@ -69,6 +69,8 @@ local function poisenp(tick, time, time_left, player)
 	end
 
 end
+
+local admin = minetest.settings:get("name")
 
 function hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound)
 	return function(itemstack, user, pointed_thing)
@@ -101,7 +103,7 @@ function hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal, sound
 				user:set_hp(hp)
 			end
 			-- Poison
-			if poisen then
+			if poisen and user:get_player_name() ~= admin then
 				-- Set poison bar
 				hb.change_hudbar(user, "health", nil, nil, "hbhunger_icon_health_poison.png", nil, "hbhunger_bar_health_poison.png")
 				hbhunger.poisonings[name] = hbhunger.poisonings[name] + 1
@@ -460,7 +462,7 @@ function hbhunger.handle_node_actions(pos, oldnode, player, ext)
 		return
 	end
 	local name = player:get_player_name()
-	if name == minetest.settings:get("name") then return end
+	if name == admin then return end
 	local exhaus = hbhunger.exhaustion[name]
 	if exhaus == nil then return end
 	local new = hbhunger.EXHAUST_PLACE

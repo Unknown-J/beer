@@ -5,20 +5,22 @@ digtron.auto_controller_colorize = "#88000030"
 digtron.pusher_controller_colorize = "#00880030"
 digtron.soft_digger_colorize = "#88880030"
 
-dofile( minetest.get_modpath( "digtron" ) .. "/util.lua" )
-dofile( minetest.get_modpath( "digtron" ) .. "/doc.lua" )
-dofile( minetest.get_modpath( "digtron" ) .. "/awards.lua" )
-dofile( minetest.get_modpath( "digtron" ) .. "/class_pointset.lua" )
-dofile( minetest.get_modpath( "digtron" ) .. "/class_layout.lua" )
-dofile( minetest.get_modpath( "digtron" ) .. "/entities.lua" )
-dofile( minetest.get_modpath( "digtron" ) .. "/node_misc.lua" ) -- contains structure and light nodes
-dofile( minetest.get_modpath( "digtron" ) .. "/node_storage.lua" ) -- contains inventory and fuel storage nodes
-dofile( minetest.get_modpath( "digtron" ) .. "/node_diggers.lua" ) -- contains all diggers
-dofile( minetest.get_modpath( "digtron" ) .. "/node_builders.lua" ) -- contains all builders (there's just one currently)
-dofile( minetest.get_modpath( "digtron" ) .. "/node_controllers.lua" ) -- controllers
-dofile( minetest.get_modpath( "digtron" ) .. "/node_axle.lua" ) -- Rotation controller
-dofile( minetest.get_modpath( "digtron" ) .. "/node_crate.lua" ) -- Digtron portability support
-dofile( minetest.get_modpath( "digtron" ) .. "/recipes.lua" )
+local MP = minetest.get_modpath("digtron") .. "/"
+
+dofile(MP .. "util.lua")
+dofile(MP .. "doc.lua")
+dofile(MP .. "awards.lua")
+dofile(MP .. "class_pointset.lua")
+dofile(MP .. "class_layout.lua")
+dofile(MP .. "entities.lua")
+dofile(MP .. "node_misc.lua") -- contains structure and light nodes
+dofile(MP .. "node_storage.lua") -- contains inventory and fuel storage nodes
+dofile(MP .. "node_diggers.lua") -- contains all diggers
+dofile(MP .. "node_builders.lua") -- contains all builders (there's just one currently)
+dofile(MP .. "node_controllers.lua") -- controllers
+dofile(MP .. "node_axle.lua") -- Rotation controller
+dofile(MP .. "node_crate.lua") -- Digtron portability support
+dofile(MP .. "recipes.lua")
 
 -- Enables the spray of particles out the back of a digger head and puffs of smoke from the controller
 local particle_effects = minetest.settings:get_bool("enable_particles")
@@ -129,9 +131,6 @@ minetest.register_lbm({
 		inv:set_list("fuel", list)
 		meta:set_string("formspec",
 			"size[8,9.3]" ..
-			default.gui_bg ..
-			default.gui_bg_img ..
-			default.gui_slots ..
 			"label[0,0;Fuel items]" ..
 			"list[context;fuel;0,0.6;8,4;]" ..
 			"list[current_player;main;0,5.15;8,1;]" ..
@@ -154,9 +153,6 @@ minetest.register_lbm({
 		meta:set_int("slope", 0)
 		meta:set_string("formspec",
 			"size[3.5,2]" ..
-			default.gui_bg ..
-			default.gui_bg_img ..
-			default.gui_slots ..
 			"field[0.5,0.8;1,0.1;cycles;Cycles;${cycles}]" ..
 			"tooltip[cycles;When triggered, this controller will try to run for the given number of cycles.\nThe cycle count will decrement as it runs, so if it gets halted by a problem\nyou can fix the problem and restart.]" ..
 			"button_exit[1.2,0.5;1,0.1;set;Set]" ..

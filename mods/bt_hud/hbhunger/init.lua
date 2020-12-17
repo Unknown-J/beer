@@ -101,6 +101,7 @@ minetest.register_on_respawnplayer(function(player)
 	hbhunger.exhaustion[name] = 0
 end)
 
+local admin = minetest.settings:get("name")
 local main_timer = 0
 local timer = 0
 local timer2 = 0
@@ -126,7 +127,7 @@ minetest.register_globalstep(function(dtime)
 			end
 			-- lower satiation by 1 point after xx seconds
 			if timer2 > hbhunger.HUNGER_TICK then
-				if h > 0 and name ~= minetest.settings:get("name") then
+				if h > 0 and name ~= admin then
 					h = h-1
 					hbhunger.hunger[name] = h
 					hbhunger.set_hunger_raw(player)

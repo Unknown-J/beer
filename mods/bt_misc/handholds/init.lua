@@ -1,4 +1,3 @@
-
 -- function to safely remove climbable air
 local function remove_air(pos, oldnode)
 	local dir = minetest.facedir_to_dir(oldnode.param2)
@@ -23,7 +22,6 @@ local function remove_air(pos, oldnode)
 		minetest.set_node(airpos, {name = "air"})
 	end
 end
-
 
 -- remove handholds from nodes buried under falling nodes
 local function remove_handholds(pos)
@@ -58,7 +56,6 @@ local function remove_handholds(pos)
 	end
 end
 
-
 -- climbable air!
 minetest.register_node("handholds:climbable_air", {
 	description = "Air!",
@@ -76,13 +73,12 @@ minetest.register_node("handholds:climbable_air", {
 	end,
 })
 
-
 -- handholds nodes
 minetest.register_node("handholds:stone", {
 	description = "Stone Handholds",
 	tiles = {
-		"default_stone.png", "default_stone.png", 
-		"default_stone.png", "default_stone.png", 
+		"default_stone.png", "default_stone.png",
+		"default_stone.png", "default_stone.png",
 		"default_stone.png", "default_stone.png^handholds_holds.png"
 	},
 	paramtype2 = "facedir",
@@ -97,8 +93,8 @@ minetest.register_node("handholds:stone", {
 minetest.register_node("handholds:desert_stone", {
 	description = "Desert Stone Handholds",
 	tiles = {
-		"default_desert_stone.png", "default_desert_stone.png", 
-		"default_desert_stone.png", "default_desert_stone.png", 
+		"default_desert_stone.png", "default_desert_stone.png",
+		"default_desert_stone.png", "default_desert_stone.png",
 		"default_desert_stone.png", "default_desert_stone.png^handholds_holds.png"
 	},
 	paramtype2 = "facedir",
@@ -113,8 +109,8 @@ minetest.register_node("handholds:desert_stone", {
 minetest.register_node("handholds:sandstone", {
 	description = "Sandstone Handholds",
 	tiles = {
-		"default_sandstone.png", "default_sandstone.png", 
-		"default_sandstone.png", "default_sandstone.png", 
+		"default_sandstone.png", "default_sandstone.png",
+		"default_sandstone.png", "default_sandstone.png",
 		"default_sandstone.png", "default_sandstone.png^handholds_holds.png"
 	},
 	paramtype2 = "facedir",
@@ -129,13 +125,13 @@ minetest.register_node("handholds:sandstone", {
 minetest.register_node("handholds:ice", {
 	description = "Ice Handholds",
 	tiles = {
-		"default_ice.png", "default_ice.png", 
-		"default_ice.png", "default_ice.png", 
+		"default_ice.png", "default_ice.png",
+		"default_ice.png", "default_ice.png",
 		"default_ice.png", "default_ice.png^handholds_holds.png"
 	},
 	paramtype2 = "facedir",
 	groups = {
-		cracky = 3, puts_out_fire = 1, cools_lava = 1,
+		cracky = 3, cools_lava = 1,
 		not_in_creative_inventory = 1, handholds = 1
 	},
 	drop = 'default:ice',
@@ -145,15 +141,14 @@ minetest.register_node("handholds:ice", {
 	end,
 })
 
-
 -- handholds tool
 minetest.register_tool("handholds:climbing_pick", {
 	description = "Climbing Pick",
 	inventory_image = "handholds_tool.png",
 	sound = {breaks = "default_tool_breaks"},
 	on_use = function(itemstack, player, pointed_thing)
-		if not pointed_thing or 
-				pointed_thing.type ~= "node" or 
+		if not pointed_thing or
+				pointed_thing.type ~= "node" or
 				minetest.is_protected(pointed_thing.under, player:get_player_name()) or
 				minetest.is_protected(pointed_thing.above, player:get_player_name()) or
 				pointed_thing.under.y + 1 == pointed_thing.above.y or
@@ -161,7 +156,7 @@ minetest.register_tool("handholds:climbing_pick", {
 			return
 		end
 
-		local node_def = 
+		local node_def =
 			minetest.registered_nodes[minetest.get_node(pointed_thing.above).name]
 		if not node_def or not node_def.buildable_to then
 			return
@@ -210,6 +205,6 @@ minetest.register_craft({
 	recipe = {
 		{'default:diamond', 'default:diamond', 'default:diamond'},
 		{'group:stick', '', ''},
-		{'group:stick', '', ''},
-	},
+		{'group:stick', '', ''}
+	}
 })

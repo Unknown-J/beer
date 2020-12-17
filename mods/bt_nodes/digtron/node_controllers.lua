@@ -76,9 +76,6 @@ minetest.register_node("digtron:controller", {
 ---------------------------------------------------------------------------------------------------------------
 
 local auto_formspec = "size[8,6.2]" ..
-	default.gui_bg ..
-	default.gui_bg_img ..
-	default.gui_slots ..
 	"container[2.0,0]" ..
 	"field[0.0,0.8;1,0.1;cycles;" .. S("Cycles").. ";${cycles}]" ..
 	"tooltip[cycles;" .. S("When triggered, this controller will try to run for the given number of cycles.\nThe cycle count will decrement as it runs, so if it gets halted by a problem\nyou can fix the problem and restart.").. "]" ..

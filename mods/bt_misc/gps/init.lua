@@ -78,13 +78,23 @@ local valid_chars = {
 	["x"] = true,
 	["y"] = true,
 	["z"] = true,
+	-- Numeros
+	["0"] = true,
+	["1"] = true,
+	["2"] = true,
+	["3"] = true,
+	["4"] = true,
+	["5"] = true,
+	["6"] = true,
+	["7"] = true,
+	["8"] = true,
+	["9"] = true,
 	-- Caracteres especiais
 	[" "] = true
 }
 
 -- Verificar nome do grupo
 check_text = function(text)
-
 	-- Verifica comprimento
 	if string.len(text) > 30 or string.len(text) == 0 then
 		return false
@@ -109,11 +119,10 @@ check_text = function(text)
 	return true
 end
 
-
-
 --
 -----
 --------
+
 -- Banco de dados
 local path = minetest.get_worldpath()
 local pathbd = path .. "/gps"
@@ -179,6 +188,7 @@ minetest.register_on_joinplayer(function(player)
 	end
 end)
 -- Fim
+
 --------
 -----
 --
@@ -186,6 +196,7 @@ end)
 --
 -----
 --------
+
 -- Craftitem
 minetest.register_craftitem("gps:gps", { -- GPS
 	description = S("GPS"),
@@ -193,28 +204,33 @@ minetest.register_craftitem("gps:gps", { -- GPS
 	inventory_image = "gps_item.png",
 	on_use = function(itemstack, user, pointed_thing)
 		local name = user:get_player_name()
-		local formspec = "size[5,4]"
-			.."bgcolor[#08080800]"
-			.."background[0,0;5,4;gps_bg.png;true]"
-			.."label[0.1,-0.1;"..S("Destinos").."]"
-			.."dropdown[0.1,0.4;5,1;destino;"..registros[name].string..";1]"
-			.."button_exit[0.1,1.1;1.7,1;ir;"..S("Localizar").."]"
-			.."button_exit[1.7,1.1;1.7,1;desligar;"..S("Desligar").."]"
-			.."button_exit[3.3,1.1;1.6,1;deletar;"..S("Deletar").."]"
-			.."field[0.3,2.9;5,1;nome_destino;"..S("Novo Destino")..";"..S("Nome Desse Lugar").."]"
-			.."button_exit[0,3.3;5,1;gravar;"..S("Gravar Novo Destino").."]"
-		minetest.show_formspec(name, "gps:gps", formspec)
-	end,
+		minetest.show_formspec(name, "gps:gps", ([[
+			size[5,4]
+			bgcolor[#08080800]
+			background[0,0;5,4;gps_bg.png;true]
+			label[0.1,-0.1;%s]
+			dropdown[0.1,0.4;5,1;destino;%s;1]
+			button_exit[0.1,1.1;1.7,1;ir;%s]
+			button_exit[1.7,1.1;1.7,1;desligar;%s]
+			button_exit[3.3,1.1;1.6,1;deletar;%s]
+			field[0.3,2.9;5,1;nome_destino;%s;%s]
+			button_exit[0,3.3;5,1;gravar;%s]
+			]]):format(S("Destinations"), registros[name].string, S("Locate"),
+				S("Turn Off"), S("Delete"), S("New Destination"),
+				S("My Place"), S("Save New Place"))
+		)
+	end
 })
-
---[[minetest.register_craft({ -- Receita de GPS
+--[[
+minetest.register_craft({ -- Receita de GPS
 	output = "gps:gps",
 	recipe = {
 		{"default:steel_ingot", "dye:orange", "default:steel_ingot"},
 		{"default:steel_ingot", "default:diamond", "default:steel_ingot"},
 		{"default:stick", "default:stick", "default:stick"}
 	}
-})]]--
+})
+--]]
 -- Fim
 --------
 -----
@@ -245,7 +261,7 @@ minetest.register_globalstep(function(dtime)
 			if not player or not player:get_inventory():contains_item(player:get_wield_list(), "gps:gps") then
 				if player then
 					player:hud_remove(waypoints[name])
-					minetest.chat_send_player(name, S("Precisa estar com o GPS para ir ao destino."))
+					minetest.chat_send_player(name, S("You need to be with the GPS to go to the destination."))
 				end
 			else
 				waypoints_validos[name] = waypoints[name]
@@ -265,7 +281,7 @@ local adicionar_waypoint = function(name, destino)
 	waypoints[name] = player:hud_add({
 		hud_elem_type = "waypoint",
 		name = destino,
-		number = "16747520",
+		number = 16747520,
 		world_pos = registros[name].destinos[destino]
 	})
 end
@@ -277,18 +293,18 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if fields.ir then
 			if registros[name].destinos[fields.destino] then
 				adicionar_waypoint(name, fields.destino)
-				minetest.chat_send_player(name, S("GPS Ativado. Destino @1 localizado.", fields.destino))
+				minetest.chat_send_player(name, S("GPS Active. @1 located.", fields.destino))
 				minetest.sound_play("gps_beep", {gain = 1.0, max_hear_distance = 3, object = player})
 				return true
 			else
-				minetest.chat_send_player(name, S("Nenhum destino encontrado. Defina novos destinos."))
+				minetest.chat_send_player(name, S("No destination found. Set a new."))
 				return true
 			end
 		elseif fields.desligar then
 			if waypoints[name] then
 				player:hud_remove(waypoints[name])
 			end
-			minetest.chat_send_player(name, S("GPS desligado."))
+			minetest.chat_send_player(name, S("GPS turned off."))
 			return true
 		elseif fields.gravar then
 			if fields.nome_destino then
@@ -300,7 +316,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 					and check_text(fields.nome_destino) == true
 				then
 					if fields.nome_destino == "" then
-						minetest.chat_send_player(name, S("Nenhum nome definido para o lugar. Digite um nome."))
+						minetest.chat_send_player(name, S("No name set to the place. Enter a name."))
 						return true
 					end
 					-- verificar quantos ja tem
@@ -309,13 +325,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 						total = total + 1
 					end
 					if total >= LIMITE then
-						minetest.chat_send_player(name, S("Limite de @1 destinos no seu GPS. Delete algum dos ja existentes.", LIMITE))
+						minetest.chat_send_player(name, S("Limit is @1 destinations. Delete any of the already existing.", LIMITE))
 						return true
 					end
 					registros[name].destinos[fields.nome_destino] = player:get_pos()
 					atualizar_string(name)
 					salvar_dados(name)
-					minetest.chat_send_player(name, S("Lugar @1 foi gravado no seu GPS.", fields.nome_destino))
+					minetest.chat_send_player(name, S("@1 has been recorded in your GPS.", fields.nome_destino))
 					-- Caso ja tenha e esteja ativo entao ajusta o waypoint visualizado
 					if tonumber(waypoints[name]) and player:hud_get(waypoints[name]) then
 						local def = player:hud_get(waypoints[name])
@@ -323,11 +339,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 					end
 					return true
 				else
-					minetest.chat_send_player(name, S("Caracteres invalidos. Tente utilizar apenas letras e numeros no novo nome."))
+					minetest.chat_send_player(name, S("Invalid characters. Try using only letters and numbers in the new name."))
 					return true
 				end
 			else
-				minetest.chat_send_player(name, S("Nenhum nome especificado para o novo lugar. Defina o nome desse lugar."))
+				minetest.chat_send_player(name, S("No name specified for the new place. Set the name of this place."))
 				return true
 			end
 		elseif fields.deletar then
@@ -344,10 +360,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				registros[name].destinos = destinos_restantes
 				atualizar_string(name)
 				salvar_dados(name)
-				minetest.chat_send_player(name, S("Destino @1 deletado.", fields.destino))
+				minetest.chat_send_player(name, S("@1 has been deleted.", fields.destino))
 				return true
 			else
-				minetest.chat_send_player(name, S("Nenhum destino para deletar."))
+				minetest.chat_send_player(name, S("No destinations to delete."))
 				return true
 			end
 		end

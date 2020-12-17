@@ -1,6 +1,5 @@
 local S = mobs.intllib
 
-
 -- Dungeon Master by PilzAdam
 
 mobs:register_mob("mobs_monster:dungeon_master", {
@@ -24,12 +23,12 @@ mobs:register_mob("mobs_monster:dungeon_master", {
 	textures = {
 		{"mobs_dungeon_master.png"},
 		{"mobs_dungeon_master2.png"},
-		{"mobs_dungeon_master3.png"},
+		{"mobs_dungeon_master3.png"}
 	},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_dungeonmaster",
-		shoot_attack = "mobs_fireball",
+		shoot_attack = "mobs_fireball"
 	},
 	walk_velocity = 1,
 	run_velocity = 3,
@@ -39,7 +38,7 @@ mobs:register_mob("mobs_monster:dungeon_master", {
 		{name = "default:mese_crystal_fragment", chance = 1, min = 1, max = 3},
 		{name = "default:diamond", chance = 4, min = 1, max = 1},
 		{name = "default:mese_crystal", chance = 2, min = 1, max = 2},
-		{name = "default:diamondblock", chance = 30, min = 1, max = 1},
+		{name = "default:diamondblock", chance = 30, min = 1, max = 1}
 	},
 	water_damage = 1,
 	lava_damage = 1,
@@ -55,10 +54,9 @@ mobs:register_mob("mobs_monster:dungeon_master", {
 		shoot_start = 36,
 		shoot_end = 48,
 		speed_normal = 15,
-		speed_run = 15,
+		speed_run = 15
 	},
 })
-
 
 mobs:spawn({
 	name = "mobs_monster:dungeon_master",
@@ -66,7 +64,7 @@ mobs:spawn({
 	max_light = 7,
 	chance = 7000,
 	active_object_count = 1,
-	max_height = -70,
+	max_height = -70
 })
 
 mobs:spawn({
@@ -75,14 +73,12 @@ mobs:spawn({
 	max_light = 14,
 	chance = 100,
 	active_object_count = 1,
-	max_height = -19800,
+	max_height = -19800
 })
 
 mobs:register_egg("mobs_monster:dungeon_master", S("Dungeon Master"), "fire_basic_flame.png", 1, true)
 
-
 mobs:alias_mob("mobs:dungeon_master", "mobs_monster:dungeon_master") -- compatibility
-
 
 -- fireball (weapon)
 mobs:register_arrow("mobs_monster:fireball", {
@@ -95,7 +91,6 @@ mobs:register_arrow("mobs_monster:fireball", {
 	tail_size = 10,
 	glow = 5,
 	expire = 0.1,
-
 	-- direct hit, no fire... just plenty of pain
 	hit_player = function(self, player)
 		player:punch(self.object, 1.0, {
@@ -103,14 +98,12 @@ mobs:register_arrow("mobs_monster:fireball", {
 			damage_groups = {fleshy = 8},
 		}, nil)
 	end,
-
 	hit_mob = function(self, player)
 		player:punch(self.object, 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = 8},
 		}, nil)
 	end,
-
 	-- node hit, bursts into flame
 	hit_node = function(self, pos, node)
 		mobs:boom(self, pos, 1)

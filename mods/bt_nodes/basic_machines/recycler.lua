@@ -86,7 +86,7 @@ local recycler_process = function(pos)
 				itemlist=itemlist.items;
 			end
 			local output = recipe[recipe_id].output or "";
-			if string.find(output," ") then
+			if string.find(output, " ") then
 				local par = string.find(output," ");
 				--if (tonumber(string.sub(output, par)) or 0)>1 then itemlist = {} end
 
@@ -114,6 +114,9 @@ local recycler_process = function(pos)
 			-- inv:set_stack("dst", i, ItemStack(""));
 		-- end
 
+		--take 1 item from src inventory for each activation
+		stack=stack:take_item(reqcount); inv:remove_item("src", stack)
+
 		for _,  v in pairs(itemlist) do
 			if math.random(1, 4)<=3 then -- probability 3/4 = 75%
 				if not string.find(v,"group") then -- dont add if item described with group
@@ -126,11 +129,7 @@ local recycler_process = function(pos)
 			end
 		end
 
-		--take 1 item from src inventory for each activation
-		stack=stack:take_item(reqcount); inv:remove_item("src", stack)
-
-		minetest.sound_play("recycler", {pos=pos,gain=0.5,max_hear_distance = 16,})
-
+		minetest.sound_play("recycler", {pos=pos,gain=0.5, max_hear_distance = 16})
 
 		fuel = fuel-1; -- burn fuel on succesful operation
 		meta:set_float("fuel",fuel); meta:set_string("infotext", "fuel status " .. fuel .. ", recycling " .. meta:get_string("node"));

@@ -2,7 +2,7 @@
 local S = farming.intllib
 
 -- place cocoa
-function place_cocoa(itemstack, placer, pointed_thing, plantname)
+local function place_cocoa(itemstack, placer, pointed_thing, plantname)
 
 	local pt = pointed_thing
 
@@ -21,7 +21,7 @@ function place_cocoa(itemstack, placer, pointed_thing, plantname)
 	-- am I right-clicking on something that has a custom on_place set?
 	-- thanks to Krock for helping with this issue :)
 	local def = minetest.registered_nodes[under.name]
-	if def and def.on_rightclick then
+	if placer and itemstack and def and def.on_rightclick then
 		return def.on_rightclick(pt.under, under, placer, itemstack)
 	end
 
@@ -31,12 +31,20 @@ function place_cocoa(itemstack, placer, pointed_thing, plantname)
 		return
 	end
 
+	-- is player planting crop?
+	local name = placer and placer:get_player_name() or ""
+
+	-- check for protection
+	if minetest.is_protected(pt.above, name) then
+		return
+	end
+
 	-- add the node and remove 1 item from the itemstack
 	minetest.set_node(pt.above, {name = plantname})
 
 	minetest.sound_play("default_place_node", {pos = pt.above, gain = 1.0})
 
-	if not minetest.settings:get_bool("creative_mode") then
+	if placer and not farming.is_creative(placer:get_player_name()) then
 
 		itemstack:take_item()
 
@@ -59,15 +67,16 @@ end
 minetest.register_craftitem("farming:cocoa_beans", {
 	description = S("Cocoa Beans"),
 	inventory_image = "farming_cocoa_beans.png",
+	groups = {seed = 2, food_cocoa = 1, flammable = 2},
 	on_place = function(itemstack, placer, pointed_thing)
 		return place_cocoa(itemstack, placer, pointed_thing, "farming:cocoa_1")
-	end,
+	end
 })
 
 minetest.register_craft( {
 	output = "dye:brown 2",
 	recipe = {
-		{ "farming:cocoa_beans" },
+		{ "farming:cocoa_beans" }
 	}
 })
 
@@ -75,13 +84,13 @@ minetest.register_craft( {
 minetest.register_craftitem("farming:cookie", {
 	description = S("Cookie"),
 	inventory_image = "farming_cookie.png",
-	on_use = minetest.item_eat(2),
+	on_use = minetest.item_eat(2)
 })
 
 minetest.register_craft( {
 	output = "farming:cookie 8",
 	recipe = {
-		{ "farming:wheat", "farming:cocoa_beans", "farming:wheat" },
+		{"group:food_wheat", "group:food_cocoa", "group:food_wheat" }
 	}
 })
 
@@ -89,25 +98,50 @@ minetest.register_craft( {
 minetest.register_craftitem("farming:chocolate_dark", {
 	description = S("Bar of Dark Chocolate"),
 	inventory_image = "farming_chocolate_dark.png",
-	on_use = minetest.item_eat(3),
+	on_use = minetest.item_eat(3)
 })
 
 minetest.register_craft( {
 	output = "farming:chocolate_dark",
 	recipe = {
-		{ "farming:cocoa_beans", "farming:cocoa_beans", "farming:cocoa_beans" },
+		{"group:food_cocoa", "group:food_cocoa", "group:food_cocoa"}
+	}
+})
+
+-- chocolate block
+minetest.register_node("farming:chocolate_block", {
+	description = S("Chocolate Block"),
+	tiles = {"farming_chocolate_block.png"},
+	is_ground_content = false,
+	groups = {cracky = 2, oddly_breakable_by_hand = 2},
+	sounds = default.node_sound_stone_defaults()
+})
+
+minetest.register_craft({
+	output = "farming:chocolate_block",
+	recipe = {
+		{"farming:chocolate_dark", "farming:chocolate_dark", "farming:chocolate_dark"},
+		{"farming:chocolate_dark", "farming:chocolate_dark", "farming:chocolate_dark"},
+		{"farming:chocolate_dark", "farming:chocolate_dark", "farming:chocolate_dark"}
+	}
+})
+
+minetest.register_craft({
+	output = "farming:chocolate_dark 9",
+	recipe = {
+		{"farming:chocolate_block"}
 	}
 })
 
 -- cocoa definition
-local crop_def = {
+local def = {
 	drawtype = "plantlike",
 	tiles = {"farming_cocoa_1.png"},
 	paramtype = "light",
-	walkable = true,
+	walkable = false,
 	drop = {
 		items = {
-			{items = {'farming:cocoa_beans 1'}, rarity = 2},
+			{items = {"farming:cocoa_beans 1"}, rarity = 2},
 		}
 	},
 	selection_box = {
@@ -116,33 +150,54 @@ local crop_def = {
 	},
 	groups = {
 		snappy = 3, flammable = 2, plant = 1, growing = 1,
-		not_in_creative_inventory=1, leafdecay = 1, leafdecay_drop = 1
+		not_in_creative_inventory = 1, leafdecay = 1, leafdecay_drop = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = default.node_sound_leaves_defaults(),
+	growth_check = function(pos, node_name)
+		if minetest.find_node_near(pos, 1, {"default:jungletree"}) then
+			return false
+		end
+		return true
+	end
 }
 
 -- stage 1
-minetest.register_node("farming:cocoa_1", table.copy(crop_def))
+minetest.register_node("farming:cocoa_1", table.copy(def))
 
--- stage2
-crop_def.tiles = {"farming_cocoa_2.png"}
-crop_def.drop = {
+-- stage 2
+def.tiles = {"farming_cocoa_2.png"}
+minetest.register_node("farming:cocoa_2", table.copy(def))
+
+-- stage3
+def.tiles = {"farming_cocoa_3.png"}
+def.drop = {
 	items = {
-		{items = {'farming:cocoa_beans 1'}, rarity = 1},
+		{items = {"farming:cocoa_beans 1"}, rarity = 1}
 	}
 }
-minetest.register_node("farming:cocoa_2", table.copy(crop_def))
+minetest.register_node("farming:cocoa_3", table.copy(def))
 
--- stage 3 (final)
-crop_def.tiles = {"farming_cocoa_3.png"}
-crop_def.groups.growing = 0
-crop_def.drop = {
+-- stage 4 (final)
+def.tiles = {"farming_cocoa_4.png"}
+def.groups.growing = nil
+def.growth_check = nil
+def.drop = {
 	items = {
-		{items = {'farming:cocoa_beans 2'}, rarity = 1},
-		{items = {'farming:cocoa_beans 1'}, rarity = 2},
+		{items = {"farming:cocoa_beans 2"}, rarity = 1},
+		{items = {"farming:cocoa_beans 1"}, rarity = 2},
+		{items = {"farming:cocoa_beans 1"}, rarity = 4}
 	}
 }
-minetest.register_node("farming:cocoa_3", table.copy(crop_def))
+minetest.register_node("farming:cocoa_4", table.copy(def))
+
+-- add to registered_plants
+farming.registered_plants["farming:cocoa_beans"] = {
+	crop = "farming:cocoa",
+	seed = "farming:cocoa_beans",
+	minlight = farming.min_light,
+	maxlight = farming.max_light,
+	steps = 4
+}
 
 -- add random cocoa pods to jungle tree's
 minetest.register_on_generated(function(minp, maxp)
@@ -161,29 +216,24 @@ minetest.register_on_generated(function(minp, maxp)
 		if minetest.find_node_near(pos, 1,
 			{"default:jungleleaves", "moretrees:jungletree_leaves_green"}) then
 
-			dir = math.random(1, 160)
+			dir = math.random(1, 80)
 
-			if dir == 1 then
-				pos.x = pos.x + 1
-			elseif dir == 2 then
-				pos.x = pos.x - 1
-			elseif dir == 3 then
-				pos.z = pos.z + 1
-			elseif dir == 4 then
-				pos.z = pos.z -1
+			    if dir == 1 then pos.x = pos.x + 1
+			elseif dir == 2 then pos.x = pos.x - 1
+			elseif dir == 3 then pos.z = pos.z + 1
+			elseif dir == 4 then pos.z = pos.z -1
 			end
 
 			if dir < 5
 			and minetest.get_node(pos).name == "air"
 			and minetest.get_node_light(pos) > 12 then
 
-				--print ("Cocoa Pod added at " .. minetest.pos_to_string(pos))
+--print ("Cocoa Pod added at " .. minetest.pos_to_string(pos))
 
 				minetest.swap_node(pos, {
-					name = "farming:cocoa_" .. tostring(math.random(1, 3))
+					name = "farming:cocoa_" .. tostring(math.random(4))
 				})
 			end
-
 		end
 	end
 end)

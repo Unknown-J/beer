@@ -64,7 +64,7 @@ function random_messages.read_messages()
 			io.close(default_input)
 		end
 		io.close(output)
-		input = io.open(minetest.get_worldpath().."/random_messages","r")
+		input = io.open(minetest.get_worldpath().."/random_messages", "r")
 	end
 	-- we should have input by now, so lets read it
 	for line in input:lines() do
@@ -109,12 +109,12 @@ function random_messages.remove_message(k)
 end
 
 function random_messages.add_message(t)
-	table.insert(random_messages.messages,table.concat(t," ",2))
+	table.insert(random_messages.messages,table.concat(t, " ", 2))
 	random_messages.save_messages()
 end
 
 function random_messages.save_messages()
-	local output = io.open(minetest.get_worldpath().."/random_messages","w")
+	local output = io.open(minetest.get_worldpath().."/random_messages", "w")
 	for k, v in pairs(random_messages.messages) do
 		output:write(v .. "\n")
 	end
@@ -131,7 +131,8 @@ random_messages.set_interval()
 random_messages.read_messages()
 --random_messages.start_spamming()
 
---[[local TIMER = 0
+--[[
+local TIMER = 0
 if random_messages.messages[1] then
 	minetest.register_globalstep(function(dtime)
 		TIMER = TIMER + dtime;
@@ -140,8 +141,8 @@ if random_messages.messages[1] then
 			TIMER = 0
 		end
 	end)
-end]]--
-
+end
+--]]
 local register_chatcommand_table = {
 	params = "viewmessages | removemessage <number> | addmessage <number>",
 	privs = {server = true},

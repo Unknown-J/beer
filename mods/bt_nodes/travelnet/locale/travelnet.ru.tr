@@ -72,6 +72,6 @@ Initiating transfer to station '%s'.=Инициирование перехода
 Could not find information about the station that is to be removed.=Не удалось найти информацию о станции, для удаления.
 Could not find the station that is to be removed.=Не удалось найти станцию, для удаления.
 has been REMOVED from the network '%s'.=УДАЛЕНА из сети «%s».
-Travelnet-Box=
+#Travelnet-Box=
 This %s has not been configured yet. Please set it up first to claim it. Afterwards you can remove it because you are then the owner.=Этот %s еще не настроен. Пожалуйста, сначала настройте его, чтобы перенять имущество. После этого вы можете удалить его, так как вы являетесь владельцем.
 This %s belongs to %s. You can't remove it.=Этот %s принадлежит %s.

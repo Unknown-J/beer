@@ -257,7 +257,8 @@ local oredefs = {
 			y_min = moreores.silver_min_depth,
 			y_max = moreores.silver_max_depth,
 		},
-		tools = {
+		tools = {},
+	--[[tools = {
 			pick = {
 				cracky = {times = {[1] = 2.60, [2] = 1.00, [3] = 0.60}, uses = 100, maxlevel = 1},
 			},
@@ -278,7 +279,7 @@ local oredefs = {
 			},
 		},
 		full_punch_interval = 1.0,
-		damage_groups = {fleshy = 6},
+		damage_groups = {fleshy = 6},--]]
 	},
 	mithril = {
 		description = "Mithril",
@@ -294,9 +295,9 @@ local oredefs = {
 			pick = {
 				cracky = {times = {[1] = 2.25, [2] = 0.55, [3] = 0.35}, uses = 200, maxlevel = 3}
 			},
-			hoe = {
+		--[[hoe = {
 				uses = 1000,
-			},
+			},--]]
 			shovel = {
 				crumbly = {times = {[1] = 0.70, [2] = 0.35, [3] = 0.20}, uses = 200, maxlevel = 3},
 			},
@@ -353,7 +354,7 @@ else
 		},
 	})
 end
-
+--[[
 -- Copper rail (unique node)
 if minetest.get_modpath("carts") then
 	carts:register_rail("moreores:copper_rail", {
@@ -362,11 +363,11 @@ if minetest.get_modpath("carts") then
 			"moreores_copper_rail.png",
 			"moreores_copper_rail_curved.png",
 			"moreores_copper_rail_t_junction.png",
-			"moreores_copper_rail_crossing.png",
+			"moreores_copper_rail_crossing.png"
 		},
 		inventory_image = "moreores_copper_rail.png",
 		wield_image = "moreores_copper_rail.png",
-		groups = carts:get_rail_groups(),
+		groups = carts:get_rail_groups()
 	}, {})
 end
 
@@ -375,10 +376,10 @@ minetest.register_craft({
 	recipe = {
 		{"default:copper_ingot", "", "default:copper_ingot"},
 		{"default:copper_ingot", "group:stick", "default:copper_ingot"},
-		{"default:copper_ingot", "", "default:copper_ingot"},
-	},
+		{"default:copper_ingot", "", "default:copper_ingot"}
+	}
 })
-
+--]]
 for orename, def in pairs(oredefs) do
 	-- Register everything
 	add_ore("moreores", def.description, orename, def)

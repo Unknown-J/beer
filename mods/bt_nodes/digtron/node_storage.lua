@@ -21,16 +21,13 @@ minetest.register_node("digtron:inventory", {
 		"digtron_plate.png^digtron_crossbrace.png^digtron_storage.png",
 		"digtron_plate.png^digtron_crossbrace.png^digtron_storage.png",
 		"digtron_plate.png^digtron_crossbrace.png^digtron_storage.png",
-		"digtron_plate.png^digtron_crossbrace.png^digtron_storage.png",
-		},
+		"digtron_plate.png^digtron_crossbrace.png^digtron_storage.png"
+	},
 
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec",
 			"size[8,9.3]" ..
-			default.gui_bg ..
-			default.gui_bg_img ..
-			default.gui_slots ..
 			"label[0,0;" .. S("Inventory items") .. "]" ..
 			"list[context;main;0,0.6;8,4;]" ..
 			"list[current_player;main;0,5.15;8,1;]" ..
@@ -97,9 +94,6 @@ minetest.register_node("digtron:fuelstore", {
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec",
 			"size[8,9.3]" ..
-			default.gui_bg ..
-			default.gui_bg_img ..
-			default.gui_slots ..
 			"label[0,0;" .. S("Fuel items") .. "]" ..
 			"list[context;fuel;0,0.6;8,4;]" ..
 			"list[current_player;main;0,5.15;8,1;]" ..
@@ -181,9 +175,6 @@ minetest.register_node("digtron:combined_storage", {
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec",
 			"size[8,9.9]" ..
-			default.gui_bg ..
-			default.gui_bg_img ..
-			default.gui_slots ..
 			"label[0,0;" .. S("Inventory items") .. "]" ..
 			"list[context;main;0,0.6;8,3;]" ..
 			"label[0,3.5;" .. S("Fuel items") .. "]" ..
@@ -271,6 +262,6 @@ if minetest.get_modpath("hopper") and hopper ~= nil and hopper.add_container ~= 
 
 		{"top", "digtron:combined_storage", "main"},
 		{"bottom", "digtron:combined_storage", "main"},
-		{"side", "digtron:combined_storage", "fuel"},
+		{"side", "digtron:combined_storage", "fuel"}
 	})
 end

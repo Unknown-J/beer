@@ -1,5 +1,5 @@
 local S = mobs.intllib
-local hairball = minetest.settings:get("mobs_hairball")
+local hairball = minetest.settings:get_bool("mobs_hairball", true)
 
 -- Kitten by Jordach / BFD
 
@@ -55,8 +55,8 @@ mobs:register_mob("mobs_animal:kitten", {
 		if mobs:protect(self, clicker) then return end
 		-- by pressing sneak key and right-clicking owner can switch between staying and walking
 		if clicker:get_player_control().sneak and self.owner and self.owner == clicker:get_player_name() then
-			local kitten_name = "Kitten"
-			if self.nametag and self.nametag ~= '' and not self.nametag:find("♥ " .. self.health .. " / " .. self.hp_max) then
+			local kitten_name = self.name:split(":")[2]:gsub("^%l", string.upper)
+			if self.nametag and self.nametag ~= "" and not (self.nametag == ("♥ " .. self.health .. " / " .. self.hp_max)) then
 				kitten_name = self.nametag
 			end
 			if self.order ~= "stand" then
@@ -102,17 +102,21 @@ mobs:register_mob("mobs_animal:kitten", {
 	end
 })
 
+local spawn_on = "default:dirt_with_grass"
+
+if minetest.get_modpath("ethereal") then
+	spawn_on = "ethereal:grove_dirt"
+end
 
 mobs:spawn({
 	name = "mobs_animal:kitten",
-	nodes = {"default:dirt_with_grass", "ethereal:grove_dirt"},
+	nodes = {spawn_on},
 	min_light = 12,
 	chance = 60000,
 	min_height = 0,
 	max_height = 31000,
 	day_toggle = true
 })
-
 
 mobs:register_egg("mobs_animal:kitten", S("Cash's World Overlord Kitten"), "mobs_kitten_inv.png", 0)
 
