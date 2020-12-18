@@ -1,3 +1,4 @@
+
 local colours = {
 	{"black",      "Black",      "#000000b0"},
 	{"blue",       "Blue",       "#015dbb70"},
@@ -17,14 +18,23 @@ local colours = {
 }
 
 for i = 1, #colours, 1 do
+--example
+--[[
+minetest.register_node("cblocks:stonebrick_red", {
+	description = "Red Stone Brick -EXAMPLE FOR ALL CBLOCKS: Glass, Wood, Stonebrick, and Clay",
+	tiles = {"default_stone_brick.png^[colorize:#ff000070"},
+	is_ground_content = false,
+	groups = {cracky = 2, stone = 1},
+	sounds = default.node_sound_stone_defaults(),
+})
+]]
 
 -- wood
-
 minetest.register_node("cblocks:wood_" .. colours[i][1], {
 	description = colours[i][2] .. " Wooden Planks",
 	tiles = {"default_wood.png^[colorize:" .. colours[i][3]},
 	is_ground_content = false,
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, wood = 1},
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 3, wood = 1,not_in_craft_guide=1},
 	sounds = default.node_sound_wood_defaults(),
 })
 
@@ -35,13 +45,46 @@ minetest.register_craft({
 	}
 })
 
--- stone brick
 
+--Cobble
+minetest.register_node("cblocks:cobble_" .. colours[i][1], {
+	description = colours[i][2] .. " Cobble",
+	tiles = {"default_cobble.png^[colorize:" .. colours[i][3]},
+	is_ground_content = false,
+	groups = {cracky = 3, stone = 1,not_in_craft_guide=1},
+	sounds = default.node_sound_stone_defaults(),
+})
+
+minetest.register_craft({
+	output = "cblocks:cobble_".. colours[i][1] .. " 2",
+	recipe = {
+		{"default:cobble","default:cobble", "dye:" .. colours[i][1]},
+	}
+})
+
+
+-- stone brick
 minetest.register_node("cblocks:stonebrick_" .. colours[i][1], {
 	description = colours[i][2] .. " Stone Brick",
 	tiles = {"default_stone_brick.png^[colorize:" .. colours[i][3]},
 	is_ground_content = false,
-	groups = {cracky = 2, stone = 1},
+	groups = {cracky = 2, stone = 1,not_in_craft_guide=1},
+	sounds = default.node_sound_stone_defaults(),
+})
+
+minetest.register_craft({
+	output = "cblocks:stonebrick_".. colours[i][1] .. " 2",
+	recipe = {
+		{"default:stonebrick","default:stonebrick", "dye:" .. colours[i][1]},
+	}
+})
+
+-- stone
+minetest.register_node("cblocks:stone_" .. colours[i][1], {
+	description = colours[i][2] .. " Stone",
+	tiles = {"default_stone.png^[colorize:" .. colours[i][3]},
+	is_ground_content = false,
+	groups = {cracky = 2, stone = 1,not_in_craft_guide=1},
 	sounds = default.node_sound_stone_defaults(),
 })
 
@@ -53,7 +96,6 @@ minetest.register_craft({
 })
 
 -- glass
-
 minetest.register_node( "cblocks:glass_" .. colours[i][1], {
 	description = colours[i][2] .. " Glass",
 	tiles = {"cblocks.png^[colorize:" .. colours[i][3]},
@@ -62,7 +104,7 @@ minetest.register_node( "cblocks:glass_" .. colours[i][1], {
 	sunlight_propagates = true,
 	use_texture_alpha = true,
 	is_ground_content = false,
-	groups = {cracky = 3, oddly_breakable_by_hand = 3},
+	groups = {cracky = 3, oddly_breakable_by_hand = 3,not_in_craft_guide=1},
 	sounds = default.node_sound_glass_defaults(),
 })
 
@@ -73,163 +115,135 @@ minetest.register_craft({
 	}
 })
 
--- brick block
-
-minetest.register_node("cblocks:brick_" .. colours[i][1], {
-	description = colours[i][2] .. " Brick Block",
-	tiles = {"default_brick.png^[colorize:" .. colours[i][3]},
+--Clay
+minetest.register_node( "cblocks:clay_" .. colours[i][1], {
+	description = colours[i][2] .. " Clay",
+	tiles = {"default_clay.png^[colorize:" .. colours[i][3]},
 	is_ground_content = false,
-	groups = {cracky = 3},
+	groups = {crumbly = 2, oddly_breakable_by_hand = 2,not_in_craft_guide=1},
 	sounds = default.node_sound_stone_defaults(),
 })
 
 minetest.register_craft({
-	output = "cblocks:brick_".. colours[i][1] .. " 2",
+	output = "cblocks:clay_".. colours[i][1] .. " 2",
 	recipe = {
-		{"default:brick","default:brick", "dye:" .. colours[i][1]},
+		{"default:clay","default:clay", "dye:" .. colours[i][1]},
 	}
 })
 
--- cobblestone
+--LET US REGISTER STAIRS!
+--maikerumine 20160321
+--EXAMPLE
+--[[
+stairs.register_stair_and_slab("stonebrick_red", "cblocks:stonebrick_red",
+		{cracky = 3},
+		{"default_stone_brick.png^[colorize:#ff000070"},
+		"Red Stone Brick Stair -EXAMPLE FOR ALL CBLOCKS: Glass, Wood, Stonebrick, and Clay",
+		"Red Stone Brick Slab -EXAMPLE FOR ALL CBLOCKS: Glass, Wood, Stonebrick, and Clay",
+		default.node_sound_stone_defaults())
+	
+stairs.register_stair("stonebrick_red", "cblocks:stonebrick_red",
+	{choppy = 2, oddly_breakable_by_hand = 2, flammable = 3,not_in_craft_guide=1},
+	{"default_stone_brick.png^[colorize:#ff000070"},
+	"Red Stone Brick -EXAMPLE FOR ALL CBLOCKS: Glass, Wood, Stonebrick, and Clay",
+	stairs.stone)
+	
+	
+	
+	
+	--old
+	--wood
+stairs.register_stair_and_slab("wood_" .. colours[i][1], "cblocks:wood_" .. colours[i][1],
+		{snappy = 2, choppy = 2, oddly_breakable_by_hand = 2, flammable = 3},
+		{"default_wood.png^[colorize:" .. colours[i][3]},
+		"Wooden Stair",
+		"Wooden Slab",
+		default.node_sound_wood_defaults())
+		
+		
+		
+		for _, t in pairs(circular_saw.names) do
+	minetest.register_alias("moreblocks:" .. t[1] .. "_jungle_wood" .. t[2],
+			"moreblocks:" .. t[1] .. "_junglewood" .. t[2])
+end
+]]
 
-minetest.register_node("cblocks:cobble_" .. colours[i][1], {
-	description = colours[i][2] .. " Cobblestone",
-	tiles = {"default_cobble.png^[colorize:" .. colours[i][3]},
-	is_ground_content = false,
-	groups = {cracky = 3, stone = 2},
-	sounds = default.node_sound_stone_defaults(),
-})
 
-minetest.register_craft({
-	output = "cblocks:cobble_".. colours[i][1] .. " 2",
-	recipe = {
-		{"default:cobble","default:cobble", "dye:" .. colours[i][1]},
-	}
-})
+--	minetest.register_alias("stairs:"stair_.. colours[i][1].. "_wood" .. ,
+--			"stairs:"stair_wood_" .. colours[i][1])
+--  minetest.register_alias("sweeper", "moreblocks:sweeper")
 
--- stone
+--Alias to swap stairs.
+	minetest.register_alias("stairs:stair_stone_" .. colours[i][1] ,	"stairs:stair_".. colours[i][1].. "_stone")
+	minetest.register_alias("stairs:stair_cobble_" .. colours[i][1] ,	"stairs:stair_".. colours[i][1].. "_cobble")
+	minetest.register_alias("stairs:stair_stonebrick_".. colours[i][1] ,	"stairs:stair_".. colours[i][1].. "_stonebrick")
+	minetest.register_alias("stairs:stair_clay_" .. colours[i][1] ,	"stairs:stair_".. colours[i][1].. "_clay")
+	minetest.register_alias("stairs:stair_wood_" .. colours[i][1] ,	"stairs:stair_".. colours[i][1].. "_wood")
+	minetest.register_alias("stairs:stair_glass_" .. colours[i][1] ,	"stairs:stair_".. colours[i][1].. "_glass")
+--Alias to swap slabs.
+	minetest.register_alias("stairs:slab_stone_" .. colours[i][1] ,	"stairs:slab_".. colours[i][1].. "_stone")
+	minetest.register_alias("stairs:slab_cobble_" .. colours[i][1] ,	"stairs:slab_".. colours[i][1].. "_cobble")
+	minetest.register_alias("stairs:slab_stonebrick_".. colours[i][1] ,	"stairs:slab_".. colours[i][1].. "_stonebrick")
+	minetest.register_alias("stairs:slab_clay_" .. colours[i][1] ,	"stairs:slab_".. colours[i][1].. "_clay")
+	minetest.register_alias("stairs:slab_wood_" .. colours[i][1] ,	"stairs:slab_".. colours[i][1].. "_wood")
+	minetest.register_alias("stairs:slab_glass_" .. colours[i][1] ,	"stairs:slab_".. colours[i][1].. "_glass")
+			
+			
+if minetest.get_modpath("moreblocks") then
 
-minetest.register_node("cblocks:stone_" .. colours[i][1], {
-	description = colours[i][2] .. " Stone",
-	tiles = {"default_stone.png^[colorize:" .. colours[i][3]},
-	is_ground_content = false,
-	groups = {cracky = 3, stone = 1},
-	drop = 'cblocks:cobble_' .. colours[i][1],
-	sounds = default.node_sound_stone_defaults(),
-})
 
-minetest.register_craft({
-	output = "cblocks:stone_".. colours[i][1] .. " 2",
-	recipe = {
-		{"default:stone","default:stone", "dye:" .. colours[i][1]},
-	}
-})
+--wood
+	stairsplus:register_all("wood_" .. colours[i][1], "wood", "cblocks:wood_" .. colours[i][1], {
+		description = "Coloured Wood",
+		tiles ={"default_wood.png^[colorize:" .. colours[i][3]},
+		groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 2, flammable = 3},
+		sounds = default.node_sound_wood_defaults(),
+		sunlight_propagates = true,
+	})
 
--- steel block
+--cobble
+	stairsplus:register_all("cobble_" .. colours[i][1], "cobble",  "cblocks:cobble_" .. colours[i][1], {
+		description = "Coloured Cobble",
+		tiles ={"default_cobble.png^[colorize:" .. colours[i][3]},
+		groups = {cracky = 3},
+		sounds = default.node_sound_stone_defaults(),
+		sunlight_propagates = true,
+	})
+	
+--stonebrick
+	stairsplus:register_all("stonebrick_" .. colours[i][1], "stonebrick",  "cblocks:stonebrick_" .. colours[i][1], {
+		description = "Coloured Stonebrick",
+		tiles ={"default_stone_brick.png^[colorize:" .. colours[i][3]},
+		groups = {cracky = 2},
+		sounds = default.node_sound_stone_defaults(),
+		sunlight_propagates = true,
+	})
 
-minetest.register_node("cblocks:steelblock_" .. colours[i][1], {
-	description = colours[i][2] .. " Steel Block",
-	tiles = {"default_steel_block.png^[colorize:" .. colours[i][3]},
-	is_ground_content = false,
-	groups = {cracky = 1, level = 2},
-	sounds = default.node_sound_stone_defaults(),
-})
-
-minetest.register_craft({
-	output = "cblocks:steelblock_".. colours[i][1] .. " 2",
-	recipe = {
-		{"default:steelblock","default:steelblock", "dye:" .. colours[i][1]},
-	}
-})
-
--- fence
-
-local fence_texture =
-	"default_fence_overlay.png^default_wood.png^[colorize:" .. colours[i][3] .. "^default_fence_overlay.png^[makealpha:255,126,126"
-minetest.register_node("cblocks:fence_wood_" .. colours[i][1], {
-	description = colours[i][2] .. " Fence",
-	drawtype = "fencelike",
-	tiles = {"default_wood.png^[colorize:" .. colours[i][3]},
-	inventory_image = fence_texture,
-	wield_image = fence_texture,
-	paramtype = "light",
-	is_ground_content = false,
-	selection_box = {
-		type = "fixed",
-		fixed = {-1/7, -1/2, -1/7, 1/7, 1/2, 1/7},
-	},
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
-	sounds = default.node_sound_wood_defaults(),
-})
-
-minetest.register_craft({
-	output = "cblocks:fence_wood_".. colours[i][1] .. " 2",
-	recipe = {
-		{"default:fence_wood","default:fence_wood", "dye:" .. colours[i][1]},
-	}
-})
-
--- wooden door
-
-doors.register_door("cblocks:door_wood_" .. colours[i][1], {
-	description = colours[i][2] .. " Wooden Door",
-	tiles_bottom = {"doors_wood_b.png^[colorize:" .. colours[i][3], "doors_brown.png^[colorize:" .. colours[i][3]},
-	tiles_top = {"doors_wood_a.png^[colorize:" .. colours[i][3], "doors_brown.png^[colorize:" .. colours[i][3]},
-	inventory_image = "doors_wood.png^[colorize:" .. colours[i][3],
-	is_ground_content = false,
-	groups = {snappy=1, choppy=2, oddly_breakable_by_hand=2, flammable=2, door=1},
-	sounds = default.node_sound_wood_defaults(),
-	sunlight = false,
-})
-
-minetest.register_craft({
-	output = "cblocks:door_wood_".. colours[i][1] .. " 2",
-	recipe = {
-		{"doors:door_wood","doors:door_wood", "dye:" .. colours[i][1]},
-	}
-})
-
--- steel door
-
-doors.register_door("cblocks:door_steel_" .. colours[i][1], {
-	description = colours[i][2] .. " Steel Door",
-	tiles_bottom = {"doors_steel_b.png^[colorize:" .. colours[i][3], "doors_grey.png^[colorize:" .. colours[i][3]},
-	tiles_top = {"doors_steel_a.png^[colorize:" .. colours[i][3], "doors_grey.png^[colorize:" .. colours[i][3]},
-	inventory_image = "doors_steel.png^[colorize:" .. colours[i][3],
-	is_ground_content = false,
-	groups = {snappy=1, bendy=2, cracky=1, melty=2, level=2, door=1},
-	only_placer_can_open = true,
-	sounds = default.node_sound_wood_defaults(),
-	sunlight = false,
-})
-
-minetest.register_craft({
-	output = "cblocks:door_steel_".. colours[i][1] .. " 2",
-	recipe = {
-		{"doors:door_steel","doors:door_steel", "dye:" .. colours[i][1]},
-	}
-})
-
--- trap door
-
---[[doors.register_trapdoor("cblocks:trapdoor_" .. colours[i][1], {
-	description = colours[i][2] .. " Trapdoor",
-	tile_front = {"doors_trapdoor.png^[colorize:" .. colours[i][3]},
-	tile_side = {"doors_trapdoor_side.png^[colorize:" .. colours[i][3]},
-	inventory_image = "doors_trapdoor.png^[colorize:" .. colours[i][3],
-	wield_image = "doors_trapdoor.png^[colorize:" .. colours[i][3],
-	is_ground_content = false,
-	groups = {snappy=1, choppy=2, oddly_breakable_by_hand=2, flammable=2, door=1},
-	sounds = default.node_sound_wood_defaults(),
-	sound_open = "doors_door_open",
-	sound_close = "doors_door_close"
-})
-
-minetest.register_craft({
-	output = "cblocks:trapdoor_".. colours[i][1] .. " 2",
-	recipe = {
-		{"doors:trapdoor","doors:trapdoor", "dye:" .. colours[i][1]},
-	}
-})]]
-
+--stone
+	stairsplus:register_all("stone_" .. colours[i][1], "stone",  "cblocks:stone_" .. colours[i][1], {
+		description = "Coloured Stone",
+		tiles ={"default_stone.png^[colorize:" .. colours[i][3]},
+		groups = {cracky = 3},
+		sounds = default.node_sound_stone_defaults(),
+		sunlight_propagates = true,
+	})
+	
+--clay
+	stairsplus:register_all("clay_" .. colours[i][1], "clay",  "cblocks:clay_" .. colours[i][1], {
+		description = "Coloured Clay",
+		tiles ={"default_clay.png^[colorize:" .. colours[i][3]},
+		groups = {crumbly = 3},
+		sounds = default.node_sound_dirt_defaults(),
+		sunlight_propagates = true,
+	})
+	
+--glass
+	stairsplus:register_all("glass_" .. colours[i][1], "glass",  "cblocks:glass_" .. colours[i][1], {
+		description = "Coloured Glass",
+		tiles ={"cblocks.png^[colorize:" .. colours[i][3]},
+		groups = {cracky = 3, oddly_breakable_by_hand = 3},
+		sounds = default.node_sound_glass_defaults(),
+		sunlight_propagates = true,
+	})
+end
 end
