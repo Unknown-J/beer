@@ -167,6 +167,68 @@ minetest.register_craft({
 	recipe = {
 		{"default:fence_wood","default:fence_wood", "dye:" .. colours[i][1]},
 	}
+})
+
+-- wooden door
+
+doors.register_door("cblocks:door_wood_" .. colours[i][1], {
+	description = colours[i][2] .. " Wooden Door",
+	tiles_bottom = {"doors_wood_b.png^[colorize:" .. colours[i][3], "doors_brown.png^[colorize:" .. colours[i][3]},
+	tiles_top = {"doors_wood_a.png^[colorize:" .. colours[i][3], "doors_brown.png^[colorize:" .. colours[i][3]},
+	inventory_image = "doors_wood.png^[colorize:" .. colours[i][3],
+	is_ground_content = false,
+	groups = {snappy=1, choppy=2, oddly_breakable_by_hand=2, flammable=2, door=1},
+	sounds = default.node_sound_wood_defaults(),
+	sunlight = false,
+})
+
+minetest.register_craft({
+	output = "cblocks:door_wood_".. colours[i][1] .. " 2",
+	recipe = {
+		{"doors:door_wood","doors:door_wood", "dye:" .. colours[i][1]},
+	}
+})
+
+-- steel door
+
+doors.register_door("cblocks:door_steel_" .. colours[i][1], {
+	description = colours[i][2] .. " Steel Door",
+	tiles_bottom = {"doors_steel_b.png^[colorize:" .. colours[i][3], "doors_grey.png^[colorize:" .. colours[i][3]},
+	tiles_top = {"doors_steel_a.png^[colorize:" .. colours[i][3], "doors_grey.png^[colorize:" .. colours[i][3]},
+	inventory_image = "doors_steel.png^[colorize:" .. colours[i][3],
+	is_ground_content = false,
+	groups = {snappy=1, bendy=2, cracky=1, melty=2, level=2, door=1},
+	only_placer_can_open = true,
+	sounds = default.node_sound_wood_defaults(),
+	sunlight = false,
+})
+
+minetest.register_craft({
+	output = "cblocks:door_steel_".. colours[i][1] .. " 2",
+	recipe = {
+		{"doors:door_steel","doors:door_steel", "dye:" .. colours[i][1]},
+	}
+})
+
+-- trap door
+
+--[[doors.register_trapdoor("cblocks:trapdoor_" .. colours[i][1], {
+	description = colours[i][2] .. " Trapdoor",
+	tile_front = {"doors_trapdoor.png^[colorize:" .. colours[i][3]},
+	tile_side = {"doors_trapdoor_side.png^[colorize:" .. colours[i][3]},
+	inventory_image = "doors_trapdoor.png^[colorize:" .. colours[i][3],
+	wield_image = "doors_trapdoor.png^[colorize:" .. colours[i][3],
+	is_ground_content = false,
+	groups = {snappy=1, choppy=2, oddly_breakable_by_hand=2, flammable=2, door=1},
+	sounds = default.node_sound_wood_defaults(),
+	sound_open = "doors_door_open",
+	sound_close = "doors_door_close"
+})
+minetest.register_craft({
+	output = "cblocks:trapdoor_".. colours[i][1] .. " 2",
+	recipe = {
+		{"doors:trapdoor","doors:trapdoor", "dye:" .. colours[i][1]},
+	}
 })]]
 
 end
