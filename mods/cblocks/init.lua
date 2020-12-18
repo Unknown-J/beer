@@ -167,4 +167,6 @@ minetest.register_craft({
 	recipe = {
 		{"default:fence_wood","default:fence_wood", "dye:" .. colours[i][1]},
 	}
-})
+})]]
+
+end
