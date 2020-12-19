@@ -2,7 +2,6 @@
 from http.client import HTTPConnection,HTTPException,BadStatusLine,_CS_IDLE
 import json
 import base64
-from contextlib import closing
 import sys,os,shutil,time
 
 def die(message,code=23):
@@ -129,7 +128,7 @@ with Pipeline() as pipeline:
 		l = json.loads(data)
 		if not l["success"]:
 			die("Success != True")
-		r = 0
+
 		pages = int(l["pages"])
 		foundOne = False
 		for s in l["skins"]:
