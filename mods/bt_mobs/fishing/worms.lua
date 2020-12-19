@@ -50,9 +50,12 @@ minetest.register_entity("fishing:bait_worm_entity", {
 	end,
 	-- ...softly take it into your hand.
 	on_rightclick = function(self, clicker)
-		if clicked and clicker:is_player() and clicker:get_inventory() then
-			clicker:get_inventory():add_item("main", "fishing:bait_worm")
-			self.object:remove()
+		if clicker and clicker:is_player() then
+			local inv = clicker:get_inventory()
+			if inv then
+				inv:add_item("main", "fishing:bait_worm")
+				self.object:remove()
+			end
 		end
 	end,
 	-- AI :D

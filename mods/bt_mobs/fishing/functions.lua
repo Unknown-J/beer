@@ -317,7 +317,7 @@ if minetest.get_modpath("unified_inventory") then
 	unified_inventory.register_button("menu_fishing", {
 		type = "image",
 		image = "fishing_perch_raw.png",
-		tooltip = "Fishing Menu Configuration",
+		tooltip = S("Fishing Menu"),
 		action = function(player)
 			if not player or not player:is_player() then return end
 			local player_name = player:get_player_name()

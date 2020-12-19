@@ -224,7 +224,6 @@ minetest.register_craft({
 	sound_open = "doors_door_open",
 	sound_close = "doors_door_close"
 })
-
 minetest.register_craft({
 	output = "cblocks:trapdoor_".. colours[i][1] .. " 2",
 	recipe = {
