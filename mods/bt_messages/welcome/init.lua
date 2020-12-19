@@ -1,7 +1,7 @@
 local function show_welcome_message(name)
 	local text = ([[
 						Welcome %s!
-                                                        This is the world known as Silver City. It was inspired by talamh
+                                                This is the world known as Silver City. It was inspired by talamh
                                                 and beerarchy this is still an anarchy server with a few contributors
 					        and "ALMOST" no moderation besides keeping the server up and running. Feel
 						free to say whatever you want in chat. Griefing in any form whatsoever
