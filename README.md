@@ -14,8 +14,8 @@ A you awaken, you find yourself in a scorching desert. There is nothing but sand
 ## Game Information
 
 Host:   jo.edgy1.net
-Port:  48115<br/>
-Website:  ...
+  Port:  48115<br/>
+Website:  ...<br/>
 Admin: joshoua<br/>
 Code:  https://github.com/Unknown-J/beerarchy<br/>
 Forum: TODO<br/>
