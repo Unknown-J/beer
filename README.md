@@ -4,6 +4,16 @@ Anarchy, chaos, griefing. All is allowed on this unmoderated server. Venture int
 
 So keep your friends close and your enemies closer. Hide your base well, conquer the lands, climb the rankings, become the number one and God of this world.
 
+## Game Information
+
+Host:   jo.edgy1.net  
+     Port:  48115<br/>
+Website:  ...<br/>
+Admin: joshoua<br/>
+Code:  https://github.com/Unknown-J/beerarchy<br/>
+Forum: TODO<br/>
+
+
 ### Act One
 You are approached by a dark figure. Something is amiss. It is not whole, missing an eye, radiating darkness. Its eye, shimmering in the starlight, stares straight into your being, burning your soul, turning your heart into brimstone and ashes, and with a voice of 6000 years old it starts to speak: "I offer you a choice: Live your boring life and achieve nothing, or be cast to Beerarchy to start over and get a chance to gain unfathomable riches and eternal fame. Rot away like a feeble cowardly dog, or defile the gods, conquer their thrones and become the lord master of these desolate lands."
 
@@ -11,14 +21,6 @@ You are blinded by the promise of countless bars of gold, endless amounts of dia
 
 A you awaken, you find yourself in a scorching desert. There is nothing but sand and you are stripped of what little Earthly belongings you had. Recalling the dark figure's words, "Start over", "Get a chance", you realize all too well that such words should have been taken literally. There is no way back, but now you are more determined than ever. You clench your fists, ready to take on this world, and as you look at the Sun approaching the horizon, you discern some ungodly shapes slowly moving towards you ...
 
-## Game Information
-
-Host:   jo.edgy1.net
-  Port:  48115<br/>
-Website:  ...<br/>
-Admin: joshoua<br/>
-Code:  https://github.com/Unknown-J/beerarchy<br/>
-Forum: TODO<br/>
 
 **NOTE:** This server is unmoderated. Admin is only there to keep the server up and running, fix server issues and feedback on the server. Requests for diamonds or mese, complaints about players, griefers, foulmouthed people cursing in chat, or anything else not related to the general technical wellbeing of the server will not be answered.
 
@@ -69,7 +71,7 @@ Forum: TODO<br/>
 3d_armor, 3d_armor_stand, 3d_armor_ui, aerotest, banners, basic_machines, basic_signs, beds, beerchat, binoculars, biome_lib, boats, bones, books, boost_cart, bucket, carts, coalblocks, custom, death_messages, default, digtron, dmobs, doc, doc_basics, doc_encyclopedia, doc_identifier, doc_items, doors, dye, env_sounds, explosives, farming, fire,  fishing, flowers, fun_tools, game_commands, gps, handholds, hard_mobs, hbarmor, hbhunger, headanim, horror, hudbars, important_message, integral, mail, map, mob_horse, mobkit, mobs, mobs_animal, mobs_monster, moontest_spacesuit, moreores, nyancat, painted_3d_armor, painting, player_api, player_monoids, protector, random_messages, ranking, screwdriver, shields, signs_lib, skins, snowdrift, sprint, stairs, statue, throwing, tnt, travelnet, treasurer, trm_beerarchy, trm_boats, trm_bucket, trm_default, trm_doors, trm_dye, trm_farming, trm_screwdriver, trm_tnt, trm_vessels, trm_xpanes, tsm_chests_dungeon, under_sky, underworlds, unified_inventory, vessels, vines, walls, weather, welcome, wieldview, wool, xpanes
 
 ### Compatibility
-The Beerarchy subgame requires a recent Minetest version and at least 5.0.0.
+You can access the Silver City in all version (5.0 + 0.4)
 
 ### Licensing
 See LICENSE.txt and the various licenses of some of the mods embedded into the game. TODO: Update the LICENSE.txt to reflect the licenses of the mods used and freesound.org soundcloud.com music of the game, add attributions.
