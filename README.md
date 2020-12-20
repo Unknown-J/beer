@@ -1,4 +1,4 @@
-## Beerarchy
+## Silver City
 ### Prologue
 Anarchy, chaos, griefing. All is allowed on this unmoderated server. Venture into the depths of hell or ascend the highest mountains, leaping from float land to float land all the way into space. You will be rewarded for your efforts, as endless riches can be found in the most inaccessible places. But be careful who you trust or you will lose everything and be forced to start all over.
 
@@ -12,14 +12,12 @@ You are blinded by the promise of countless bars of gold, endless amounts of dia
 A you awaken, you find yourself in a scorching desert. There is nothing but sand and you are stripped of what little Earthly belongings you had. Recalling the dark figure's words, "Start over", "Get a chance", you realize all too well that such words should have been taken literally. There is no way back, but now you are more determined than ever. You clench your fists, ready to take on this world, and as you look at the Sun approaching the horizon, you discern some ungodly shapes slowly moving towards you ...
 
 ## Game Information
-### Server
-Hosted on the wonderful World of Illuna Minetest infrastructure provided by https://minetestserver.hosting/ and with the great and wonderful support of [Milan](https://tchncs.de).
 
-Host:  beerarchy.tk<br/>
-Port:  30024<br/>
-Website:  https://beerarchy.tk<br/>
-Admin: Beerholder a.k.a. Basilisk<br/>
-Code:  https://github.com/evrooije/beerarchy<br/>
+Host:   jo.edgy1.net
+Port:  48115<br/>
+Website:  ...
+Admin: joshoua<br/>
+Code:  https://github.com/Unknown-J/beerarchy<br/>
 Forum: TODO<br/>
 
 **NOTE:** This server is unmoderated. Admin is only there to keep the server up and running, fix server issues and feedback on the server. Requests for diamonds or mese, complaints about players, griefers, foulmouthed people cursing in chat, or anything else not related to the general technical wellbeing of the server will not be answered.
