@@ -85,7 +85,7 @@ end
 battery_upgrade = function(pos)
 	local meta = minetest.get_meta(pos);
 	local inv = meta:get_inventory();
-	local count1,count2;count1=0;count2=0;
+	local count1, count2 = 0, 0
 	local stack,item,count;
 	for i=1,2 do
 		stack = inv:get_stack("upgrade", i);item = stack:get_name();count= stack:get_count();
@@ -213,8 +213,7 @@ minetest.register_node("basic_machines:battery", {
 
 	on_receive_fields = function(pos, formname, fields, sender)
 		if fields.quit then return end
-		local meta = minetest.get_meta(pos);
-		battery_update_meta(pos);
+		battery_update_meta(pos)
 	end,
 
 	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
@@ -291,7 +290,7 @@ end
 generator_upgrade = function(pos)
 	local meta = minetest.get_meta(pos);
 	local inv = meta:get_inventory();
-	local count1, count2 = 0
+	local count1, count2 = 0, 0
 	local stack,item,count;
 	for i=1,2 do
 		stack = inv:get_stack("upgrade", i);item = stack:get_name();count= stack:get_count();
@@ -335,10 +334,7 @@ minetest.register_node("basic_machines:generator", {
 			minetest.show_formspec(sender:get_player_name(), "basic_machines:help_mover", form)
 			return
 		end
-		local meta = minetest.get_meta(pos);
-
-
-		generator_update_meta(pos);
+		generator_update_meta(pos)
 	end,
 
 	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
