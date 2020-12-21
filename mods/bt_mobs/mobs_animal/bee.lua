@@ -5,12 +5,14 @@ local S = mobs.intllib
 mobs:register_mob("mobs_animal:bee", {
 	type = "animal",
 	passive = true,
-	hp_min = 1,
-	hp_max = 2,
-	armor = 200,
+	hp_min = 666,
+	hp_max = 666,
+	armor = 666,
 	collisionbox = {-0.2, -0.01, -0.2, 0.2, 0.2, 0.2},
 	visual = "mesh",
 	mesh = "mobs_bee.x",
+	view_range = 6,
+	damage = 9,	
 	textures = {
 		{"mobs_bee.png"}
 	},
