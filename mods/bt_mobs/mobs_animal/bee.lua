@@ -7,7 +7,7 @@ mobs:register_mob("mobs_animal:bee", {
 	passive = true,
 	hp_min = 666,
 	hp_max = 666,
-	armor = 666,
+	armor = 150,
 	collisionbox = {-0.2, -0.01, -0.2, 0.2, 0.2, 0.2},
 	visual = "mesh",
 	mesh = "mobs_bee.x",
