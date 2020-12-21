@@ -92,8 +92,8 @@ function stairs.register_stair(subname, recipeitem, groups, images, description,
 		paramtype = "light",
 		paramtype2 = "facedir",
 		is_ground_content = false,
-		use_texture_alpha = true,	--mm added for alpha texture stair / slab
-		light_source = light,	--mm added for lighted stair / slab
+		use_texture_alpha = alpha or false,	-- mm added for alpha texture stair / slab
+		light_source = light or 0, -- mm added for lighted stair / slab
 		groups = new_groups,
 		sounds = sounds,
 		node_box = {
@@ -189,8 +189,8 @@ function stairs.register_slab(subname, recipeitem, groups, images, description,
 		paramtype = "light",
 		paramtype2 = "facedir",
 		is_ground_content = false,
-		use_texture_alpha = true,	--mm added for alpha texture stair / slab
-		light_source = light,	--mm added for lighted stair / slab
+		use_texture_alpha = alpha or false,	-- mm added for alpha texture stair / slab
+		light_source = light or 0, -- mm added for lighted stair / slab
 		groups = new_groups,
 		sounds = sounds,
 		node_box = {
@@ -337,8 +337,8 @@ function stairs.register_stair_inner(subname, recipeitem, groups, images,
 		paramtype = "light",
 		paramtype2 = "facedir",
 		is_ground_content = false,
-		use_texture_alpha = true,	--mm added for alpha texture stair / slab
-		light_source = light,	--mm added for lighted stair / slab
+		use_texture_alpha = alpha or false,	-- mm added for alpha texture stair / slab
+		light_source = light or 0, -- mm added for lighted stair / slab
 		groups = new_groups,
 		sounds = sounds,
 		node_box = {
@@ -426,8 +426,8 @@ function stairs.register_stair_outer(subname, recipeitem, groups, images,
 		paramtype = "light",
 		paramtype2 = "facedir",
 		is_ground_content = false,
-		use_texture_alpha = true,	--mm added for alpha texture stair / slab
-		light_source = light,	--mm added for lighted stair / slab
+		use_texture_alpha = alpha or false,	-- mm added for alpha texture stair / slab
+		light_source = light or 0, -- mm added for lighted stair / slab
 		groups = new_groups,
 		sounds = sounds,
 		node_box = {
@@ -502,8 +502,8 @@ function stairs.register_slab1(subname, recipeitem, groups, images,
 		paramtype = "light",
 		paramtype2 = "facedir",
 		is_ground_content = false,
-		use_texture_alpha = true,	--mm added for alpha texture stair / slab
-		light_source = light,	--mm added for lighted stair / slab
+		use_texture_alpha = alpha or false,	-- mm added for alpha texture stair / slab
+		light_source = light or 0, -- mm added for lighted stair / slab
 		groups = new_groups,
 		sounds = sounds,
 		node_box = {
@@ -520,7 +520,7 @@ function stairs.register_slab1(subname, recipeitem, groups, images,
 			{"stairs:slab_" .. subname},
 		},
 	})
---[[	
+--[[
 	minetest.register_craft({
 		output = 'stairs:slab_' .. subname .. ' 1',
 		recipe = {
@@ -568,15 +568,14 @@ function stairs.register_slope(subname, recipeitem, groups, images,
 	warn_if_exists("stairs:slope_" .. subname)
 	minetest.register_node(":stairs:slope_" .. subname, {
 		description = description,
-		--drawtype = "nodebox",
 		drawtype = "mesh",
 		mesh = "stairs_slope.obj",
 		tiles = images,
 		paramtype = "light",
 		paramtype2 = "facedir",
 		is_ground_content = false,
-		use_texture_alpha = true,	--mm added for alpha texture stair / slab
-		light_source = light,	--mm added for lighted stair / slab
+		use_texture_alpha = alpha or false,	-- mm added for alpha texture stair / slab
+		light_source = light or 0, -- mm added for lighted stair / slab
 		groups = groups,
 		sounds = sounds,
 		selection_box = {
@@ -632,7 +631,7 @@ function stairs.register_stair_and_slab(subname, recipeitem, groups, images,
 		sounds, worldaligntex, alpha, light)
 
 	stairs.register_slope(subname, recipeitem, groups, images, desc_stair,
-		sounds, worldaligntex, alpha, light)		
+		sounds, worldaligntex, alpha, light)
 ]]
 end
 
@@ -647,7 +646,7 @@ local function my_register_stair_and_slab(subname, recipeitem, groups, images,
 		sounds, worldaligntex, S("Outer " .. desc_stair), alpha, light)
 	stairs.register_slab(subname, recipeitem, groups, images, S(desc_slab),
 		sounds, worldaligntex, alpha, light)
---mm added slopes and thin slabs (panels)	
+--mm added slopes and thin slabs (panels)
 	stairs.register_slab1(subname, recipeitem, groups, images, S(subname.. " Panel"),
 		sounds, worldaligntex, alpha, light)
 	stairs.register_slope(subname, recipeitem, groups, images, S(subname .. " Slope"),
@@ -1046,7 +1045,7 @@ my_register_stair_and_slab(
 	default.node_sound_wood_defaults(),
 	true
 )
-	
+
 my_register_stair_and_slab(
 	"jungletree",
 	"default:jungletree",
@@ -1118,7 +1117,7 @@ my_register_stair_and_slab(
 	default.node_sound_dirt_defaults(),
 	true
 )
-	
+
 my_register_stair_and_slab(
 	"dirt_with_snow",
 	"default:dirt_with_snow",
@@ -1129,7 +1128,7 @@ my_register_stair_and_slab(
 	default.node_sound_dirt_defaults(),
 	true
 )
-	
+
 my_register_stair_and_slab(
 	"dirt_with_dry_grass",
 	"default:dirt_with_dry_grass",
@@ -1163,166 +1162,133 @@ my_register_stair_and_slab(
 	true
 )
 
---colours for nodes	
+--colours for nodes
 --========================
 
-local coloursg = {
-	{"black",      "Black",      "#000000b0"},
-	{"blue",       "Blue",       "#015dbb70"},
-	{"brown",      "Brown",      "#a78c4570"},
-	{"cyan",       "Cyan",       "#01ffd870"},
-	{"dark_green", "Dark Green", "#005b0770"},
-	{"dark_grey",  "Dark Grey",  "#303030b0"},
-	{"green",      "Green",      "#61ff0170"},
-	{"grey",       "Grey",       "#5b5b5bb0"},
-	{"magenta",    "Magenta",    "#ff05bb70"},
-	{"orange",     "Orange",     "#ff840170"},
-	{"pink",       "Pink",       "#ff65b570"},
-	{"red",        "Red",        "#ff000070"},
-	{"violet",     "Violet",     "#2000c970"},
-	{"white",      "White",      "#abababc0"},
-	{"yellow",     "Yellow",     "#e3ff0070"},
-}
-
-local colours = {
-	{"black",      "Black",      "cblocks_black.png"},
-	{"blue",       "Blue",       "cblocks_blue.png"},
-	{"brown",      "Brown",      "cblocks_brown.png"},
-	{"cyan",       "Cyan",       "cblocks_cyan.png"},
-	{"dark_green", "Dark Green", "cblocks_dark_green.png"},
-	{"dark_grey",  "Dark Grey",  "cblocks_dark_grey.png"},
-	{"green",      "Green",      "cblocks_green.png"},
-	{"grey",       "Grey",       "cblocks_grey.png"},
-	{"magenta",    "Magenta",    "cblocks_magenta.png"},
-	{"orange",     "Orange",     "cblocks_orange.png"},
-	{"pink",       "Pink",       "cblocks_pink.png"},
-	{"red",        "Red",        "cblocks_red.png"},
-	{"violet",     "Violet",     "cblocks_violet.png"},
-	{"white",      "White",      "cblocks_white.png"},
-	{"yellow",     "Yellow",     "cblocks_yellow.png"},
-}
 --= Coloured Blocks Mod
-if minetest.get_modpath("cblocks") then
-	for i = 1, #colours, 1 do
-	-- stonebrick / clay / wood / glass /  -stair, slab, thin slab, slope
-	my_register_stair_and_slab(
-		colours[i][1] .. "_stonebrick",
-		"cblocks:stonebrick_" .. colours[i][1],
-		{cracky = 2},
-		--{"default_stone_brick.png^[colorize:" .. colours[i][3]},
-		{"default_stone_brick.png^" .. colours[i][3]},
-		colours[i][2] .. " Stonebrick Stair",
-		colours[i][2] .. " Stonebrick Slab",
-		default.node_sound_stone_defaults(),
-		true
-	)
-		
-	my_register_stair_and_slab(
-		colours[i][1] .. "_stone",
-		"cblocks:stone_" .. colours[i][1],
-		{cracky = 2},
-		--{"default_stone.png^[colorize:" .. colours[i][3]},
-		{"default_stone.png^" .. colours[i][3]},
-		colours[i][2] .. " Stone Stair",
-		colours[i][2] .. " Stone Slab",
-		default.node_sound_stone_defaults(),
-		true
-	)
-		
-	my_register_stair_and_slab(
-		colours[i][1] .. "_clay",
-		"cblocks:clay_" .. colours[i][1],
-		{crumbly = 2, oddly_breakable_by_hand = 2},
-		--{"default_clay.png^[colorize:" .. colours[i][3]},
-		{"default_clay.png^" .. colours[i][3]},
-		colours[i][2] .. " Clay Stair",
-		colours[i][2] .. " Clay Slab",
-		default.node_sound_dirt_defaults(),
-		true
-	)
+if minetest.global_exists("cblocks") then
+	local colours = cblocks.colours
 
-	my_register_stair_and_slab(
-		colours[i][1] .. "_wood",
-		"cblocks:wood_" .. colours[i][1],
-		{choppy = 2, oddly_breakable_by_hand = 2, flammable = 3},
-		--{"default_wood.png^[colorize:" .. colours[i][3]},
-		{"default_wood.png^" .. colours[i][3]},
-		colours[i][2] .. " Wood Stair",
-		colours[i][2] .. " Wood Slab",
-		default.node_sound_wood_defaults(),
-		true
-	)
-
-	my_register_stair_and_slab(
-		colours[i][1] .. "_cobble",
-		"cblocks:cobble_" .. colours[i][1],
-		{cracky = 2},
-		--{"default_wood.png^[colorize:" .. colours[i][3]},
-		{"default_cobble.png^" .. colours[i][3]},
-		colours[i][2] .. " Cobble Stair",
-		colours[i][2] .. " Cobble Slab",
-		default.node_sound_stone_defaults(),
-		true
-	)
-
-	my_register_stair_and_slab(
-		colours[i][1] .. "_glass",
-		"cblocks:glass_" .. colours[i][1],
-		{cracky = 3, oddly_breakable_by_hand = 3},
-		--{"cblocks.png^[colorize:" .. colours[i][3]},
-		{"default_glass.png^default_glass_detail.png^[colorize:" .. coloursg[i][3]},
-		--{"default_glass.png^default_glass_detail.png^" .. colours[i][3]},
-		--drawtype = "glasslike",
-		--paramtype = "light",
-		--alpha = 160,
-		--drawtype = "glasslike_framed_optional",
-		--paramtype2 = "glasslikeliquidlevel",
-		colours[i][2] .. " Glass Stair",
-		colours[i][2] .. " Glass Slab",
-		default.node_sound_glass_defaults(),
-		true
-		--"0,0,0",
-		--default.LIGHT_MAX-14
-	)
-	
+	for i = 1, #colours do
+		-- stonebrick / clay / wood / glass /  -stair, slab, thin slab, slope
 		my_register_stair_and_slab(
-		colours[i][1] .. "_meselamp",
-		"cblocks:meselamp_" .. colours[i][1],
-		{cracky = 3, oddly_breakable_by_hand = 3},
-		--{"default_meselamp.png^[colorize:" .. colours[i][3]},
-		{"default_meselamp.png^" .. colours[i][3]},
-		colours[i][2] .. " Mese Lamp Stair",
-		colours[i][2] .. " Mese Lamp Slab",
-		default.node_sound_glass_defaults(),
-		true,
-		"0,0,0",
-		default.LIGHT_MAX
-	)
-	end --for
+			colours[i][1] .. "_stonebrick",
+			"cblocks:stonebrick_" .. colours[i][1],
+			{cracky = 2},
+			--{"default_stone_brick.png^[colorize:" .. colours[i][3]},
+			{"default_stone_brick.png^[colorize:" .. colours[i][3]},
+			colours[i][2] .. " Stonebrick Stair",
+			colours[i][2] .. " Stonebrick Slab",
+			default.node_sound_stone_defaults(),
+			true
+		)
+
+		my_register_stair_and_slab(
+			colours[i][1] .. "_stone",
+			"cblocks:stone_" .. colours[i][1],
+			{cracky = 2},
+			--{"default_stone.png^[colorize:" .. colours[i][3]},
+			{"default_stone.png^[colorize:" .. colours[i][3]},
+			colours[i][2] .. " Stone Stair",
+			colours[i][2] .. " Stone Slab",
+			default.node_sound_stone_defaults(),
+			true
+		)
+
+		my_register_stair_and_slab(
+			colours[i][1] .. "_clay",
+			"cblocks:clay_" .. colours[i][1],
+			{crumbly = 2, oddly_breakable_by_hand = 2},
+			--{"default_clay.png^[colorize:" .. colours[i][3]},
+			{"default_clay.png^[colorize:" .. colours[i][3]},
+			colours[i][2] .. " Clay Stair",
+			colours[i][2] .. " Clay Slab",
+			default.node_sound_dirt_defaults(),
+			true
+		)
+
+		my_register_stair_and_slab(
+			colours[i][1] .. "_wood",
+			"cblocks:wood_" .. colours[i][1],
+			{choppy = 2, oddly_breakable_by_hand = 2, flammable = 3},
+			--{"default_wood.png^[colorize:" .. colours[i][3]},
+			{"default_wood.png^[colorize:" .. colours[i][3]},
+			colours[i][2] .. " Wood Stair",
+			colours[i][2] .. " Wood Slab",
+			default.node_sound_wood_defaults(),
+			true
+		)
+
+		my_register_stair_and_slab(
+			colours[i][1] .. "_cobble",
+			"cblocks:cobble_" .. colours[i][1],
+			{cracky = 2},
+			--{"default_wood.png^[colorize:" .. colours[i][3]},
+			{"default_cobble.png^[colorize:" .. colours[i][3]},
+			colours[i][2] .. " Cobble Stair",
+			colours[i][2] .. " Cobble Slab",
+			default.node_sound_stone_defaults(),
+			true
+		)
+
+		my_register_stair_and_slab(
+			colours[i][1] .. "_glass",
+			"cblocks:glass_" .. colours[i][1],
+			{cracky = 3, oddly_breakable_by_hand = 3},
+			--{"cblocks.png^[colorize:" .. colours[i][3]},
+			{"default_glass.png^default_glass_detail.png^[colorize:" .. colours[i][3]},
+			--{"default_glass.png^default_glass_detail.png^" .. colours[i][3]},
+			--drawtype = "glasslike",
+			--paramtype = "light",
+			--alpha = 160,
+			--drawtype = "glasslike_framed_optional",
+			--paramtype2 = "glasslikeliquidlevel",
+			colours[i][2] .. " Glass Stair",
+			colours[i][2] .. " Glass Slab",
+			default.node_sound_glass_defaults(),
+			true
+			--"0,0,0",
+			--default.LIGHT_MAX-14
+		)
+
+		my_register_stair_and_slab(
+			colours[i][1] .. "_meselamp",
+			"cblocks:meselamp_" .. colours[i][1],
+			{cracky = 3, oddly_breakable_by_hand = 3},
+			--{"default_meselamp.png^[colorize:" .. colours[i][3]},
+			{"default_meselamp.png^[colorize:" .. colours[i][3]},
+			colours[i][2] .. " Mese Lamp Stair",
+			colours[i][2] .. " Mese Lamp Slab",
+			default.node_sound_glass_defaults(),
+			true
+			-- "0,0,0",
+			-- default.LIGHT_MAX
+		)
+	end
 end
 
 
 --= Wool Mod
 
-if minetest.get_modpath("wool") then
-	for i = 1, #colours, 1 do
-	my_register_stair_and_slab(
-		"wool_" .. colours[i][1],
-		"wool:" .. colours[i][1],
-		{snappy = 2, choppy = 2, oddly_breakable_by_hand = 3, flammable = 3},
-		{"wool_" .. colours[i][1] .. ".png"},
-		colours[i][2] .. " Wool Stair",
-		colours[i][2] .. " Wool Slab",
-		default.node_sound_stone_defaults(),
-		true
-	)
-	end -- END for
+if minetest.get_modpath("wool") and minetest.global_exists("dye") then
+	local colours = dye.dyes
+	for i = 1, #colours do
+		my_register_stair_and_slab(
+			"wool_" .. colours[i][1],
+			"wool:" .. colours[i][1],
+			{snappy = 2, choppy = 2, oddly_breakable_by_hand = 3, flammable = 3},
+			{"wool_" .. colours[i][1] .. ".png"},
+			colours[i][2] .. " Wool Stair",
+			colours[i][2] .. " Wool Slab",
+			default.node_sound_stone_defaults(),
+			true
+		)
+	end
 end
 
 
 --= Es Mod
 if minetest.get_modpath("es") then
-
 	--es grass
 	my_register_stair_and_slab(
 		"dry_dirt",
@@ -1364,8 +1330,8 @@ if minetest.get_modpath("es") then
 		{cracky = 3},
 		{"technic_granite.png"},
 		--{"mcl_core_granite.png"},
-		"Granite Block Stair",	
-		"Granite Block Slab",	
+		"Granite Block Stair",
+		"Granite Block Slab",
 		default.node_sound_stone_defaults(),
 		true
 	)
@@ -1393,7 +1359,7 @@ if minetest.get_modpath("es") then
 		default.node_sound_stone_defaults(),
 		true
 	)
-		
+
 	my_register_stair_and_slab(
 		"marble_bricks",
 		"es:marble_bricks",
@@ -1406,7 +1372,7 @@ if minetest.get_modpath("es") then
 		true
 	)
 
-	--Es Strange Clay 
+	--Es Strange Clay
 	my_register_stair_and_slab(
 		"strange_clay_blue",
 		"es:strange_clay_blue",
@@ -1496,7 +1462,7 @@ if minetest.get_modpath("es") then
 		default.node_sound_glass_defaults(),
 		true
 	)
-		
+
 	my_register_stair_and_slab(
 		"ruby",
 		"es:rubyblock",
@@ -1529,7 +1495,7 @@ if minetest.get_modpath("es") then
 		default.node_sound_stone_defaults(),
 		true
 	)
-		
+
 	my_register_stair_and_slab(
 		"purpellium",
 		"es:purpelliumblock",
@@ -1540,7 +1506,7 @@ if minetest.get_modpath("es") then
 		default.node_sound_glass_defaults(),
 		true
 	)
-	
+
 		my_register_stair_and_slab(
 		"unobtanium",
 		"es:unobtaniumblock",
@@ -1551,7 +1517,7 @@ if minetest.get_modpath("es") then
 		default.node_sound_stone_defaults(),
 		true
 	)
-	
+
 		my_register_stair_and_slab(
 		"depleted_uranium",
 		"es:depleted_uraniumblock",
@@ -1562,7 +1528,7 @@ if minetest.get_modpath("es") then
 		default.node_sound_glass_defaults(),
 		true
 	)
-		
+
 	my_register_stair_and_slab(
 		"boneblock",
 		"es:boneblock",
@@ -1583,12 +1549,10 @@ if minetest.get_modpath("es") then
 		"Messymese Slab",
 		default.node_sound_stone_defaults(),
 		true
-	)	
-		
+	)
 end
-
---lighted nodes
 --[[
+--lighted nodes
 my_register_stair_and_slab(
 	"meselamp",
 	"default:meselamp",
@@ -1597,27 +1561,23 @@ my_register_stair_and_slab(
 	"Meselamp Stair",
 	"Meselamp Slab",
 	default.node_sound_glass_defaults(),
-	true,
-	"0,0,0",
-	default.LIGHT_MAX
-)	
-]]
-my_register_stair_and_slab(
-	"meselamp",
-	"default:meselamp",
-	{cracky = 3, oddly_breakable_by_hand = 3},
-	{"default_meselamp.png"},
-	"Meselamp Stair",
-	"Meselamp Slab",
-	default.node_sound_glass_defaults(),
-	true,
-	"0,0,0",
-	default.LIGHT_MAX
+	true
+	-- "0,0,0",
+	-- default.LIGHT_MAX
 )
-
-
-
-
+--]]
+my_register_stair_and_slab(
+	"meselamp",
+	"default:meselamp",
+	{cracky = 3, oddly_breakable_by_hand = 3},
+	{"default_meselamp.png"},
+	"Meselamp Stair",
+	"Meselamp Slab",
+	default.node_sound_glass_defaults(),
+	true
+	-- "0,0,0",
+	-- default.LIGHT_MAX
+)
 
 --============================
 --============================
