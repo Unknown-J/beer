@@ -154,7 +154,7 @@ minetest.register_abm({
 		-- bee's only make honey during the day
 		local tod = (minetest.get_timeofday() or 0) * 24000
 
-		if tod < 5500 or tod > 18500 then
+		if tod < 0 or tod > 24000 then
 			return
 		end
 
@@ -165,7 +165,7 @@ minetest.register_abm({
 		local honey = inv:get_stack("beehive", 1):get_count()
 
 		-- is hive full?
-		if honey > 19 then
+		if honey > 33 then
 			return
 		end
 
