@@ -47,7 +47,7 @@ if legacy_setting_getbool("item_drop.enable_item_pickup",
 	local pickup_particle =
 		minetest.settings:get_bool("item_drop.pickup_particle", true)
 	local pickup_radius = legacy_setting_getnumber("item_drop.pickup_radius",
-		"item_pickup_radius", 3.55)
+		"item_pickup_radius", 2.75)
 	local magnet_radius = tonumber(
 		minetest.settings:get("item_drop.magnet_radius")) or -1
 	local magnet_time = tonumber(
