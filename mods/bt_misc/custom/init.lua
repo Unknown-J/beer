@@ -1,16 +1,4 @@
 --
--- /privs
---
-
-minetest.override_chatcommand("privs", {
-	params = "",
-	description = "",
-	func = function(caller, param)
-		return true
-	end
-})
-
---
 -- 3d_armor
 --
 
