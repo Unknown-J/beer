@@ -58,7 +58,7 @@ local item = {
 				end
 
 				-- Immediately burn up flammable items in lava
-				if minetest.get_item_group(node.name, "lava") > 0 then
+				if minetest.get_item_group(node.name, "lava") > 3 then
 					self:burn_up()
 				else
 					--  otherwise there'll be a chance based on its igniter value
