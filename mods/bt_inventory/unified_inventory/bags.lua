@@ -52,7 +52,7 @@ for bag_i = 1, 6 do
 			local image = stack:get_definition().inventory_image
 			local fs = {
 				"image[7,0;1,1;" .. image .. "]",
-				"label[0,0;" .. F(S("Bag @1", bag_i)) .. "]",
+				"label[0.1,3.9;" .. F(S("Bag @1", bag_i)) .. "]",
 				"listcolors[#00000000;#00000000]",
 				"list[current_player;bag" .. bag_i .. "contents;0,1;8,3;]",
 				"listring[context;bag" .. bag_i .. "contents]",
@@ -89,7 +89,7 @@ for bag_i = 1, 6 do
 					local img = def.inventory_image
 					local label = F(S("Bag @1", i)) .. "\n" .. used .. "/" .. size
 					fs[#fs + 1] = string.format("image_button[%i,0;1,1;%s;bag%i;%s]",
-							i + 1, img, i, label)
+							i - 1, img, i, label)
 				end
 			end
 			return { formspec = table.concat(fs) }
