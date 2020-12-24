@@ -6,6 +6,7 @@ So keep your friends close and your enemies closer. Hide your base well, conquer
 
 ## Game Information
 
+Server name: Silver City<br/>
 Host:   jo.edgy1.net  
      Port:  48115<br/>
 Website:  ...<br/>
