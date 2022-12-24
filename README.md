@@ -1,4 +1,4 @@
-## Silver City
+## ---
 ### Prologue
 Anarchy, chaos, griefing. All is allowed on this unmoderated server. Venture into the depths of hell or ascend the highest mountains, leaping from float land to float land all the way into space. You will be rewarded for your efforts, as endless riches can be found in the most inaccessible places. But be careful who you trust or you will lose everything and be forced to start all over.
 
@@ -6,13 +6,7 @@ So keep your friends close and your enemies closer. Hide your base well, conquer
 
 ## Game Information
 
-Server name: Silver City<br/>
-Host:   jo.edgy1.net  
-     Port:  48115<br/>
-Website:  ...<br/>
-Admin: joshoua<br/>
-Code:  https://github.com/Unknown-J/beerarchy<br/>
-Forum: TODO<br/>
+-----
 
 
 ### Act One
